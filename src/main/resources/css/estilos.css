@@ -1,0 +1,112 @@
+/* styles.css */
+
+body {
+    background-color: #fefefe;
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    color: #111827;
+}
+
+/* Botón de Modo Oscuro (Luna) */
+.theme-toggle {
+    position: absolute;
+    top: 24px;
+    right: 24px;
+    background-color: #f3f4f6;
+    border: none;
+    border-radius: 8px;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #374151;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.theme-toggle:hover {
+    background-color: #e5e7eb;
+}
+
+/* Círculo superior con el ícono del birrete */
+.logo-circle {
+    width: 64px;
+    height: 64px;
+    background-color: #030712;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto;
+    color: white;
+    font-size: 26px;
+}
+
+/* Tarjeta principal del formulario */
+.login-card {
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 16px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+    padding: 40px;
+}
+
+/* Estilos de los inputs (cajas grises) */
+.input-group-text {
+    background-color: #f3f4f6;
+    border: 1px solid #e5e7eb;
+    border-right: none;
+    color: #6b7280;
+    border-top-left-radius: 8px;
+    border-bottom-left-radius: 8px;
+}
+
+.form-control {
+    background-color: #f3f4f6;
+    border: 1px solid #e5e7eb;
+    border-left: none;
+    border-top-right-radius: 8px;
+    border-bottom-right-radius: 8px;
+    padding: 10px 12px;
+    font-size: 0.95rem;
+}
+
+.form-control:focus {
+    background-color: #f3f4f6;
+    border-color: #d1d5db;
+    box-shadow: none;
+}
+
+.form-control::placeholder {
+    color: #9ca3af;
+}
+
+/* Etiquetas de los inputs */
+.form-label {
+    font-size: 0.85rem;
+    font-weight: 700;
+    margin-bottom: 0.4rem;
+}
+
+/* Botón de Iniciar Sesión */
+.btn-login {
+    background-color: #030712;
+    color: white;
+    border-radius: 8px;
+    padding: 12px;
+    font-weight: 600;
+    font-size: 0.95rem;
+    margin-top: 10px;
+    transition: background-color 0.2s;
+}
+
+.btn-login:hover {
+    background-color: #1f2937;
+    color: white;
+}
+
+/* Subtítulo */
+.subtitle {
+    color: #6b7280;
+    font-size: 0.95rem;
+}
