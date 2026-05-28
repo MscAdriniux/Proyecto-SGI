@@ -39,4 +39,9 @@ public class IncidenciaController {
     
         return incidenciaService.agregarComentario(id, comentario);
     }
+
+    @GetMapping("/estado/{estado}")
+    public List<Incidencia> obtenerPorEstado(@PathVariable String estado) {
+        return incidenciaService.obtenerPorEstado(estado);
+    }
 }
