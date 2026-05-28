@@ -18,10 +18,13 @@ public class Incidencia {
     private String descripcion;
 
     @Column(nullable = false)
-    private String estado; // Pendiente, En Proceso, Resuelta
+    private String estado; // Pendiente, En Proceso, Resuelta, No Resuelta
 
     @Column(nullable = false)
     private String prioridad; // Alta, Media, Baja
+   
+    @Column(length = 300)
+    private String comentarioAdmin;
 
     @Column(name = "fecha_creacion")
     private LocalDateTime fechaCreacion;
@@ -47,6 +50,14 @@ public class Incidencia {
 
     public String getPrioridad() { return prioridad; }
     public void setPrioridad(String prioridad) { this.prioridad = prioridad; }
+
+    public String getComentarioAdmin() {
+    return comentarioAdmin;
+    }
+    
+    public void setComentarioAdmin(String comentarioAdmin) {
+        this.comentarioAdmin = comentarioAdmin;
+    }
 
     public LocalDateTime getFechaCreacion() { return fechaCreacion; }
     public void setFechaCreacion(LocalDateTime fechaCreacion) { this.fechaCreacion = fechaCreacion; }
