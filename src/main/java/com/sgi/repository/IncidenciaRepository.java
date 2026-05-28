@@ -6,4 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface IncidenciaRepository extends JpaRepository<Incidencia, Long> {
+  List<Incidencia> findByEstado(String estado);
 }
