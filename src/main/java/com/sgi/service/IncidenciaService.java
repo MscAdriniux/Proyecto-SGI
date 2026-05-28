@@ -19,4 +19,24 @@ public class IncidenciaService {
     public Incidencia guardarIncidencia(Incidencia incidencia) {
         return incidenciaRepository.save(incidencia);
     }
+
+    public Incidencia cambiarEstado(Long id, String estado) {
+
+        Incidencia incidencia = incidenciaRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Incidencia no encontrada"));
+    
+        incidencia.setEstado(estado);
+    
+        return incidenciaRepository.save(incidencia);
+    }
+    
+    public Incidencia agregarComentario(Long id, String comentario) {
+    
+        Incidencia incidencia = incidenciaRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Incidencia no encontrada"));
+    
+        incidencia.setComentarioAdmin(comentario);
+    
+        return incidenciaRepository.save(incidencia);
+    }
 }
