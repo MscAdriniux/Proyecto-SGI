@@ -10,6 +10,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 @RequestMapping("/incidencias")
@@ -42,5 +44,41 @@ public class IncidenciaController {
         model.addAttribute("totalResueltas", resueltas);
 
         return "panel-docente";
+    }
+    
+    // Mostrar el formulario
+    @GetMapping("/nueva")
+    public String mostrarFormularioIncidencia(HttpSession session, Model model) {
+        if (session.getAttribute("usuarioLogueado") == null) {
+            return "redirect:/login";
+        }
+        model.addAttribute("usuarioLogueado", session.getAttribute("usuarioLogueado"));
+        return "nueva-incidencia"; // Busca nueva-incidencia.html
+    }
+
+    // Guardar el formulario
+    @PostMapping("/guardar")
+    public String guardarIncidencia(
+            @RequestParam("tipoIncidencia") String tipoIncidencia,
+            @RequestParam("categoria") String categoria,
+            @RequestParam("prioridad") String prioridad,
+            @RequestParam("ubicacion") String ubicacion,
+            HttpSession session) {
+        
+        Usuario usuarioLogueado = (Usuario) session.getAttribute("usuarioLogueado");
+        if (usuarioLogueado == null) return "redirect:/login";
+
+        // Creamos y llenamos la incidencia
+        Incidencia nueva = new Incidencia();
+        nueva.setTipoIncidencia(tipoIncidencia);
+        nueva.setCategoria(categoria);
+        nueva.setPrioridad(prioridad);
+        nueva.setUbicacion(ubicacion);
+        nueva.setUsuario(usuarioLogueado);
+        
+        // ESTA ES LA LÍNEA MÁGICA QUE FALTABA
+        incidenciaService.guardar(nueva); 
+
+        return "redirect:/incidencias/mis-incidencias";
     }
 }

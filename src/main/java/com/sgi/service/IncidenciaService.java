@@ -17,4 +17,9 @@ public class IncidenciaService {
     public List<Incidencia> obtenerPorUsuario(Usuario usuario) {
         return incidenciaRepository.findByUsuario(usuario);
     }
+    
+    // Método para guardar una nueva incidencia en la base de datos
+    public void guardar(Incidencia incidencia) {
+        incidenciaRepository.save(incidencia);
+    }
 }

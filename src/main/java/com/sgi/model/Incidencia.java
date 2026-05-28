@@ -31,6 +31,9 @@ public class Incidencia {
 
     @Column(name = "asignado_a", length = 100)
     private String asignadoA;
+    
+    @Column(name = "tipo_incidencia", nullable = false, length = 200)
+    private String tipoIncidencia;
 
     // Relación: Muchas incidencias pertenecen a un solo usuario
     @ManyToOne
@@ -66,4 +69,7 @@ public class Incidencia {
 
     public Usuario getUsuario() { return usuario; }
     public void setUsuario(Usuario usuario) { this.usuario = usuario; }
+    
+    public String getTipoIncidencia() { return tipoIncidencia; }
+    public void setTipoIncidencia(String tipoIncidencia) { this.tipoIncidencia = tipoIncidencia; }
 }
