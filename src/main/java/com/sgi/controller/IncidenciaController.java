@@ -2,7 +2,6 @@ package com.sgi.controller;
 
 import com.sgi.model.Incidencia;
 import com.sgi.service.IncidenciaService;
-import com.sgi.service.IncidenciaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
