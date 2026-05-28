@@ -120,12 +120,4 @@ public class LoginController {
         if(u == null) return "Acceso denegado. <a href='/login'>Inicia sesión</a>";
         return "<h1>¡Éxito total!</h1><p>Bienvenido Administrador <b>" + u.getNombres() + "</b>. Tu login funciona perfecto.</p><br><a href='/logout'>Cerrar Sesión</a>";
     }
-
-    @GetMapping("/incidencias/mis-incidencias")
-    @ResponseBody
-    public String panelUsuario(HttpSession session) {
-        Usuario u = (Usuario) session.getAttribute("usuarioLogueado");
-        if(u == null) return "Acceso denegado. <a href='/login'>Inicia sesión</a>";
-        return "<h1>¡Éxito total!</h1><p>Bienvenido <b>" + u.getNombres() + "</b> (Rol: " + u.getRol() + "). Tu login funciona perfecto.</p><br><a href='/logout'>Cerrar Sesión</a>";
-    }
 }
