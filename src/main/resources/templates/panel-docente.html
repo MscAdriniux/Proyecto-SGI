@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel de Docente - SGI</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" th:href="@{/estilos.css}">
+</head>
+<body class="dashboard-body">
+
+    <nav class="navbar navbar-expand-lg border-bottom px-4 py-3 bg-nav">
+        <div class="container-fluid">
+            <div>
+                <h4 class="mb-0 fw-bold">Sistema de Incidencias</h4>
+                <small class="text-muted">
+                    <span th:text="${usuarioLogueado.nombres} + ' ' + ${usuarioLogueado.apellidos}">Diego Sotelo</span> • Panel de Docente
+                </small>
+            </div>
+            
+            <div class="d-flex align-items-center gap-3">
+                <button class="btn btn-dark fw-bold px-3 py-2 rounded-3">
+                    <i class="fa-solid fa-plus me-2"></i> Nueva Incidencia
+                </button>
+                <button class="theme-toggle position-static m-0" id="themeToggleBtn">
+                    <i class="fa-regular fa-moon" id="themeIcon"></i>
+                </button>
+                <a href="/logout" class="btn btn-light border fw-bold px-3 py-2 rounded-3 text-dark btn-logout">
+                    <i class="fa-solid fa-arrow-right-from-bracket me-2"></i> Cerrar Sesión
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-4">
+        
+        <div class="row mb-4 g-3">
+            <div class="col-md-4">
+                <div class="summary-card p-3 d-flex align-items-center gap-3">
+                    <div class="icon-box bg-danger-subtle text-danger">
+                        <i class="fa-solid fa-circle-exclamation fa-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="mb-0 fw-bold" th:text="${totalPendientes}">0</h3>
+                        <span class="text-muted">Pendientes</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="summary-card p-3 d-flex align-items-center gap-3">
+                    <div class="icon-box bg-primary-subtle text-primary">
+                        <i class="fa-regular fa-clock fa-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="mb-0 fw-bold" th:text="${totalEnProceso}">0</h3>
+                        <span class="text-muted">En Proceso</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="summary-card p-3 d-flex align-items-center gap-3">
+                    <div class="icon-box bg-success-subtle text-success">
+                        <i class="fa-regular fa-circle-check fa-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="mb-0 fw-bold" th:text="${totalResueltas}">0</h3>
+                        <span class="text-muted">Resueltas</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="incidencias-container p-4 mt-4">
+            <h5 class="fw-bold mb-3">Mis Incidencias</h5>
+            
+            <div class="d-flex justify-content-between align-items-center mb-4 gap-3 flex-wrap">
+                <div class="input-group" style="max-width: 400px;">
+                    <span class="input-group-text bg-transparent"><i class="fa-solid fa-magnifying-glass"></i></span>
+                    <input type="text" class="form-control border-start-0" placeholder="Buscar incidencias...">
+                </div>
+                <div class="btn-group filter-group">
+                    <button class="btn btn-dark active">Todas</button>
+                    <button class="btn btn-light border">Pendiente</button>
+                    <button class="btn btn-light border">En Proceso</button>
+                    <button class="btn btn-light border">Resuelta</button>
+                </div>
+            </div>
+
+            <div class="empty-state text-center py-5">
+                <div class="mb-3">
+                    <i class="fa-regular fa-folder-open text-muted" style="font-size: 3rem;"></i>
+                </div>
+                <h5 class="fw-bold">Aún no hay incidencias</h5>
+                <p class="text-muted">Cuando reportes un problema en la UTP o en tu sede, aparecerá detallado aquí.</p>
+                <button class="btn btn-dark mt-2">
+                    <i class="fa-solid fa-plus me-2"></i> Crear mi primer reporte
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script th:src="@{/script.js}"></script>
+</body>
+</html>
