@@ -39,4 +39,8 @@ public class IncidenciaService {
     
         return incidenciaRepository.save(incidencia);
     }
+
+    public List<Incidencia> obtenerPorEstado(String estado) {
+        return incidenciaRepository.findByEstado(estado);
+    }
 }
