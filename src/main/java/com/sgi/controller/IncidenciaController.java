@@ -1,5 +1,11 @@
 package com.sgi.controller;
 
+import org.apache.commons.io.FilenameUtils;
+import org.springframework.web.multipart.MultipartFile;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import com.sgi.model.Incidencia;
 import com.sgi.model.Usuario;
 import com.sgi.service.IncidenciaService;
@@ -80,5 +86,79 @@ public class IncidenciaController {
         incidenciaService.guardar(nueva); 
 
         return "redirect:/incidencias/mis-incidencias";
+    }
+    
+    // ==========================================
+    // RUTAS DEL PANEL DE TI (SOPORTE TÉCNICO)
+    // ==========================================
+
+    @GetMapping("/panel-tecnico")
+    public String verPanelTecnico(HttpSession session, Model model) {
+        Usuario usuarioLogueado = (Usuario) session.getAttribute("usuarioLogueado");
+        if (usuarioLogueado == null) return "redirect:/login";
+
+        // Asumiendo que en tu IncidenciaService tienes un método para obtener TODAS
+        // Si no se llama "obtenerTodas()", cámbialo por el nombre que tu compañero le haya puesto (ej. findAll())
+        List<Incidencia> todasIncidencias = incidenciaService.obtenerTodas();
+
+        long pendientes = todasIncidencias.stream().filter(i -> i.getEstado().equalsIgnoreCase("PENDIENTE")).count();
+        long enProceso = todasIncidencias.stream().filter(i -> i.getEstado().equalsIgnoreCase("EN PROCESO")).count();
+        long resueltas = todasIncidencias.stream().filter(i -> i.getEstado().equalsIgnoreCase("RESUELTA")).count();
+
+        model.addAttribute("usuarioLogueado", usuarioLogueado);
+        model.addAttribute("incidencias", todasIncidencias);
+        model.addAttribute("totalPendientes", pendientes);
+        model.addAttribute("totalEnProceso", enProceso);
+        model.addAttribute("totalResueltas", resueltas);
+
+        return "panel-tecnico"; // Buscará panel-tecnico.html
+    }
+
+    // Método para que el técnico cambie el estado de la incidencia
+     @PostMapping("/actualizar-estado")
+    public String actualizarEstado(
+            @RequestParam("idIncidencia") Integer idIncidencia, 
+            @RequestParam("nuevoEstado") String nuevoEstado,
+            // Agregamos el parámetro para recibir el archivo (required = false porque es opcional)
+            @RequestParam(value = "archivoEvidencia", required = false) MultipartFile archivo) {
+        
+        Incidencia incidencia = incidenciaService.obtenerPorId(idIncidencia); 
+        
+        if (incidencia != null) {
+            incidencia.setEstado(nuevoEstado);
+            
+            // LÓGICA DE SUBIDA DE EVIDENCIA
+            // Si el estado es RESUELTA y el técnico subió un archivo que no está vacío
+            if (nuevoEstado.equals("RESUELTA") && archivo != null && !archivo.isEmpty()) {
+                try {
+                    // 1. Usamos Apache Commons IO para extraer la extensión segura (ej. jpg, png)
+                    String extension = FilenameUtils.getExtension(archivo.getOriginalFilename());
+                    
+                    // 2. Creamos un nombre único para evitar que fotos con el mismo nombre se chanquen
+                    String nombreFoto = "evidencia_ticket_" + idIncidencia + "." + extension;
+                    
+                    // 3. Definimos la carpeta física donde se guardará (se creará en la raíz del proyecto SGI)
+                    Path rutaCarpeta = Paths.get("uploads/evidencias");
+                    if (!Files.exists(rutaCarpeta)) {
+                        Files.createDirectories(rutaCarpeta);
+                    }
+                    
+                    // 4. Copiamos el archivo del navegador a nuestra carpeta física
+                    Path rutaCompleta = rutaCarpeta.resolve(nombreFoto);
+                    Files.copy(archivo.getInputStream(), rutaCompleta, StandardCopyOption.REPLACE_EXISTING);
+                    
+                    // 5. Guardamos solo el nombre del archivo en MySQL
+                    incidencia.setEvidenciaUrl(nombreFoto);
+                    
+                } catch (Exception e) {
+                    System.out.println("Error fatal al subir la foto de evidencia: " + e.getMessage());
+                }
+            }
+
+            // Guardamos todo (el nuevo estado y el nombre de la foto) en la base de datos
+            incidenciaService.guardar(incidencia);
+        }
+        
+        return "redirect:/incidencias/panel-tecnico";
     }
 }

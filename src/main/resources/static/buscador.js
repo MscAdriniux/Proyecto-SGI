@@ -1,13 +1,29 @@
 // Catálogo predefinido de incidencias
 const catalogoIncidencias = [
+    // Hardware y Equipamiento (Aulas y Laboratorios)
     { nombre: "Proyector no enciende", categoria: "Hardware", prioridad: "ALTA" },
     { nombre: "Computadora no da video", categoria: "Hardware", prioridad: "ALTA" },
-    { nombre: "No hay conexión a Internet en el aula", categoria: "Redes", prioridad: "ALTA" },
-    { nombre: "Falta cable HDMI", categoria: "Equipamiento", prioridad: "MEDIA" },
-    { nombre: "Software AutoCAD no abre", categoria: "Software", prioridad: "MEDIA" },
+    { nombre: "Estación de trabajo sobrecalentada / Falla de refrigeración", categoria: "Hardware", prioridad: "ALTA" },
+    { nombre: "Falta cable HDMI / Adaptador", categoria: "Equipamiento", prioridad: "MEDIA" },
+    { nombre: "Teclado o mouse inoperativo en laboratorio", categoria: "Equipamiento", prioridad: "BAJA" },
+    
+    // Redes y Conectividad
+    { nombre: "No hay conexión a Internet en el aula (WiFi)", categoria: "Redes", prioridad: "ALTA" },
+    { nombre: "Fallo en switch o puerto de red físico (Ethernet)", categoria: "Redes", prioridad: "ALTA" },
+    { nombre: "Problema de enrutamiento o asignación de VLAN en laboratorio", categoria: "Redes", prioridad: "ALTA" },
+    { nombre: "Latencia alta o red institucional lenta", categoria: "Redes", prioridad: "MEDIA" },
+
+    // Software y Servidores
+    { nombre: "Software AutoCAD / IDE de desarrollo no abre", categoria: "Software", prioridad: "MEDIA" },
     { nombre: "Licencia de programa expirada", categoria: "Software", prioridad: "MEDIA" },
-    { nombre: "Aire acondicionado gotea", categoria: "Infraestructura", prioridad: "BAJA" },
-    { nombre: "Pizarra en mal estado", categoria: "Infraestructura", prioridad: "BAJA" }
+    { nombre: "Error de permisos al ejecutar scripts en terminal de laboratorio", categoria: "Software", prioridad: "MEDIA" },
+    { nombre: "Servidor local de base de datos sin respuesta", categoria: "Servidores", prioridad: "ALTA" },
+
+    // Infraestructura Física
+    { nombre: "Aire acondicionado gotea o no enfría", categoria: "Infraestructura", prioridad: "BAJA" },
+    { nombre: "Pizarra en mal estado / Faltan plumones", categoria: "Infraestructura", prioridad: "BAJA" },
+    { nombre: "Falla de energía eléctrica en el pabellón", categoria: "Infraestructura", prioridad: "ALTA" },
+
 ];
 
 const inputBuscador = document.getElementById('buscador');
