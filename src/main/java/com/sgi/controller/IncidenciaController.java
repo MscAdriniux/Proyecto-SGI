@@ -24,4 +24,20 @@ public class IncidenciaController {
     public Incidencia crear(@RequestBody Incidencia incidencia) {
         return incidenciaService.guardarIncidencia(incidencia);
     }
+
+    @PutMapping("/{id}/estado")
+    public Incidencia cambiarEstado(
+            @PathVariable Long id,
+            @RequestParam String estado) {
+    
+        return incidenciaService.cambiarEstado(id, estado);
+    }
+    
+    @PutMapping("/{id}/comentario")
+    public Incidencia agregarComentario(
+            @PathVariable Long id,
+            @RequestParam String comentario) {
+    
+        return incidenciaService.agregarComentario(id, comentario);
+    }
 }
