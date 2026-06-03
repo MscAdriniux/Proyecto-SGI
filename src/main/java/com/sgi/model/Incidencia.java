@@ -37,9 +37,6 @@ public class Incidencia {
     
     @Column(name = "evidencia_url")
     private String evidenciaUrl;
-    
-    @Column(name = "fecha_resolucion")
-    private LocalDateTime fechaResolucion;
 
     // Relación: Muchas incidencias pertenecen a un solo usuario
     @ManyToOne
@@ -125,10 +122,5 @@ public class Incidencia {
     public void setTipoIncidencia(String tipoIncidencia) {
         this.tipoIncidencia = tipoIncidencia; 
     }
-    public LocalDateTime getFechaResolucion() {
-        return fechaResolucion; 
-    }
-    public void setFechaResolucion(LocalDateTime fechaResolucion) { 
-        this.fechaResolucion = fechaResolucion; 
-    }
+ 
 }

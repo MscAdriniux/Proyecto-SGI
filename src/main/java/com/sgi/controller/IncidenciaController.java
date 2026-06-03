@@ -99,12 +99,11 @@ public class IncidenciaController {
     // RUTAS DEL PANEL DE TI (SOPORTE TÉCNICO)
     // ==========================================
 
-    @GetMapping("/panel-tecnico")
+  @GetMapping("/panel-tecnico")
     public String verPanelTecnico(HttpSession session, Model model) {
         Usuario usuarioLogueado = (Usuario) session.getAttribute("usuarioLogueado");
         if (usuarioLogueado == null) return "redirect:/login";
         
-        // CANDADO: Si NO es "soporte ti" (ni administrador), lo pateamos a su panel
         String rol = usuarioLogueado.getRol().trim();
         if (!rol.equalsIgnoreCase("soporte ti") && !rol.equalsIgnoreCase("tecnico") && !rol.equalsIgnoreCase("administrador")) {
             return "redirect:/incidencias/mis-incidencias"; 
@@ -116,8 +115,19 @@ public class IncidenciaController {
         long enProceso = todasIncidencias.stream().filter(i -> i.getEstado().equalsIgnoreCase("EN PROCESO")).count();
         long resueltas = todasIncidencias.stream().filter(i -> i.getEstado().equalsIgnoreCase("RESUELTA")).count();
 
+        List<Incidencia> activas = todasIncidencias.stream()
+                .filter(i -> !i.getEstado().equalsIgnoreCase("RESUELTA"))
+                .sorted((i1, i2) -> Integer.compare(obtenerPesoPrioridad(i1.getPrioridad()), obtenerPesoPrioridad(i2.getPrioridad())))
+                .toList();
+
+        List<Incidencia> historialResueltas = todasIncidencias.stream()
+                .filter(i -> i.getEstado().equalsIgnoreCase("RESUELTA"))
+                .sorted((i1, i2) -> i2.getIdIncidencia().compareTo(i1.getIdIncidencia()))
+                .toList();
+
         model.addAttribute("usuarioLogueado", usuarioLogueado);
-        model.addAttribute("incidencias", todasIncidencias);
+        model.addAttribute("incidenciasActivas", activas);
+        model.addAttribute("incidenciasResueltas", historialResueltas);
         model.addAttribute("totalPendientes", pendientes);
         model.addAttribute("totalEnProceso", enProceso);
         model.addAttribute("totalResueltas", resueltas);
@@ -138,7 +148,7 @@ public class IncidenciaController {
             
             // NUEVO: GUARDAR FECHA Y HORA DE RESOLUCIÓN  
             if (nuevoEstado.equals("RESUELTA")) {
-                incidencia.setFechaResolucion(java.time.LocalDateTime.now());
+                incidencia.setFechaCierre(java.time.LocalDateTime.now());
             }  
             
             // LÓGICA DE SUBIDA DE EVIDENCIA
@@ -166,5 +176,12 @@ public class IncidenciaController {
         }
         
         return "redirect:/incidencias/panel-tecnico";
+    }
+    
+    private int obtenerPesoPrioridad(String prioridad) {
+        if (prioridad == null) return 3;
+        if (prioridad.equalsIgnoreCase("ALTA")) return 1;
+        if (prioridad.equalsIgnoreCase("MEDIA")) return 2;
+        return 3;
     }
 }

@@ -59,50 +59,91 @@
         </div>
 
         <div class="incidencias-container p-4 mt-4" style="background-color: var(--bg-card); border: 1px solid var(--border-card); border-radius: 12px;">
-            <h5 class="fw-bold mb-4" style="color: var(--text-main);">Bandeja de Entrada TI</h5>
+            
+            <ul class="nav nav-tabs mb-4" id="tiTabs" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link active fw-bold text-danger" id="activas-tab" data-bs-toggle="tab" data-bs-target="#activas-pane" type="button" role="tab" aria-selected="true">
+                        <i class="fa-solid fa-fire me-1"></i> Entrada
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link fw-bold text-success" id="resueltas-tab" data-bs-toggle="tab" data-bs-target="#resueltas-pane" type="button" role="tab" aria-selected="false">
+                        <i class="fa-solid fa-check-double me-1"></i> Historial 
+                    </button>
+                </li>
+            </ul>
 
-            <div th:if="${#lists.isEmpty(incidencias)}" class="text-center py-5 text-muted">
-                <i class="fa-solid fa-mug-hot fa-3x mb-3"></i>
-                <h5>No hay incidencias reportadas.</h5>
-            </div>
-
-            <div th:each="incidencia : ${incidencias}" class="p-3 border rounded-3 mb-3 d-flex justify-content-between align-items-start flex-wrap gap-3" style="border-color: var(--border-card) !important;">
+            <div class="tab-content" id="tiTabsContent">
                 
-                <div class="flex-grow-1">
-                    <div class="d-flex align-items-center gap-2 mb-2">
-                        <h6 class="fw-bold mb-0" style="color: var(--text-main);" th:text="${incidencia.tipoIncidencia}">Falla Reportada</h6>
-                        <span class="badge" th:classappend="${incidencia.prioridad == 'ALTA' ? 'bg-danger' : (incidencia.prioridad == 'MEDIA' ? 'bg-warning text-dark' : 'bg-success')}" th:text="${incidencia.prioridad}">ALTA</span>
-                        <span class="badge border" th:classappend="${incidencia.estado == 'PENDIENTE' ? 'border-secondary text-secondary' : (incidencia.estado == 'EN PROCESO' ? 'border-primary text-primary' : 'border-success text-success')}" th:text="${incidencia.estado}">ESTADO</span>
+                <div class="tab-pane fade show active" id="activas-pane" role="tabpanel" tabindex="0">
+                    <div th:if="${#lists.isEmpty(incidenciasActivas)}" class="text-center py-5 text-muted">
+                        <i class="fa-solid fa-mug-hot fa-3x mb-3"></i>
+                        <h5>No hay emergencias pendientes.</h5>
                     </div>
-                    <div class="text-muted small d-flex gap-3 flex-wrap">
-                        <span><i class="fa-solid fa-location-dot me-1"></i> <span th:text="${incidencia.ubicacion}">Ubicación</span></span>
-                        <span th:if="${incidencia.usuario != null}"><i class="fa-regular fa-user me-1"></i> <span th:text="${incidencia.usuario.nombres}">Profesor</span></span>
+
+                    <div th:each="incidencia : ${incidenciasActivas}" class="p-3 border rounded-3 mb-3 d-flex justify-content-between align-items-start flex-wrap gap-3" style="border-color: var(--border-card) !important;">
+                        <div class="flex-grow-1">
+                            <div class="d-flex align-items-center gap-2 mb-2">
+                                <h6 class="fw-bold mb-0" style="color: var(--text-main);" th:text="${incidencia.tipoIncidencia}"></h6>
+                                <span class="badge" th:classappend="${incidencia.prioridad == 'ALTA' ? 'bg-danger' : (incidencia.prioridad == 'MEDIA' ? 'bg-warning text-dark' : 'bg-success')}" th:text="${incidencia.prioridad}"></span>
+                                <span class="badge border" th:classappend="${incidencia.estado == 'PENDIENTE' ? 'border-secondary text-secondary' : 'border-primary text-primary'}" th:text="${incidencia.estado}"></span>
+                            </div>
+                            <div class="text-muted small d-flex gap-3 flex-wrap">
+                                <span><i class="fa-solid fa-location-dot me-1"></i> <span th:text="${incidencia.ubicacion}"></span></span>
+                                <span th:if="${incidencia.usuario != null}"><i class="fa-regular fa-user me-1"></i> <span th:text="${incidencia.usuario.nombres}"></span></span>
+                            </div>
+                        </div>
+
+                        <div class="acciones-tecnico" style="min-width: 250px;">
+                            <form th:action="@{/incidencias/actualizar-estado}" method="POST" enctype="multipart/form-data" class="d-flex flex-column gap-2">
+                                <input type="hidden" name="idIncidencia" th:value="${incidencia.idIncidencia}"> 
+                                
+                                <div class="d-flex gap-2">
+                                    <select name="nuevoEstado" class="form-select form-select-sm" style="background-color: var(--bg-input); color: var(--text-main); border-color: var(--border-input);" onchange="mostrarInputArchivo(this)">
+                                        <option value="EN PROCESO" th:selected="${incidencia.estado == 'EN PROCESO'}">Atender (En Proceso)</option>
+                                        <option value="RESUELTA">Marcar como Resuelta</option>
+                                    </select>
+                                    <button type="submit" class="btn btn-sm btn-primary fw-bold">Actualizar</button>
+                                </div>
+                                
+                                <div class="contenedor-evidencia mt-1" style="display: none;">
+                                    <small class="text-muted d-block mb-1"><i class="fa-solid fa-camera"></i> Subir evidencia (opcional)</small>
+                                    <input type="file" name="archivoEvidencia" class="form-control form-control-sm" accept="image/png, image/jpeg">
+                                </div>
+                            </form>
+                        </div>
                     </div>
                 </div>
 
-                <div class="acciones-tecnico" th:if="${incidencia.estado != 'RESUELTA'}" style="min-width: 250px;">
-                    <form th:action="@{/incidencias/actualizar-estado}" method="POST" enctype="multipart/form-data" class="d-flex flex-column gap-2">
-                        <input type="hidden" name="idIncidencia" th:value="${incidencia.idIncidencia}"> 
-                        
-                        <div class="d-flex gap-2">
-                            <select name="nuevoEstado" class="form-select form-select-sm" style="background-color: var(--bg-input); color: var(--text-main); border-color: var(--border-input);" onchange="mostrarInputArchivo(this)">
-                                <option value="EN PROCESO" th:selected="${incidencia.estado == 'EN PROCESO'}">Atender (En Proceso)</option>
-                                <option value="RESUELTA">Marcar como Resuelta</option>
-                            </select>
-                            <button type="submit" class="btn btn-sm btn-primary fw-bold">Actualizar</button>
+                <div class="tab-pane fade" id="resueltas-pane" role="tabpanel" tabindex="0">
+                    <div th:if="${#lists.isEmpty(incidenciasResueltas)}" class="text-center py-5 text-muted">
+                        <i class="fa-solid fa-folder-open fa-3x mb-3"></i>
+                        <h5>El historial está vacío.</h5>
+                    </div>
+
+                    <div th:each="incidencia : ${incidenciasResueltas}" class="p-3 border rounded-3 mb-3 d-flex justify-content-between align-items-center flex-wrap gap-3" style="border-color: var(--border-card) !important; opacity: 0.85;">
+                        <div class="flex-grow-1">
+                            <div class="d-flex align-items-center gap-2 mb-2">
+                                <h6 class="fw-bold mb-0 text-muted" style="text-decoration: line-through;" th:text="${incidencia.tipoIncidencia}"></h6>
+                                <span class="badge border border-success text-success">RESUELTA</span>
+                            </div>
+                            <div class="text-muted small d-flex gap-3 flex-wrap">
+                                <span><i class="fa-solid fa-location-dot me-1"></i> <span th:text="${incidencia.ubicacion}"></span></span>
+                                <span th:if="${incidencia.fechaCierre != null}"><i class="fa-regular fa-clock me-1"></i> Fin: <span th:text="${#temporals.format(incidencia.fechaCierre, 'dd/MM/yyyy HH:mm')}"></span></span>
+                            </div>
                         </div>
-                        
-                        <div class="contenedor-evidencia mt-1" style="display: none;">
-                            <small class="text-muted d-block mb-1"><i class="fa-solid fa-camera"></i> Subir evidencia (opcional)</small>
-                            <input type="file" name="archivoEvidencia" class="form-control form-control-sm" accept="image/png, image/jpeg">
+                        <div th:if="${incidencia.evidenciaUrl != null}">
+                            <span class="badge bg-secondary"><i class="fa-solid fa-paperclip me-1"></i> Evidencia Adjunta</span>
                         </div>
-                    </form>
+                    </div>
                 </div>
 
             </div>
         </div>
     </div>
 
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    
     <script th:src="@{/script.js}"></script>
     
     <script>
