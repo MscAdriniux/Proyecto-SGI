@@ -42,18 +42,28 @@ public class LoginController {
                                     
         Usuario usuarioAutenticado = usuarioService.autenticarUsuario(correo, contrasena);
 
-        if (usuarioAutenticado != null) {
+            if (usuarioAutenticado != null) {
             // Guardamos al usuario en la sesión
             session.setAttribute("usuarioLogueado", usuarioAutenticado);
+                
+            String rol = usuarioAutenticado.getRol();
             
-            // Redirigimos según su rol
-            if (usuarioAutenticado.getRol().equals("administrador")) {
+            if (rol.equalsIgnoreCase("administrador") || rol.equalsIgnoreCase("admin")) {
+                // Va al panel del Administrador
                 return "redirect:/admin/dashboard";
+                
+            } else if (rol.equalsIgnoreCase("tecnico") || rol.equalsIgnoreCase("ti")) {
+                // Va a la bandeja del Soporte Técnico
+                return "redirect:/incidencias/panel-tecnico";
+                
             } else {
+                // Por defecto, si es DOCENTE o cualquier otro, va a "Mis Incidencias"
                 return "redirect:/incidencias/mis-incidencias";
             }
+            // ==========================================
+            
         } else {
-            // Error en credenciales
+           
             model.addAttribute("error", "Correo o contraseña incorrectos");
             return "login";
         }
