@@ -10,6 +10,7 @@ import com.sgi.model.Incidencia;
 import com.sgi.model.Usuario;
 import com.sgi.service.IncidenciaService;
 import jakarta.servlet.http.HttpSession;
+import java.io.IOException;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+
 
 @Controller
 @RequestMapping("/incidencias")
@@ -115,17 +117,21 @@ public class IncidenciaController {
     }
 
     // Método para que el técnico cambie el estado de la incidencia
-     @PostMapping("/actualizar-estado")
+    @PostMapping("/actualizar-estado")
     public String actualizarEstado(
             @RequestParam("idIncidencia") Integer idIncidencia, 
             @RequestParam("nuevoEstado") String nuevoEstado,
-            // Agregamos el parámetro para recibir el archivo (required = false porque es opcional)
             @RequestParam(value = "archivoEvidencia", required = false) MultipartFile archivo) {
         
         Incidencia incidencia = incidenciaService.obtenerPorId(idIncidencia); 
         
         if (incidencia != null) {
             incidencia.setEstado(nuevoEstado);
+            
+            // NUEVO: GUARDAR FECHA Y HORA DE RESOLUCIÓN  
+            if (nuevoEstado.equals("RESUELTA")) {
+                incidencia.setFechaResolucion(java.time.LocalDateTime.now());
+            }  
             
             // LÓGICA DE SUBIDA DE EVIDENCIA
             // Si el estado es RESUELTA y el técnico subió un archivo que no está vacío
@@ -150,12 +156,12 @@ public class IncidenciaController {
                     // 5. Guardamos solo el nombre del archivo en MySQL
                     incidencia.setEvidenciaUrl(nombreFoto);
                     
-                } catch (Exception e) {
+                } catch (IOException | IllegalArgumentException e) {
                     System.out.println("Error fatal al subir la foto de evidencia: " + e.getMessage());
                 }
             }
 
-            // Guardamos todo (el nuevo estado y el nombre de la foto) en la base de datos
+            // Guardamos todo (el nuevo estado, fecha y nombre de la foto) en la base de datos
             incidenciaService.guardar(incidencia);
         }
         

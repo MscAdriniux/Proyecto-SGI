@@ -8,4 +8,4 @@ import org.springframework.stereotype.Repository;
 public interface UsuarioRepository extends JpaRepository<Usuario, Integer> {
     // Spring Boot crea automáticamente la consulta SQL con solo nombrar bien el método
     Usuario findByCorreo(String correo);
-}
+}  
