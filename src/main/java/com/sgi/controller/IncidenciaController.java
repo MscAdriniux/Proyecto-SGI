@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
 @RequestMapping("/incidencias")
@@ -183,5 +184,17 @@ public class IncidenciaController {
         if (prioridad.equalsIgnoreCase("ALTA")) return 1;
         if (prioridad.equalsIgnoreCase("MEDIA")) return 2;
         return 3;
+    }
+    
+    // ==========================================
+    // API PARA AJAX POLLING (NOTIFICACIONES)
+    // ==========================================
+    @GetMapping("/api/conteo-pendientes")
+    @ResponseBody
+    public long contarIncidenciasPendientes(HttpSession session) {
+        // Obtenemos todas y contamos las pendientes (igual que en el panel)
+        return incidenciaService.obtenerTodas().stream()
+                .filter(i -> i.getEstado().equalsIgnoreCase("PENDIENTE"))
+                .count();
     }
 }

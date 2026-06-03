@@ -33,7 +33,7 @@
                 <div class="summary-card p-3 d-flex align-items-center gap-3" style="background-color: var(--bg-card); border: 1px solid var(--border-card); border-radius: 8px;">
                     <div class="icon-box bg-danger-subtle text-danger p-3 rounded-circle"><i class="fa-solid fa-circle-exclamation fa-lg"></i></div>
                     <div>
-                        <h3 class="mb-0 fw-bold" style="color: var(--text-main);" th:text="${totalPendientes}">0</h3>
+                        <h3 id="contadorPendientes" class="mb-0 fw-bold" style="color: var(--text-main);" th:text="${totalPendientes}">0</h3>
                         <span class="text-muted">Pendientes</span>
                     </div>
                 </div>
@@ -141,11 +141,30 @@
             </div>
         </div>
     </div>
-
+    
+    <div class="toast-container position-fixed bottom-0 end-0 p-3" style="z-index: 1055;">
+        <div id="alertaNuevoTicket" class="toast border-danger shadow-lg" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="toast-header bg-danger text-white">
+                <i class="fa-solid fa-bell fa-shake me-2"></i>
+                <strong class="me-auto">¡Nueva Emergencia!</strong>
+                <small>Ahora mismo</small>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+            <div class="toast-body bg-light text-dark">
+                Se ha reportado una nueva incidencia en el sistema.
+                <div class="mt-2 pt-2 border-top">
+                    <button type="button" class="btn btn-sm btn-primary fw-bold" onclick="location.reload()">
+                        <i class="fa-solid fa-arrows-rotate me-1"></i> Actualizar Bandeja
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     
     <script th:src="@{/script.js}"></script>
-    
+   
     <script>
         function mostrarInputArchivo(selectElement) {
             // Busca el div contenedor del input de archivo que está justo debajo del select
