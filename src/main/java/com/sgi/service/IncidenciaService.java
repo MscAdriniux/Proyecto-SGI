@@ -13,7 +13,7 @@ public class IncidenciaService {
     @Autowired
     private IncidenciaRepository incidenciaRepository;
 
-    // Obtener las incidencias de un docente en específico
+    // Obtener las incidencias de un docente en específico (Panel Docente)
     public List<Incidencia> obtenerPorUsuario(Usuario usuario) {
         return incidenciaRepository.findByUsuario(usuario);
     }
@@ -21,5 +21,20 @@ public class IncidenciaService {
     // Método para guardar una nueva incidencia en la base de datos
     public void guardar(Incidencia incidencia) {
         incidenciaRepository.save(incidencia);
+    }
+
+  
+    // MÉTODOS PARA EL PANEL DE TI
+    // =============================
+
+    // Obtener absolutamente TODAS las incidencias de la base de datos
+    public List<Incidencia> obtenerTodas() {
+        return incidenciaRepository.findAll();
+    }
+
+    // Buscar una incidencia específica por su ID (Para actualizar su estado)
+    public Incidencia obtenerPorId(Integer id) {
+        // El ".orElse(null)" significa: si no encuentra el ID, que devuelva nulo para que no se caiga el sistema
+        return incidenciaRepository.findById(id).orElse(null);
     }
 }

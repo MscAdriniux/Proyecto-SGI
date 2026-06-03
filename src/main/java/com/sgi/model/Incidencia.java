@@ -34,6 +34,9 @@ public class Incidencia {
     
     @Column(name = "tipo_incidencia", nullable = false, length = 200)
     private String tipoIncidencia;
+    
+    @Column(name = "evidencia_url")
+    private String evidenciaUrl;
 
     // Relación: Muchas incidencias pertenecen a un solo usuario
     @ManyToOne
@@ -43,33 +46,80 @@ public class Incidencia {
     // Constructores, Getters y Setters
     public Incidencia() {}
 
-    public Integer getIdIncidencia() { return idIncidencia; }
-    public void setIdIncidencia(Integer idIncidencia) { this.idIncidencia = idIncidencia; }
+    public String getEvidenciaUrl() {
+        return evidenciaUrl;
+    }
 
-    public String getEstado() { return estado; }
-    public void setEstado(String estado) { this.estado = estado; }
+    public void setEvidenciaUrl(String evidenciaUrl) {
+        this.evidenciaUrl = evidenciaUrl;
+    }
+    public Integer getIdIncidencia() {
+        return idIncidencia; 
+    }
+    public void setIdIncidencia(Integer idIncidencia) {
+        this.idIncidencia = idIncidencia; 
+    }
 
-    public String getPrioridad() { return prioridad; }
-    public void setPrioridad(String prioridad) { this.prioridad = prioridad; }
+    public String getEstado() { 
+        return estado; 
+    }
+    public void setEstado(String estado) {
+        this.estado = estado; 
+    }
 
-    public LocalDateTime getFechaCreacion() { return fechaCreacion; }
-    public void setFechaCreacion(LocalDateTime fechaCreacion) { this.fechaCreacion = fechaCreacion; }
+    public String getPrioridad() {
+        return prioridad; 
+    }
+    public void setPrioridad(String prioridad) { 
+        this.prioridad = prioridad; 
+    }
 
-    public LocalDateTime getFechaCierre() { return fechaCierre; }
-    public void setFechaCierre(LocalDateTime fechaCierre) { this.fechaCierre = fechaCierre; }
+    public LocalDateTime getFechaCreacion() {
+        return fechaCreacion; 
+    }
+    public void setFechaCreacion(LocalDateTime fechaCreacion) {
+        this.fechaCreacion = fechaCreacion; 
+    }
 
-    public String getCategoria() { return categoria; }
-    public void setCategoria(String categoria) { this.categoria = categoria; }
+    public LocalDateTime getFechaCierre() {
+        return fechaCierre; 
+    }
+    public void setFechaCierre(LocalDateTime fechaCierre) {
+        this.fechaCierre = fechaCierre; 
+    }
 
-    public String getUbicacion() { return ubicacion; }
-    public void setUbicacion(String ubicacion) { this.ubicacion = ubicacion; }
+    public String getCategoria() {
+        return categoria; 
+    }
+    public void setCategoria(String categoria) {
+        this.categoria = categoria; 
+    }
 
-    public String getAsignadoA() { return asignadoA; }
-    public void setAsignadoA(String asignadoA) { this.asignadoA = asignadoA; }
+    public String getUbicacion() {
+        return ubicacion; 
+    }
+    public void setUbicacion(String ubicacion) {
+        this.ubicacion = ubicacion; 
+    }
 
-    public Usuario getUsuario() { return usuario; }
-    public void setUsuario(Usuario usuario) { this.usuario = usuario; }
+    public String getAsignadoA() {
+        return asignadoA; 
+    }
+    public void setAsignadoA(String asignadoA) {
+        this.asignadoA = asignadoA; 
+    }
+
+    public Usuario getUsuario() {
+        return usuario; 
+    }
+    public void setUsuario(Usuario usuario) {
+        this.usuario = usuario; 
+    }
     
-    public String getTipoIncidencia() { return tipoIncidencia; }
-    public void setTipoIncidencia(String tipoIncidencia) { this.tipoIncidencia = tipoIncidencia; }
+    public String getTipoIncidencia() {
+        return tipoIncidencia; 
+    }
+    public void setTipoIncidencia(String tipoIncidencia) {
+        this.tipoIncidencia = tipoIncidencia; 
+    }
 }
