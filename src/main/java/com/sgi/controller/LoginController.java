@@ -42,23 +42,37 @@ public class LoginController {
                                     
         Usuario usuarioAutenticado = usuarioService.autenticarUsuario(correo, contrasena);
 
+        // PRIMERA VALIDACIÓN: ¿Existe el usuario y la contraseña es correcta?
         if (usuarioAutenticado != null) {
-            // Guardamos al usuario en la sesión
-            session.setAttribute("usuarioLogueado", usuarioAutenticado);
             
-            // Redirigimos según su rol
-            if (usuarioAutenticado.getRol().equals("administrador")) {
+            // Guardamos al usuario en la sesión para que las demás pantallas lo reconozcan
+            session.setAttribute("usuarioLogueado", usuarioAutenticado); 
+            // Obtenemos el rol
+            String rol = usuarioAutenticado.getRol(); 
+            // Salvavidas por si un usuario viejo no tiene rol en la BD
+            if (rol == null) {
+                rol = "docente"; 
+            }  
+            // Limpiamos espacios accidentales en la base de datos
+            rol = rol.trim(); 
+            
+            // ENRUTADOR INTELIGENTE
+            if (rol.equalsIgnoreCase("administrador") || rol.equalsIgnoreCase("admin")) {
                 return "redirect:/admin/dashboard";
+                
+            } else if (rol.equalsIgnoreCase("soporte ti") || rol.equalsIgnoreCase("tecnico")) {
+                return "redirect:/incidencias/panel-tecnico";
+                
             } else {
                 return "redirect:/incidencias/mis-incidencias";
             }
+            
         } else {
-            // Error en credenciales
+            // Si llega aquí, significa que se equivocó de correo o contraseña
             model.addAttribute("error", "Correo o contraseña incorrectos");
-            return "login";
+            return "login"; // Lo devuelve a la vista login.html con el mensaje de error
         }
     }
-
     // ==========================================
     // 2. RUTAS DE REGISTRO
     // ==========================================

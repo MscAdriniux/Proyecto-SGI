@@ -122,4 +122,5 @@ public class Incidencia {
     public void setTipoIncidencia(String tipoIncidencia) {
         this.tipoIncidencia = tipoIncidencia; 
     }
+ 
 }
