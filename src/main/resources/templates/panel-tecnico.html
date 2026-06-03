@@ -121,27 +121,53 @@
                         <h5>El historial está vacío.</h5>
                     </div>
 
-                    <div th:each="incidencia : ${incidenciasResueltas}" class="p-3 border rounded-3 mb-3 d-flex justify-content-between align-items-center flex-wrap gap-3" style="border-color: var(--border-card) !important; opacity: 0.85;">
-                        <div class="flex-grow-1">
-                            <div class="d-flex align-items-center gap-2 mb-2">
-                                <h6 class="fw-bold mb-0 text-muted" style="text-decoration: line-through;" th:text="${incidencia.tipoIncidencia}"></h6>
-                                <span class="badge border border-success text-success">RESUELTA</span>
+                    <div th:each="incidencia : ${incidenciasResueltas}">
+                        
+                        <div class="p-3 border rounded-3 mb-3 d-flex justify-content-between align-items-center flex-wrap gap-3" 
+                             style="border-color: var(--border-card) !important; opacity: 0.85; cursor: pointer; transition: 0.2s;"
+                             onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.85'"
+                             data-bs-toggle="modal" th:data-bs-target="'#modalDetalle-' + ${incidencia.idIncidencia}">
+                            
+                            <div class="flex-grow-1">
+                                <div class="d-flex align-items-center gap-2 mb-2">
+                                    <h6 class="fw-bold mb-0 text-muted" style="text-decoration: line-through;" th:text="${incidencia.tipoIncidencia}"></h6>
+                                    <span class="badge border border-success text-success">RESUELTA</span>
+                                </div>
+                                <div class="text-muted small d-flex gap-3 flex-wrap">
+                                    <span><i class="fa-solid fa-location-dot me-1"></i> <span th:text="${incidencia.ubicacion}"></span></span>
+                                    <span th:if="${incidencia.fechaCierre != null}"><i class="fa-regular fa-clock me-1"></i> Fin: <span th:text="${#temporals.format(incidencia.fechaCierre, 'dd/MM/yyyy HH:mm')}"></span></span>
+                                </div>
                             </div>
-                            <div class="text-muted small d-flex gap-3 flex-wrap">
-                                <span><i class="fa-solid fa-location-dot me-1"></i> <span th:text="${incidencia.ubicacion}"></span></span>
-                                <span th:if="${incidencia.fechaCierre != null}"><i class="fa-regular fa-clock me-1"></i> Fin: <span th:text="${#temporals.format(incidencia.fechaCierre, 'dd/MM/yyyy HH:mm')}"></span></span>
+                            <div>
+                                <span class="badge bg-secondary"><i class="fa-solid fa-eye me-1"></i> Ver Detalles</span>
                             </div>
                         </div>
-                        <div th:if="${incidencia.evidenciaUrl != null}">
-                            <span class="badge bg-secondary"><i class="fa-solid fa-paperclip me-1"></i> Evidencia Adjunta</span>
-                        </div>
-                    </div>
-                </div>
 
-            </div>
-        </div>
-    </div>
-    
+                        <div class="modal fade" th:id="'modalDetalle-' + ${incidencia.idIncidencia}" tabindex="-1" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered">
+                                <div class="modal-content" style="background-color: var(--bg-card); color: var(--text-main);">
+                                    <div class="modal-header border-bottom-0">
+                                        <h1 class="modal-title fs-5 fw-bold">
+                                            <i class="fa-solid fa-ticket text-primary me-2"></i>Ticket #<span th:text="${incidencia.idIncidencia}"></span>
+                                        </h1>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body pt-0">
+                                        <hr class="mt-0">
+                                        <p class="mb-2"><strong>Problema:</strong> <span th:text="${incidencia.tipoIncidencia}"></span></p>
+                                        <p class="mb-2"><strong>Docente Solicitante:</strong> <span th:text="${incidencia.usuario != null ? incidencia.usuario.nombres + ' ' + incidencia.usuario.apellidos : 'No registrado'}"></span></p>
+                                        <p class="mb-2"><strong>Ubicación:</strong> <span th:text="${incidencia.ubicacion}"></span></p>
+                                        <p class="mb-2"><strong>Fecha de Solicitud:</strong> <span th:text="${#temporals.format(incidencia.fechaCreacion, 'dd/MM/yyyy HH:mm')}"></span></p>
+                                        <p class="mb-0" th:if="${incidencia.fechaCierre != null}"><strong>Fecha de Cierre:</strong> <span class="text-success fw-bold" th:text="${#temporals.format(incidencia.fechaCierre, 'dd/MM/yyyy HH:mm')}"></span></p>
+                                    </div>
+                                    <div class="modal-footer border-top-0">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                                    </div>
+                                </div>
+                            </div>
+                     </div>
+                 </div>
+          </div>
     <div class="toast-container position-fixed bottom-0 end-0 p-3" style="z-index: 1055;">
         <div id="alertaNuevoTicket" class="toast border-danger shadow-lg" role="alert" aria-live="assertive" aria-atomic="true">
             <div class="toast-header bg-danger text-white">

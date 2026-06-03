@@ -33,7 +33,7 @@ if (contadorElement) {
     // Leemos el número directamente del HTML
     let conteoActual = parseInt(contadorElement.innerText) || 0;
 
-    setInterval(function() {
+    setInterval(function() {     
         // Hacemos la consulta silenciosa al servidor
         fetch('/incidencias/api/conteo-pendientes')
             .then(respuesta => respuesta.json())
