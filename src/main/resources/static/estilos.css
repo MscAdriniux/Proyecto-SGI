@@ -234,7 +234,7 @@ h1, h2, h3, h4, h5, h6, p, span {
     color: var(--text-btn) !important;
     border-color: var(--bg-btn) !important;
 }
-
+/*data*/
 [data-theme="dark"] .btn-dark:hover, 
 [data-theme="dark"] .btn-dark:focus {
     background-color: var(--bg-btn) !important;
