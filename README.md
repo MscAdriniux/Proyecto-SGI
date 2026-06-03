@@ -1,8 +1,18 @@
-# Título Principal (H1)
-## Subtítulo (H2)
-### Sección (H3)
-**Este texto estará en negrita**
-*Este texto estará en cursiva*
-***Este tendrá ambos***
-[Visita GitHub](https://github.com)
-![Logotipo del proyecto](./img/logo.png)
+flowchart LR
+    %% Actores
+    U((Usuario Registrado))
+    A((Administrador))
+
+    %% Sistema
+    subgraph Mi Aplicación
+        direction TB
+        UC1([Iniciar Sesión])
+        UC2([Editar Perfil])
+        UC3([Eliminar Cuentas])
+    end
+
+    %% Relaciones
+    U --- UC1
+    U --- UC2
+    A --- UC1
+    A --- UC3
