@@ -42,33 +42,37 @@ public class LoginController {
                                     
         Usuario usuarioAutenticado = usuarioService.autenticarUsuario(correo, contrasena);
 
-            if (usuarioAutenticado != null) {
-            // Guardamos al usuario en la sesión
-            session.setAttribute("usuarioLogueado", usuarioAutenticado);
-                
-            String rol = usuarioAutenticado.getRol();
+        // PRIMERA VALIDACIÓN: ¿Existe el usuario y la contraseña es correcta?
+        if (usuarioAutenticado != null) {
             
+            // Guardamos al usuario en la sesión para que las demás pantallas lo reconozcan
+            session.setAttribute("usuarioLogueado", usuarioAutenticado); 
+            // Obtenemos el rol
+            String rol = usuarioAutenticado.getRol(); 
+            // Salvavidas por si un usuario viejo no tiene rol en la BD
+            if (rol == null) {
+                rol = "docente"; 
+            }  
+            // Limpiamos espacios accidentales en la base de datos
+            rol = rol.trim(); 
+            
+            // ENRUTADOR INTELIGENTE
             if (rol.equalsIgnoreCase("administrador") || rol.equalsIgnoreCase("admin")) {
-                // Va al panel del Administrador
                 return "redirect:/admin/dashboard";
                 
-            } else if (rol.equalsIgnoreCase("tecnico") || rol.equalsIgnoreCase("ti")) {
-                // Va a la bandeja del Soporte Técnico
+            } else if (rol.equalsIgnoreCase("soporte ti") || rol.equalsIgnoreCase("tecnico")) {
                 return "redirect:/incidencias/panel-tecnico";
                 
             } else {
-                // Por defecto, si es DOCENTE o cualquier otro, va a "Mis Incidencias"
                 return "redirect:/incidencias/mis-incidencias";
             }
-            // ==========================================
             
         } else {
-           
+            // Si llega aquí, significa que se equivocó de correo o contraseña
             model.addAttribute("error", "Correo o contraseña incorrectos");
-            return "login";
+            return "login"; // Lo devuelve a la vista login.html con el mensaje de error
         }
     }
-
     // ==========================================
     // 2. RUTAS DE REGISTRO
     // ==========================================

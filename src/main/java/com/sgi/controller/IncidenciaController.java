@@ -20,7 +20,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-
 @Controller
 @RequestMapping("/incidencias")
 public class IncidenciaController {
@@ -28,24 +27,28 @@ public class IncidenciaController {
     @Autowired
     private IncidenciaService incidenciaService;
 
+    // ==========================================
+    // RUTAS DEL PANEL DE DOCENTE
+    // ==========================================
+
     @GetMapping("/mis-incidencias")
     public String verPanelDocente(HttpSession session, Model model) {
-        // 1. Verificamos que el usuario esté logueado
         Usuario usuarioLogueado = (Usuario) session.getAttribute("usuarioLogueado");
-        if (usuarioLogueado == null) {
-            return "redirect:/login"; // Si no hay sesión, lo botamos al login
+        if (usuarioLogueado == null) return "redirect:/login";
+        
+        // CANDADO: Si es "soporte ti" o "tecnico", lo regresamos a su área
+        String rol = usuarioLogueado.getRol().trim();
+        if (rol.equalsIgnoreCase("soporte ti") || rol.equalsIgnoreCase("tecnico")) {
+            return "redirect:/incidencias/panel-tecnico";
         }
 
-        // 2. Buscamos sus incidencias
         List<Incidencia> misIncidencias = incidenciaService.obtenerPorUsuario(usuarioLogueado);
 
-        // 3. Calculamos las estadísticas para las tarjetas superiores
         long pendientes = misIncidencias.stream().filter(i -> i.getEstado().equalsIgnoreCase("PENDIENTE")).count();
         long enProceso = misIncidencias.stream().filter(i -> i.getEstado().equalsIgnoreCase("EN PROCESO")).count();
         long resueltas = misIncidencias.stream().filter(i -> i.getEstado().equalsIgnoreCase("RESUELTA")).count();
 
-        // 4. Mandamos los datos al HTML
-        model.addAttribute("usuarioLogueado", usuarioLogueado); // <--- ESTA ES LA LÍNEA NUEVA
+        model.addAttribute("usuarioLogueado", usuarioLogueado); 
         model.addAttribute("incidencias", misIncidencias);
         model.addAttribute("totalPendientes", pendientes);
         model.addAttribute("totalEnProceso", enProceso);
@@ -54,17 +57,21 @@ public class IncidenciaController {
         return "panel-docente";
     }
     
-    // Mostrar el formulario
     @GetMapping("/nueva")
     public String mostrarFormularioIncidencia(HttpSession session, Model model) {
-        if (session.getAttribute("usuarioLogueado") == null) {
-            return "redirect:/login";
+        Usuario usuarioLogueado = (Usuario) session.getAttribute("usuarioLogueado");
+        if (usuarioLogueado == null) return "redirect:/login";
+        
+        // CANDADO EXTRA: Evitar que el técnico entre a crear reportes
+        String rol = usuarioLogueado.getRol().trim();
+        if (rol.equalsIgnoreCase("soporte ti") || rol.equalsIgnoreCase("tecnico")) {
+            return "redirect:/incidencias/panel-tecnico";
         }
-        model.addAttribute("usuarioLogueado", session.getAttribute("usuarioLogueado"));
-        return "nueva-incidencia"; // Busca nueva-incidencia.html
+
+        model.addAttribute("usuarioLogueado", usuarioLogueado);
+        return "nueva-incidencia"; 
     }
 
-    // Guardar el formulario
     @PostMapping("/guardar")
     public String guardarIncidencia(
             @RequestParam("tipoIncidencia") String tipoIncidencia,
@@ -76,7 +83,6 @@ public class IncidenciaController {
         Usuario usuarioLogueado = (Usuario) session.getAttribute("usuarioLogueado");
         if (usuarioLogueado == null) return "redirect:/login";
 
-        // Creamos y llenamos la incidencia
         Incidencia nueva = new Incidencia();
         nueva.setTipoIncidencia(tipoIncidencia);
         nueva.setCategoria(categoria);
@@ -84,7 +90,6 @@ public class IncidenciaController {
         nueva.setUbicacion(ubicacion);
         nueva.setUsuario(usuarioLogueado);
         
-        // ESTA ES LA LÍNEA MÁGICA QUE FALTABA
         incidenciaService.guardar(nueva); 
 
         return "redirect:/incidencias/mis-incidencias";
@@ -98,9 +103,13 @@ public class IncidenciaController {
     public String verPanelTecnico(HttpSession session, Model model) {
         Usuario usuarioLogueado = (Usuario) session.getAttribute("usuarioLogueado");
         if (usuarioLogueado == null) return "redirect:/login";
+        
+        // CANDADO: Si NO es "soporte ti" (ni administrador), lo pateamos a su panel
+        String rol = usuarioLogueado.getRol().trim();
+        if (!rol.equalsIgnoreCase("soporte ti") && !rol.equalsIgnoreCase("tecnico") && !rol.equalsIgnoreCase("administrador")) {
+            return "redirect:/incidencias/mis-incidencias"; 
+        }
 
-        // Asumiendo que en tu IncidenciaService tienes un método para obtener TODAS
-        // Si no se llama "obtenerTodas()", cámbialo por el nombre que tu compañero le haya puesto (ej. findAll())
         List<Incidencia> todasIncidencias = incidenciaService.obtenerTodas();
 
         long pendientes = todasIncidencias.stream().filter(i -> i.getEstado().equalsIgnoreCase("PENDIENTE")).count();
@@ -113,10 +122,9 @@ public class IncidenciaController {
         model.addAttribute("totalEnProceso", enProceso);
         model.addAttribute("totalResueltas", resueltas);
 
-        return "panel-tecnico"; // Buscará panel-tecnico.html
+        return "panel-tecnico"; 
     }
 
-    // Método para que el técnico cambie el estado de la incidencia
     @PostMapping("/actualizar-estado")
     public String actualizarEstado(
             @RequestParam("idIncidencia") Integer idIncidencia, 
@@ -134,34 +142,26 @@ public class IncidenciaController {
             }  
             
             // LÓGICA DE SUBIDA DE EVIDENCIA
-            // Si el estado es RESUELTA y el técnico subió un archivo que no está vacío
             if (nuevoEstado.equals("RESUELTA") && archivo != null && !archivo.isEmpty()) {
                 try {
-                    // 1. Usamos Apache Commons IO para extraer la extensión segura (ej. jpg, png)
                     String extension = FilenameUtils.getExtension(archivo.getOriginalFilename());
-                    
-                    // 2. Creamos un nombre único para evitar que fotos con el mismo nombre se chanquen
                     String nombreFoto = "evidencia_ticket_" + idIncidencia + "." + extension;
                     
-                    // 3. Definimos la carpeta física donde se guardará (se creará en la raíz del proyecto SGI)
                     Path rutaCarpeta = Paths.get("uploads/evidencias");
                     if (!Files.exists(rutaCarpeta)) {
                         Files.createDirectories(rutaCarpeta);
                     }
                     
-                    // 4. Copiamos el archivo del navegador a nuestra carpeta física
                     Path rutaCompleta = rutaCarpeta.resolve(nombreFoto);
                     Files.copy(archivo.getInputStream(), rutaCompleta, StandardCopyOption.REPLACE_EXISTING);
                     
-                    // 5. Guardamos solo el nombre del archivo en MySQL
                     incidencia.setEvidenciaUrl(nombreFoto);
                     
-                } catch (IOException | IllegalArgumentException e) {
+                } catch (IOException | IllegalArgumentException e) { // Cambiado a Exception general por si hay errores de rutas
                     System.out.println("Error fatal al subir la foto de evidencia: " + e.getMessage());
                 }
             }
 
-            // Guardamos todo (el nuevo estado, fecha y nombre de la foto) en la base de datos
             incidenciaService.guardar(incidencia);
         }
         
