@@ -4,61 +4,134 @@ import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "incidencias")
+@Table(name = "incidencia")
 public class Incidencia {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long idIncidencia;
+    private Integer idIncidencia;
 
-    @Column(nullable = false, length = 100)
-    private String titulo;
+    @Column(nullable = false, length = 50)
+    private String estado = "PENDIENTE";
 
-    @Column(nullable = false, columnDefinition = "TEXT")
-    private String descripcion;
+    @Column(nullable = false, length = 50)
+    private String prioridad;
+  
+    @Column(name = "fecha_creacion", updatable = false)
+    private LocalDateTime fechaCreacion = LocalDateTime.now();
 
-    @Column(nullable = false)
-    private String estado; // Pendiente, En Proceso, Resuelta, No Resuelta
+    @Column(name = "fecha_cierre")
+    private LocalDateTime fechaCierre;
 
-    @Column(nullable = false)
-    private String prioridad; // Alta, Media, Baja
-   
     @Column(length = 300)
     private String comentarioAdmin;
 
-    @Column(name = "fecha_creacion")
-    private LocalDateTime fechaCreacion;
+    @Column(length = 100)
+    private String categoria;
 
-    // --- Constructor vacío requerido por Spring ---
-    public Incidencia() {
-        this.fechaCreacion = LocalDateTime.now();
-        this.estado = "Pendiente";
+    @Column(length = 150)
+    private String ubicacion;
+
+    @Column(name = "asignado_a", length = 100)
+    private String asignadoA;
+    
+    @Column(name = "tipo_incidencia", nullable = false, length = 200)
+    private String tipoIncidencia;
+    
+    @Column(name = "evidencia_url")
+    private String evidenciaUrl;
+
+    // Relación: Muchas incidencias pertenecen a un solo usuario
+    @ManyToOne
+    @JoinColumn(name = "id_usuario", nullable = false)
+    private Usuario usuario;
+
+    // ==========================================
+    // Constructores, Getters y Setters
+    // ==========================================
+    public Incidencia() {}
+
+    public Integer getIdIncidencia() {
+        return idIncidencia; 
+    }
+    public void setIdIncidencia(Integer idIncidencia) {
+        this.idIncidencia = idIncidencia; 
     }
 
-    // --- Getters y Setters ---
-    public Long getIdIncidencia() { return idIncidencia; }
-    public void setIdIncidencia(Long idIncidencia) { this.idIncidencia = idIncidencia; }
+    public String getEstado() { 
+        return estado; 
+    }
+    public void setEstado(String estado) {
+        this.estado = estado; 
+    }
 
-    public String getTitulo() { return titulo; }
-    public void setTitulo(String titulo) { this.titulo = titulo; }
+    public String getPrioridad() {
+        return prioridad; 
+    }
+    public void setPrioridad(String prioridad) { 
+        this.prioridad = prioridad; 
+    }
 
-    public String getDescripcion() { return descripcion; }
-    public void setDescripcion(String descripcion) { this.descripcion = descripcion; }
+    public LocalDateTime getFechaCreacion() {
+        return fechaCreacion; 
+    }
+    public void setFechaCreacion(LocalDateTime fechaCreacion) {
+        this.fechaCreacion = fechaCreacion; 
+    }
 
-    public String getEstado() { return estado; }
-    public void setEstado(String estado) { this.estado = estado; }
-
-    public String getPrioridad() { return prioridad; }
-    public void setPrioridad(String prioridad) { this.prioridad = prioridad; }
-
-    public String getComentarioAdmin() {
-    return comentarioAdmin;
+    public LocalDateTime getFechaCierre() {
+        return fechaCierre; 
+    }
+    public void setFechaCierre(LocalDateTime fechaCierre) {
+        this.fechaCierre = fechaCierre; 
     }
     
+    public String getComentarioAdmin() {
+        return comentarioAdmin;
+    }
     public void setComentarioAdmin(String comentarioAdmin) {
         this.comentarioAdmin = comentarioAdmin;
     }
 
-    public LocalDateTime getFechaCreacion() { return fechaCreacion; }
-    public void setFechaCreacion(LocalDateTime fechaCreacion) { this.fechaCreacion = fechaCreacion; }
+    public String getCategoria() {
+        return categoria; 
+    }
+    public void setCategoria(String categoria) {
+        this.categoria = categoria; 
+    }
+
+    public String getUbicacion() {
+        return ubicacion; 
+    }
+    public void setUbicacion(String ubicacion) {
+        this.ubicacion = ubicacion; 
+    }
+
+    public String getAsignadoA() {
+        return asignadoA; 
+    }
+    public void setAsignadoA(String asignadoA) {
+        this.asignadoA = asignadoA; 
+    }
+
+    public String getTipoIncidencia() {
+        return tipoIncidencia; 
+    }
+    public void setTipoIncidencia(String tipoIncidencia) {
+        this.tipoIncidencia = tipoIncidencia; 
+    }
+
+    public String getEvidenciaUrl() {
+        return evidenciaUrl;
+    }
+    public void setEvidenciaUrl(String evidenciaUrl) {
+        this.evidenciaUrl = evidenciaUrl;
+    }
+
+    public Usuario getUsuario() {
+        return usuario; 
+    }
+    public void setUsuario(Usuario usuario) {
+        this.usuario = usuario; 
+    }
 }

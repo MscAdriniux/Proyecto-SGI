@@ -10,4 +10,4 @@ public class SistemaGestionIncidencias {
         SpringApplication.run(SistemaGestionIncidencias.class, args);
         System.out.println("El backend del SGI esta corriendo correctamente!");
     }
-}
+} 
