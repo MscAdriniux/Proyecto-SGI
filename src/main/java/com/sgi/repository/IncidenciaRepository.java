@@ -9,7 +9,10 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface IncidenciaRepository extends JpaRepository<Incidencia, Integer> {
     
-    // Spring Boot crea la consulta SQL automáticamente gracias a este nombre
+    // Método de tu avance (main): Para el panel del docente
     List<Incidencia> findByUsuario(Usuario usuario);
+    
+    // Método de Kriss: Para buscar por estados (ej. reportes)
+    List<Incidencia> findByEstado(String estado);
     
 }

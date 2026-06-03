@@ -16,12 +16,15 @@ public class Incidencia {
 
     @Column(nullable = false, length = 50)
     private String prioridad;
-
+  
     @Column(name = "fecha_creacion", updatable = false)
     private LocalDateTime fechaCreacion = LocalDateTime.now();
 
     @Column(name = "fecha_cierre")
     private LocalDateTime fechaCierre;
+
+    @Column(length = 300)
+    private String comentarioAdmin;
 
     @Column(length = 100)
     private String categoria;
@@ -43,16 +46,11 @@ public class Incidencia {
     @JoinColumn(name = "id_usuario", nullable = false)
     private Usuario usuario;
 
+    // ==========================================
     // Constructores, Getters y Setters
+    // ==========================================
     public Incidencia() {}
 
-    public String getEvidenciaUrl() {
-        return evidenciaUrl;
-    }
-
-    public void setEvidenciaUrl(String evidenciaUrl) {
-        this.evidenciaUrl = evidenciaUrl;
-    }
     public Integer getIdIncidencia() {
         return idIncidencia; 
     }
@@ -87,6 +85,13 @@ public class Incidencia {
     public void setFechaCierre(LocalDateTime fechaCierre) {
         this.fechaCierre = fechaCierre; 
     }
+    
+    public String getComentarioAdmin() {
+        return comentarioAdmin;
+    }
+    public void setComentarioAdmin(String comentarioAdmin) {
+        this.comentarioAdmin = comentarioAdmin;
+    }
 
     public String getCategoria() {
         return categoria; 
@@ -109,18 +114,24 @@ public class Incidencia {
         this.asignadoA = asignadoA; 
     }
 
-    public Usuario getUsuario() {
-        return usuario; 
-    }
-    public void setUsuario(Usuario usuario) {
-        this.usuario = usuario; 
-    }
-    
     public String getTipoIncidencia() {
         return tipoIncidencia; 
     }
     public void setTipoIncidencia(String tipoIncidencia) {
         this.tipoIncidencia = tipoIncidencia; 
     }
- 
+
+    public String getEvidenciaUrl() {
+        return evidenciaUrl;
+    }
+    public void setEvidenciaUrl(String evidenciaUrl) {
+        this.evidenciaUrl = evidenciaUrl;
+    }
+
+    public Usuario getUsuario() {
+        return usuario; 
+    }
+    public void setUsuario(Usuario usuario) {
+        this.usuario = usuario; 
+    }
 }

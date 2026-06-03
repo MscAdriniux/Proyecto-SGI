@@ -15,6 +15,11 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
+import java.util.List;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -196,5 +201,26 @@ public class IncidenciaController {
         return incidenciaService.obtenerTodas().stream()
                 .filter(i -> i.getEstado().equalsIgnoreCase("PENDIENTE"))
                 .count();
+    }
+
+    @PutMapping("/{id}/estado")
+    public Incidencia cambiarEstado(
+            @PathVariable Long id,
+            @RequestParam String estado) {
+    
+        return incidenciaService.cambiarEstado(id, estado);
+    }
+    
+    @PutMapping("/{id}/comentario")
+    public Incidencia agregarComentario(
+            @PathVariable Long id,
+            @RequestParam String comentario) {
+    
+        return incidenciaService.agregarComentario(id, comentario);
+    }
+
+    @GetMapping("/estado/{estado}")
+    public List<Incidencia> obtenerPorEstado(@PathVariable String estado) {
+        return incidenciaService.obtenerPorEstado(estado);
     }
 }

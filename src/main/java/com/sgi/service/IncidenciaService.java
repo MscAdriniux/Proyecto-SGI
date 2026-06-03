@@ -37,4 +37,28 @@ public class IncidenciaService {
         // El ".orElse(null)" significa: si no encuentra el ID, que devuelva nulo para que no se caiga el sistema
         return incidenciaRepository.findById(id).orElse(null);
     }
+
+    public Incidencia cambiarEstado(Long id, String estado) {
+
+        Incidencia incidencia = incidenciaRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Incidencia no encontrada"));
+    
+        incidencia.setEstado(estado);
+    
+        return incidenciaRepository.save(incidencia);
+    }
+    
+    public Incidencia agregarComentario(Long id, String comentario) {
+    
+        Incidencia incidencia = incidenciaRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Incidencia no encontrada"));
+    
+        incidencia.setComentarioAdmin(comentario);
+    
+        return incidenciaRepository.save(incidencia);
+    }
+
+    public List<Incidencia> obtenerPorEstado(String estado) {
+        return incidenciaRepository.findByEstado(estado);
+    }
 }
