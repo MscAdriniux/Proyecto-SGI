@@ -16,20 +16,20 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import java.util.List;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 
+/**
+ * Controlador encargado de gestionar las operaciones y vistas relacionadas con las incidencias.
+ * Maneja tanto el flujo del docente como el flujo de Soporte TI.
+ */
 @Controller
 @RequestMapping("/incidencias")
 public class IncidenciaController {
 
+    /**
+     * Constructor por defecto.
+     */
+    public IncidenciaController() {}
+    
     @Autowired
     private IncidenciaService incidenciaService;
 
@@ -37,6 +37,12 @@ public class IncidenciaController {
     // RUTAS DEL PANEL DE DOCENTE
     // ==========================================
 
+    /**
+     * Muestra el panel principal del docente con el listado de sus incidencias.
+     * @param session La sesión HTTP actual para verificar el usuario logueado.
+     * @param model El modelo para pasar datos a la vista.
+     * @return La vista del panel del docente o redirección si no tiene permisos.
+     */
     @GetMapping("/mis-incidencias")
     public String verPanelDocente(HttpSession session, Model model) {
         Usuario usuarioLogueado = (Usuario) session.getAttribute("usuarioLogueado");
@@ -63,6 +69,12 @@ public class IncidenciaController {
         return "panel-docente";
     }
     
+    /**
+     * Muestra el formulario para crear un nuevo ticket de incidencia.
+     * @param session La sesión HTTP actual.
+     * @param model El modelo para pasar datos a la vista.
+     * @return La vista del formulario de nueva incidencia.
+     */
     @GetMapping("/nueva")
     public String mostrarFormularioIncidencia(HttpSession session, Model model) {
         Usuario usuarioLogueado = (Usuario) session.getAttribute("usuarioLogueado");
@@ -78,6 +90,15 @@ public class IncidenciaController {
         return "nueva-incidencia"; 
     }
 
+    /**
+     * Procesa y guarda una nueva incidencia en la base de datos.
+     * @param tipoIncidencia Descripción del problema.
+     * @param categoria Categoría técnica del problema.
+     * @param prioridad Nivel de urgencia.
+     * @param ubicacion Lugar físico de la incidencia.
+     * @param session La sesión HTTP actual.
+     * @return Redirección al panel del docente.
+     */
     @PostMapping("/guardar")
     public String guardarIncidencia(
             @RequestParam("tipoIncidencia") String tipoIncidencia,
@@ -105,7 +126,13 @@ public class IncidenciaController {
     // RUTAS DEL PANEL DE TI (SOPORTE TÉCNICO)
     // ==========================================
 
-  @GetMapping("/panel-tecnico")
+    /**
+     * Muestra el panel de control (dashboard) para el personal de Soporte TI.
+     * @param session La sesión HTTP actual.
+     * @param model El modelo para pasar datos a la vista.
+     * @return La vista del panel técnico.
+     */
+    @GetMapping("/panel-tecnico")
     public String verPanelTecnico(HttpSession session, Model model) {
         Usuario usuarioLogueado = (Usuario) session.getAttribute("usuarioLogueado");
         if (usuarioLogueado == null) return "redirect:/login";
@@ -141,6 +168,13 @@ public class IncidenciaController {
         return "panel-tecnico"; 
     }
 
+    /**
+     * Actualiza el estado de una incidencia y gestiona la subida de evidencia fotográfica.
+     * @param idIncidencia Identificador de la incidencia a modificar.
+     * @param nuevoEstado El nuevo estado a asignar (ej. EN PROCESO, RESUELTA).
+     * @param archivo Archivo de evidencia física (opcional).
+     * @return Redirección al panel técnico.
+     */
     @PostMapping("/actualizar-estado")
     public String actualizarEstado(
             @RequestParam("idIncidencia") Integer idIncidencia, 
@@ -173,7 +207,7 @@ public class IncidenciaController {
                     
                     incidencia.setEvidenciaUrl(nombreFoto);
                     
-                } catch (IOException | IllegalArgumentException e) { // Cambiado a Exception general por si hay errores de rutas
+                } catch (IOException | IllegalArgumentException e) { 
                     System.out.println("Error fatal al subir la foto de evidencia: " + e.getMessage());
                 }
             }
@@ -184,6 +218,11 @@ public class IncidenciaController {
         return "redirect:/incidencias/panel-tecnico";
     }
     
+    /**
+     * Calcula el peso numérico de una prioridad para facilitar su ordenamiento.
+     * @param prioridad Texto de la prioridad (ALTA, MEDIA, BAJA).
+     * @return Valor numérico (1 para ALTA, 2 para MEDIA, 3 para otros).
+     */
     private int obtenerPesoPrioridad(String prioridad) {
         if (prioridad == null) return 3;
         if (prioridad.equalsIgnoreCase("ALTA")) return 1;
@@ -194,33 +233,18 @@ public class IncidenciaController {
     // ==========================================
     // API PARA AJAX POLLING (NOTIFICACIONES)
     // ==========================================
+    
+    /**
+     * Endpoint API para consultar silenciosamente el total de tickets pendientes.
+     * @param session La sesión HTTP actual.
+     * @return El conteo total de incidencias en estado PENDIENTE.
+     */
     @GetMapping("/api/conteo-pendientes")
     @ResponseBody
     public long contarIncidenciasPendientes(HttpSession session) {
-        // Obtenemos todas y contamos las pendientes (igual que en el panel)
         return incidenciaService.obtenerTodas().stream()
                 .filter(i -> i.getEstado().equalsIgnoreCase("PENDIENTE"))
                 .count();
     }
 
-    @PutMapping("/{id}/estado")
-    public Incidencia cambiarEstado(
-            @PathVariable Long id,
-            @RequestParam String estado) {
-    
-        return incidenciaService.cambiarEstado(id, estado);
-    }
-    
-    @PutMapping("/{id}/comentario")
-    public Incidencia agregarComentario(
-            @PathVariable Long id,
-            @RequestParam String comentario) {
-    
-        return incidenciaService.agregarComentario(id, comentario);
-    }
-
-    @GetMapping("/estado/{estado}")
-    public List<Incidencia> obtenerPorEstado(@PathVariable String estado) {
-        return incidenciaService.obtenerPorEstado(estado);
-    }
 }
