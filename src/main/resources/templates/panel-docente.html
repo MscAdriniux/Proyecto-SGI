@@ -74,22 +74,23 @@
         <div class="incidencias-container p-4 mt-4">
             <h5 class="fw-bold mb-3">Mis Incidencias</h5>
             
-            <div class="d-flex justify-content-between align-items-center mb-4 gap-3 flex-wrap">
-                <div class="input-group" style="max-width: 400px;">
-                    <span class="input-group-text bg-transparent"><i class="fa-solid fa-magnifying-glass"></i></span>
-                    <input type="text" class="form-control border-start-0" placeholder="Buscar incidencias...">
-                </div>
-                <div class="btn-group filter-group">
-                    <button class="btn btn-dark active">Todas</button>
-                    <button class="btn btn-light border">Pendiente</button>
-                    <button class="btn btn-light border">En Proceso</button>
-                    <button class="btn btn-light border">Resuelta</button>
-                </div>
+            <div class="d-flex justify-content-between align-items-center mb-4 gap-3 flex-wrap"> 
+                <div class="input-group" style="max-width: 400px;"> 
+                    <span class="input-group-text bg-transparent"><i class="fa-solid fa-magnifying-glass"></i></span> 
+                    <input type="text" class="form-control border-start-0" placeholder="Buscar incidencias..."> 
+                </div> 
+
+                <div class="btn-group filter-group" id="grupo-filtros"> 
+                    <button class="btn btn-dark active" data-filter="TODAS">Todas</button> 
+                    <button class="btn btn-light border" data-filter="PENDIENTE">Pendiente</button> 
+                    <button class="btn btn-light border" data-filter="EN PROCESO">En Proceso</button> 
+                    <button class="btn btn-light border" data-filter="RESUELTA">Resuelta</button> 
+                </div> 
             </div>
 
             <div th:if="${not #lists.isEmpty(incidencias)}">
                 
-                <div th:each="incidencia : ${incidencias}" class="p-4 border rounded-3 mb-3" style="background-color: var(--bg-card); border-color: var(--border-card) !important;">
+                <div th:each="incidencia : ${incidencias}" class="p-4 border rounded-3 mb-3 tarjeta-incidencia" th:data-estado="${incidencia.estado}" style="background-color: var(--bg-card); border-color: var(--border-card) !important;">
                     
                     <div class="d-flex align-items-center flex-wrap gap-2 mb-3">
                         <h5 class="fw-bold mb-0 me-2" th:text="${incidencia.tipoIncidencia} + ' en ' + ${incidencia.ubicacion}">Proyector no enciende</h5>

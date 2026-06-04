@@ -1,31 +1,18 @@
-// Catálogo predefinido de incidencias
-const catalogoIncidencias = [
-    // Hardware y Equipamiento (Aulas y Laboratorios)
-    { nombre: "Proyector no enciende", categoria: "Hardware", prioridad: "ALTA" },
-    { nombre: "Computadora no da video", categoria: "Hardware", prioridad: "ALTA" },
-    { nombre: "Estación de trabajo sobrecalentada / Falla de refrigeración", categoria: "Hardware", prioridad: "ALTA" },
-    { nombre: "Falta cable HDMI / Adaptador", categoria: "Equipamiento", prioridad: "MEDIA" },
-    { nombre: "Teclado o mouse inoperativo en laboratorio", categoria: "Equipamiento", prioridad: "BAJA" },
-    
-    // Redes y Conectividad
-    { nombre: "No hay conexión a Internet en el aula (WiFi)", categoria: "Redes", prioridad: "ALTA" },
-    { nombre: "Fallo en switch o puerto de red físico (Ethernet)", categoria: "Redes", prioridad: "ALTA" },
-    { nombre: "Problema de enrutamiento o asignación de VLAN en laboratorio", categoria: "Redes", prioridad: "ALTA" },
-    { nombre: "Latencia alta o red institucional lenta", categoria: "Redes", prioridad: "MEDIA" },
+// 1. Inicializamos el catálogo vacío (se llenará dinámicamente desde la Base de Datos)
+let catalogoIncidencias = [];
 
-    // Software y Servidores
-    { nombre: "Software AutoCAD / IDE de desarrollo no abre", categoria: "Software", prioridad: "MEDIA" },
-    { nombre: "Licencia de programa expirada", categoria: "Software", prioridad: "MEDIA" },
-    { nombre: "Error de permisos al ejecutar scripts en terminal de laboratorio", categoria: "Software", prioridad: "MEDIA" },
-    { nombre: "Servidor local de base de datos sin respuesta", categoria: "Servidores", prioridad: "ALTA" },
+// 2. Al cargar la página, pedimos los datos al backend (Controlador REST)
+document.addEventListener("DOMContentLoaded", function() {
+    fetch('/api/catalogo')
+        .then(response => response.json()) // Convertimos la respuesta de Java a JSON
+        .then(data => {
+            catalogoIncidencias = data; // Llenamos nuestro arreglo vacío
+            console.log("Catálogo cargado exitosamente desde la BD:", catalogoIncidencias);
+        })
+        .catch(error => console.error("Error al cargar el catálogo de incidencias:", error));
+});
 
-    // Infraestructura Física
-    { nombre: "Aire acondicionado gotea o no enfría", categoria: "Infraestructura", prioridad: "BAJA" },
-    { nombre: "Pizarra en mal estado / Faltan plumones", categoria: "Infraestructura", prioridad: "BAJA" },
-    { nombre: "Falla de energía eléctrica en el pabellón", categoria: "Infraestructura", prioridad: "ALTA" },
-
-];
-
+// 3. Capturamos todos los elementos del DOM
 const inputBuscador = document.getElementById('buscador');
 const listaSugerencias = document.getElementById('listaSugerencias');
 const btnCrear = document.getElementById('btnCrear');
@@ -39,7 +26,7 @@ const catReal = document.getElementById('categoriaReal');
 const priReal = document.getElementById('prioridadReal');
 const tipoReal = document.getElementById('tipoIncidenciaReal');
 
-// Evento al escribir en el buscador
+// 4. Evento al escribir en el buscador
 inputBuscador.addEventListener('input', function() {
     const textoBuscado = this.value.toLowerCase();
     listaSugerencias.innerHTML = '';
@@ -51,7 +38,7 @@ inputBuscador.addEventListener('input', function() {
         return;
     }
 
-    // Filtrar catálogo
+    // Filtrar catálogo (ahora busca en la data traída de MySQL)
     const coincidencias = catalogoIncidencias.filter(inc => 
         inc.nombre.toLowerCase().includes(textoBuscado)
     );
@@ -90,13 +77,14 @@ inputBuscador.addEventListener('input', function() {
     }
 });
 
-// Ocultar lista si hace clic fuera
+// 5. Ocultar lista si hace clic fuera del buscador
 document.addEventListener('click', function(e) {
     if (e.target !== inputBuscador) {
         listaSugerencias.style.display = 'none';
     }
 });
 
+// 6. Función para limpiar todos los campos
 function resetearCampos() {
     catVisual.value = '';
     catReal.value = '';
