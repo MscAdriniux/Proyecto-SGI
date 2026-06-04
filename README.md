@@ -167,10 +167,10 @@ ExcelReportService.java
 
 Proyecto académico desarrollado por:
 
-**Hilasaca Torres, Kriss Angela**
-**Huerta Tejada, Adrian Jorge**
-**Peralta Caceres, Edward Robert**
-**Sotelo Caceres, Diego Luis**
+- Hilasaca Torres, Kriss Angela
+- Huerta Tejada, Adrian Jorge
+- Peralta Caceres, Edward Robert
+- Sotelo Caceres, Diego Luis
 
 ---
 
