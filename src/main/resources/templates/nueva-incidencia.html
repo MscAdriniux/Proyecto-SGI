@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nueva Incidencia - SGI</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" th:href="@{/estilos.css}">
+    <style>
+        /* Estilos específicos para el buscador y las cajas de texto de este form */
+        .form-control-custom { background-color: var(--bg-input); border: 1px solid var(--border-input); border-radius: 8px; padding: 12px; color: var(--text-main); }
+        .form-control-custom:read-only { background-color: #e5e7eb; color: #6b7280; cursor: not-allowed; }
+        [data-theme="dark"] .form-control-custom:read-only { background-color: #374151; color: #9ca3af; }
+        .sugerencia-item { cursor: pointer; padding: 10px 15px; border-bottom: 1px solid var(--border-card); background-color: var(--bg-card); color: var(--text-main); }
+        .sugerencia-item:hover { background-color: var(--bg-input); }
+    </style>
+</head>
+<body class="dashboard-body">
+
+    <nav class="navbar navbar-expand-lg border-bottom px-4 py-3 bg-nav mb-4">
+        <div class="container-fluid">
+            <div>
+                <h4 class="mb-0 fw-bold">Sistema de Incidencias</h4>
+                <small class="text-muted">
+                    <span th:text="${usuarioLogueado.nombres} + ' ' + ${usuarioLogueado.apellidos}">Docente</span> • Nueva Incidencia
+                </small>
+            </div>
+            <div class="d-flex align-items-center gap-3">
+                <button class="theme-toggle position-static m-0" id="themeToggleBtn">
+                    <i class="fa-regular fa-moon" id="themeIcon"></i>
+                </button>
+                <a href="/logout" class="btn btn-light border fw-bold px-3 py-2 rounded-3 text-dark btn-logout">
+                    <i class="fa-solid fa-arrow-right-from-bracket me-2"></i> Cerrar Sesión
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container" style="max-width: 800px;">
+        <a href="/incidencias/mis-incidencias" class="text-decoration-none text-muted mb-4 d-inline-block fw-bold">
+            <i class="fa-solid fa-arrow-left me-2"></i> Volver al Dashboard
+        </a>
+
+        <div class="login-card p-5">
+            <h4 class="fw-bold mb-4">Reportar Nueva Incidencia</h4>
+
+            <div th:if="${error}" class="alert alert-danger text-center p-2 mb-3" role="alert" style="font-size: 0.9rem;">
+                <p class="m-0" th:text="${error}"></p>
+            </div>
+
+            <form action="/incidencias/guardar" method="post" id="formIncidencia">
+                
+                <div class="mb-4 position-relative">
+                    <label class="form-label">Buscar Incidencia</label>
+                    <input type="text" id="buscador" class="form-control form-control-custom w-100" placeholder="Ej: Proyector no enciende, Falla de red..." autocomplete="off" required>
+                    
+                    <input type="hidden" name="tipoIncidencia" id="tipoIncidenciaReal">
+
+                    <div id="listaSugerencias" class="position-absolute w-100 shadow rounded-3 mt-1" style="display: none; max-height: 200px; overflow-y: auto; z-index: 1000; border: 1px solid var(--border-card);">
+                        </div>
+                </div>
+
+                <div class="row mb-4">
+                    <div class="col-md-6">
+                        <label class="form-label">Categoría Asignada</label>
+                        <input type="text" id="categoriaVisual" class="form-control form-control-custom w-100 fw-bold" placeholder="Se asignará automáticamente" readonly>
+                        <input type="hidden" name="categoria" id="categoriaReal">
+                    </div>
+                    <div class="col-md-6 mt-3 mt-md-0">
+                        <label class="form-label">Prioridad Asignada</label>
+                        <input type="text" id="prioridadVisual" class="form-control form-control-custom w-100 fw-bold" placeholder="Se asignará automáticamente" readonly>
+                        <input type="hidden" name="prioridad" id="prioridadReal">
+                    </div>
+                    <div class="col-12 mt-2">
+                        <small class="text-muted">La prioridad y categoría son establecidas por el sistema según la incidencia seleccionada.</small>
+                    </div>
+                </div>
+
+                <div class="mb-5">
+                    <label class="form-label">Ubicación Exacta</label>
+                    <input type="text" name="ubicacion" class="form-control form-control-custom w-100" placeholder="Ej: Edificio A - Aula 302 o Laboratorio de Cómputo 4" required>
+                </div>
+
+                <div class="d-flex gap-3">
+                    <button type="submit" class="btn btn-dark text-white flex-grow-1 py-3 fw-bold" id="btnCrear" disabled>Crear Incidencia</button>
+                    <a href="/incidencias/mis-incidencias" class="btn btn-light border py-3 px-4 rounded-3 fw-bold">Cancelar</a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script th:src="@{/script.js}"></script>
+    <script th:src="@{/buscador.js}"></script> </body>
+</html>
