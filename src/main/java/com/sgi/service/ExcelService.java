@@ -1,7 +1,8 @@
 package com.sgi.service;
 
-import java.io.FileOutputStream;
-
+import com.sgi.model.Incidencia;
+import java.io.ByteArrayOutputStream;
+import java.util.List;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -11,38 +12,48 @@ import org.springframework.stereotype.Service;
 @Service
 public class ExcelService {
 
-    public void generarExcelDemo() {
+    public byte[] generarReporte(List<Incidencia> incidencias) {
 
-        try {
-
+        try (
             Workbook workbook = new XSSFWorkbook();
+            ByteArrayOutputStream output = new ByteArrayOutputStream()
+        ) {
 
-            Sheet hoja = workbook.createSheet("Demo");
+            Sheet hoja = workbook.createSheet("Incidencias");
 
             Row encabezado = hoja.createRow(0);
 
             encabezado.createCell(0).setCellValue("ID");
-            encabezado.createCell(1).setCellValue("Incidencia");
-            encabezado.createCell(2).setCellValue("Estado");
+            encabezado.createCell(1).setCellValue("Tipo");
+            encabezado.createCell(2).setCellValue("Categoria");
+            encabezado.createCell(3).setCellValue("Prioridad");
+            encabezado.createCell(4).setCellValue("Estado");
+            encabezado.createCell(5).setCellValue("Ubicacion");
 
-            Row fila1 = hoja.createRow(1);
+            int fila = 1;
 
-            fila1.createCell(0).setCellValue(1);
-            fila1.createCell(1).setCellValue("Proyector dañado");
-            fila1.createCell(2).setCellValue("PENDIENTE");
+            for (Incidencia i : incidencias) {
 
-            FileOutputStream archivo =
-                    new FileOutputStream("demo-incidencias.xlsx");
+                Row row = hoja.createRow(fila++);
 
-            workbook.write(archivo);
+                row.createCell(0).setCellValue(i.getIdIncidencia());
+                row.createCell(1).setCellValue(i.getTipoIncidencia());
+                row.createCell(2).setCellValue(i.getCategoria());
+                row.createCell(3).setCellValue(i.getPrioridad());
+                row.createCell(4).setCellValue(i.getEstado());
+                row.createCell(5).setCellValue(i.getUbicacion());
+            }
 
-            archivo.close();
-            workbook.close();
+            for (int c = 0; c < 6; c++) {
+                hoja.autoSizeColumn(c);
+            }
 
-            System.out.println("Excel generado correctamente");
+            workbook.write(output);
+
+            return output.toByteArray();
 
         } catch (Exception e) {
-            e.printStackTrace();
+            throw new RuntimeException("Error al generar Excel", e);
         }
     }
 }
