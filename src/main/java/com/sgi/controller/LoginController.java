@@ -11,9 +11,19 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+/**
+ * Controlador encargado de gestionar el acceso al sistema.
+ * Maneja el inicio de sesión (login), el registro de nuevos usuarios, 
+ * el enrutamiento inteligente según el rol y el cierre de sesión seguro.
+ */
 @Controller
 public class LoginController {
 
+    /**
+     * Constructor por defecto.
+     */
+    public LoginController() {}
+    
     @Autowired
     private UsuarioService usuarioService;
 
@@ -21,19 +31,32 @@ public class LoginController {
     // 1. RUTAS DE INICIO Y LOGIN
     // ==========================================
 
-    // Si entras a la raíz (localhost:8080/), te manda al login
+    /**
+     * Intercepta la ruta raíz del sistema y redirige al usuario a la pantalla de autenticación.
+     * @return Redirección a la ruta /login.
+     */
     @GetMapping("/")
     public String inicio() {
         return "redirect:/login";
     }
 
-    // Mostrar la página de login
+    /**
+     * Muestra la vista del formulario de inicio de sesión.
+     * @return El nombre de la plantilla HTML de login.
+     */
     @GetMapping("/login")
     public String mostrarLogin() {
         return "login"; // Busca el archivo login.html
     }
 
-    // Procesar el formulario de login
+    /**
+     * Procesa las credenciales, autentica al usuario y lo enruta al panel correspondiente a su rol.
+     * @param correo El correo electrónico ingresado en el formulario.
+     * @param contrasena La contraseña ingresada en el formulario.
+     * @param session La sesión HTTP para almacenar de forma persistente los datos del usuario.
+     * @param model El modelo para enviar mensajes de error a la vista en caso de fallo.
+     * @return Redirección al panel (Docente, Soporte TI o Admin) o recarga el login con error.
+     */
     @PostMapping("/login")
     public String procesarLogin(@RequestParam("correo") String correo, 
                                 @RequestParam("contrasena") String contrasena, 
@@ -42,34 +65,61 @@ public class LoginController {
                                     
         Usuario usuarioAutenticado = usuarioService.autenticarUsuario(correo, contrasena);
 
+        // PRIMERA VALIDACIÓN: ¿Existe el usuario y la contraseña es correcta?
         if (usuarioAutenticado != null) {
-            // Guardamos al usuario en la sesión
-            session.setAttribute("usuarioLogueado", usuarioAutenticado);
             
-            // Redirigimos según su rol
-            if (usuarioAutenticado.getRol().equals("administrador")) {
+            // Guardamos al usuario en la sesión para que las demás pantallas lo reconozcan
+            session.setAttribute("usuarioLogueado", usuarioAutenticado); 
+            // Obtenemos el rol
+            String rol = usuarioAutenticado.getRol(); 
+            // Salvavidas por si un usuario viejo no tiene rol en la BD
+            if (rol == null) {
+                rol = "docente"; 
+            }  
+            // Limpiamos espacios accidentales en la base de datos
+            rol = rol.trim(); 
+            
+            // ENRUTADOR INTELIGENTE
+            if (rol.equalsIgnoreCase("administrador") || rol.equalsIgnoreCase("admin")) {
                 return "redirect:/admin/dashboard";
+                
+            } else if (rol.equalsIgnoreCase("soporte ti") || rol.equalsIgnoreCase("tecnico")) {
+                return "redirect:/incidencias/panel-tecnico";
+                
             } else {
                 return "redirect:/incidencias/mis-incidencias";
             }
+            
         } else {
-            // Error en credenciales
+            // Si llega aquí, significa que se equivocó de correo o contraseña
             model.addAttribute("error", "Correo o contraseña incorrectos");
-            return "login";
+            return "login"; // Lo devuelve a la vista login.html con el mensaje de error
         }
     }
-
+    
     // ==========================================
     // 2. RUTAS DE REGISTRO
     // ==========================================
 
-    // Mostrar la página de registro
+    /**
+     * Muestra la vista con el formulario para registrar un nuevo usuario en el sistema.
+     * @return El nombre de la plantilla HTML de registro.
+     */
     @GetMapping("/registro")
     public String mostrarRegistro() {
         return "registro"; // Busca el archivo registro.html
     }
 
-    // Procesar el formulario de registro
+    /**
+     * Procesa los datos de registro, valida que el correo no esté duplicado y persiste el usuario.
+     * @param nombres Los nombres del nuevo usuario.
+     * @param apellidos Los apellidos del nuevo usuario.
+     * @param correo El correo electrónico (debe ser único en el sistema).
+     * @param contrasena La contraseña en texto plano (será encriptada por el servicio).
+     * @param rol El rol asignado (docente, tecnico, administrador).
+     * @param model El modelo para notificar a la vista si el correo ya existe.
+     * @return Redirección al login en caso de éxito, o recarga el registro mostrando el error.
+     */
     @PostMapping("/registro")
     public String procesarRegistro(
             @RequestParam("nombres") String nombres,
@@ -103,6 +153,11 @@ public class LoginController {
     // 3. RUTA DE LOGOUT (CERRAR SESIÓN)
     // ==========================================
 
+    /**
+     * Destruye la sesión activa del usuario actual para garantizar un cierre de sesión seguro.
+     * @param session La sesión HTTP actual que será invalidada.
+     * @return Redirección a la pantalla de login.
+     */
     @GetMapping("/logout")
     public String cerrarSesion(HttpSession session) {
         session.invalidate();
@@ -113,6 +168,12 @@ public class LoginController {
     // 4. RUTAS TEMPORALES DE PRUEBA (Para evitar el 404)
     // ==========================================
 
+    /**
+     * Endpoint temporal (Placeholder) para verificar el enrutamiento del rol Administrador.
+     * Evita errores 404 en el sistema hasta que se desarrolle la vista real del dashboard.
+     * @param session La sesión HTTP actual para recuperar y validar los datos del usuario.
+     * @return Código HTML inyectado directamente en el navegador con confirmación de éxito o error.
+     */
     @GetMapping("/admin/dashboard")
     @ResponseBody 
     public String panelAdmin(HttpSession session) {
