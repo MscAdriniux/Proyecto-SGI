@@ -37,6 +37,9 @@ public class IncidenciaController {
     @Autowired
     private IncidenciaService incidenciaService;
 
+    @Autowired
+    private ExcelService excelService;
+
     // ==========================================
     // RUTAS DEL PANEL DE DOCENTE
     // ==========================================
