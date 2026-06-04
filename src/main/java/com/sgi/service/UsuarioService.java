@@ -2,6 +2,7 @@ package com.sgi.service;
 
 import com.sgi.model.Usuario;
 import com.sgi.repository.UsuarioRepository;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -42,5 +43,8 @@ public class UsuarioService {
         return usuarioRepository.save(nuevoUsuario);
     }
     
-    
+    // Obtener usuarios por rol
+    public List<Usuario> obtenerPorRol(String rol) {
+        return usuarioRepository.findByRol(rol);
+    }
 }

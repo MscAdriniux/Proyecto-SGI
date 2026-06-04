@@ -12,4 +12,9 @@ public interface IncidenciaRepository extends JpaRepository<Incidencia, Integer>
     // Spring Boot crea la consulta SQL automáticamente gracias a este nombre
     List<Incidencia> findByUsuario(Usuario usuario);
     
+    // Comprobar si existe una incidencia activa en la misma ubicación
+    boolean existsByUbicacionAndTipoIncidenciaAndEstadoIn(String ubicacion, String tipoIncidencia, List<String> estados);
+
+    // Buscar incidencias por técnico asignado
+    List<Incidencia> findByAsignadoA(String asignadoA);
 }

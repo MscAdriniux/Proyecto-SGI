@@ -1,6 +1,7 @@
 package com.sgi.repository;
 
 import com.sgi.model.Usuario;
+import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -8,4 +9,6 @@ import org.springframework.stereotype.Repository;
 public interface UsuarioRepository extends JpaRepository<Usuario, Integer> {
     // Spring Boot crea automáticamente la consulta SQL con solo nombrar bien el método
     Usuario findByCorreo(String correo);
+    
+    List<Usuario> findByRol(String rol);
 }

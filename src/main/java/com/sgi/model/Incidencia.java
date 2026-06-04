@@ -35,6 +35,9 @@ public class Incidencia {
     @Column(name = "tipo_incidencia", nullable = false, length = 200)
     private String tipoIncidencia;
 
+    @Column(length = 1000)
+    private String resolucion;
+
     // Relación: Muchas incidencias pertenecen a un solo usuario
     @ManyToOne
     @JoinColumn(name = "id_usuario", nullable = false)
@@ -45,6 +48,9 @@ public class Incidencia {
 
     public Integer getIdIncidencia() { return idIncidencia; }
     public void setIdIncidencia(Integer idIncidencia) { this.idIncidencia = idIncidencia; }
+
+    public String getResolucion() { return resolucion; }
+    public void setResolucion(String resolucion) { this.resolucion = resolucion; }
 
     public String getEstado() { return estado; }
     public void setEstado(String estado) { this.estado = estado; }
