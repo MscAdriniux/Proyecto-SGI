@@ -230,4 +230,19 @@ public class IncidenciaController {
     public List<Incidencia> obtenerPorEstado(@PathVariable String estado) {
         return incidenciaService.obtenerPorEstado(estado);
     }
+
+    @GetMapping("/exportar-excel")
+    public ResponseEntity<byte[]> exportarExcel() {
+    
+        List<Incidencia> incidencias = incidenciaService.obtenerTodas();
+    
+        byte[] excel = excelService.generarReporte(incidencias);
+    
+        return ResponseEntity.ok()
+                .header(
+                        HttpHeaders.CONTENT_DISPOSITION,
+                        "attachment; filename=incidencias.xlsx")
+                .contentType(MediaType.APPLICATION_OCTET_STREAM)
+                .body(excel);
+    }
 }
