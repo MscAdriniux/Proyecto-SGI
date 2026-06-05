@@ -129,22 +129,18 @@
                         </div>
                     </div>
                     
-                    <hr class="my-3" th:if="${incidencia.asignadoA != null || incidencia.resolucion != null}" style="border-color: var(--border-card);">
-                    
-                    <div class="row g-2 text-muted small" th:if="${incidencia.asignadoA != null || incidencia.resolucion != null}">
-                        <div class="col-md-6" th:if="${incidencia.asignadoA != null}">
-                            <i class="fa-solid fa-user-gear me-2"></i> Técnico Asignado: <strong th:text="${incidencia.asignadoA}" style="color: var(--text-main);">Soporte TI</strong>
-                        </div>
-                        <div class="col-md-6" th:if="${incidencia.fechaCierre != null}">
-                            <i class="fa-regular fa-calendar-check me-2"></i> Fecha Resolución: <strong th:text="${#temporals.format(incidencia.fechaCierre, 'dd/MM/yyyy HH:mm')}" style="color: var(--text-main);">Fecha Resolución</strong>
-                        </div>
-                        <div class="col-12 mt-2" th:if="${incidencia.resolucion != null && !incidencia.resolucion.isEmpty()}">
-                            <div class="p-3 rounded-3" style="background-color: var(--bg-body); border: 1px solid var(--border-card);">
-                                <i class="fa-regular fa-comment-dots me-2"></i> <strong>Detalle de atención/rechazo:</strong>
-                                <p class="mb-0 mt-1" th:text="${incidencia.resolucion}" style="color: var(--text-main); font-style: italic;"></p>
-                            </div>
-                        </div>
-                    </div>
+                  <hr class="my-3" th:if="${incidencia.asignadoA != null}" style="border-color: var(--border-card);">
+
+                   <div class="row g-2 text-muted small" th:if="${incidencia.asignadoA != null}">
+                       <div class="col-md-6">
+                          <i class="fa-solid fa-user-gear me-2"></i> Técnico Asignado: 
+                         <strong th:text="${incidencia.asignadoA}" style="color: var(--text-main);">Soporte TI</strong>
+                     </div>
+                     <div class="col-md-6" th:if="${incidencia.fechaCierre != null}">
+                          <i class="fa-regular fa-calendar-check me-2"></i> Fecha Resolución: 
+                          <strong th:text="${#temporals.format(incidencia.fechaCierre, 'dd/MM/yyyy HH:mm')}" style="color: var(--text-main);">Fecha</strong>
+                     </div>
+                  </div>
                 </div>
             </div>
 
@@ -172,17 +168,21 @@
             aplicarFiltros();
             
             // Actualizar clase activa en botones
-            const buttons = document.querySelectorAll('#filterGroupAdmin .btn');
-            buttons.forEach(btn => {
-                if (btn.innerText.toUpperCase() === estado.replace("EN PROCESO", "EN PROCESO").toUpperCase() || 
-                    (estado === 'TODAS' && btn.innerText === 'Todas')) {
-                    btn.classList.remove('btn-light');
-                    btn.classList.add('btn-dark', 'active');
-                } else {
-                    btn.classList.remove('btn-dark', 'active');
-                    btn.classList.add('btn-light');
-                }
-            });
+             const buttons = document.querySelectorAll('#filterGroupAdmin .btn');
+             buttons.forEach(btn => {
+             // Comparamos el texto del botón con el estado enviado
+             // .trim() ayuda a limpiar espacios accidentales
+             const btnTexto = btn.innerText.trim().toUpperCase();
+             const estadoComparar = estado.toUpperCase();
+
+            if (btnTexto === estadoComparar || (estado === 'TODAS' && btnTexto === 'TODAS')) {
+                 btn.classList.remove('btn-light');
+                 btn.classList.add('btn-dark', 'active');
+          } else {
+                 btn.classList.remove('btn-dark', 'active');
+                 btn.classList.add('btn-light');
+    }
+});
         }
         
         // Buscador en frontend

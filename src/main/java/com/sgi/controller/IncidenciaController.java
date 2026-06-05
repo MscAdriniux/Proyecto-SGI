@@ -228,7 +228,7 @@ public class IncidenciaController {
         model.addAttribute("totalEnProceso", enProceso);
         model.addAttribute("totalResueltas", resueltas);
 
-        return "panel-ti";
+        return "panel-tecnico";
     }
 
     /**
@@ -254,19 +254,21 @@ public class IncidenciaController {
         return "redirect:/ti/dashboard";
     }
 
-    /**
-     * Resuelve o rechaza una incidencia, agregando una resolución formal.
+  
+    
+            /**
+     * Resuelve o rechaza una incidencia, actualizando su estado.
+     * La resolución se basa ahora exclusivamente en la subida de evidencia fotográfica.
      * @param id ID de la incidencia.
      * @param nuevoEstado Estado final.
-     * @param resolucion Texto de la resolución.
      * @param session Sesión actual.
      * @return Redirección al dashboard TI.
      */
+  
     @PostMapping("/ti/resolver")
     public String resolverIncidencia(
             @RequestParam("id") Integer id,
             @RequestParam("estado") String nuevoEstado,
-            @RequestParam("resolucion") String resolucion,
             HttpSession session) {
         
         Usuario u = (Usuario) session.getAttribute("usuarioLogueado");
@@ -277,7 +279,6 @@ public class IncidenciaController {
         Incidencia inc = incidenciaService.obtenerPorId(id);
         if (inc != null) {
             inc.setEstado(nuevoEstado.toUpperCase()); 
-            inc.setResolucion(resolucion); // Nota: Asegúrate de que tu modelo Incidencia tenga este atributo si Edward lo usó.
             inc.setFechaCierre(LocalDateTime.now());
             inc.setAsignadoA(u.getNombres() + " " + u.getApellidos());
             incidenciaService.guardar(inc);

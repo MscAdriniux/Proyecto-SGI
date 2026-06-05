@@ -6,6 +6,9 @@ import jakarta.persistence.*;
 @Table(name = "catalogo_incidencia")
 public class CatalogoIncidencia {
 
+    // En CatalogoIncidencia.java
+   public CatalogoIncidencia() {
+   }
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
