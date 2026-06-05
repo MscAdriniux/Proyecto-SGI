@@ -1,5 +1,11 @@
 package com.sgi.controller;
 
+import org.apache.commons.io.FilenameUtils;
+import org.springframework.web.multipart.MultipartFile;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import com.sgi.model.Incidencia;
 import com.sgi.model.Usuario;
 import com.sgi.service.IncidenciaService;
@@ -15,14 +21,22 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
+/**
+ * Controlador principal para la gestión de incidencias.
+ * Unifica los flujos de Docentes, Soporte TI y Administradores, integrando
+ * notificaciones en tiempo real y exportación de reportes.
+ */
 @Controller
 public class IncidenciaController {
 
+    /**
+     * Constructor por defecto.
+     */
+    public IncidenciaController() {}
+    
     @Autowired
     private IncidenciaService incidenciaService;
 
@@ -36,20 +50,29 @@ public class IncidenciaController {
     // 1. VISTAS DEL DOCENTE
     // ==========================================
 
+    /**
+     * Muestra el panel principal del docente con el listado de sus incidencias.
+     * @param session La sesión HTTP actual.
+     * @param model El modelo para pasar datos a la vista.
+     * @return La vista del panel del docente.
+     */
     @GetMapping("/incidencias/mis-incidencias")
     public String verPanelDocente(HttpSession session, Model model) {
         Usuario usuarioLogueado = (Usuario) session.getAttribute("usuarioLogueado");
-        if (usuarioLogueado == null) {
-            return "redirect:/login";
+        if (usuarioLogueado == null) return "redirect:/login";
+        
+        String rol = usuarioLogueado.getRol().trim();
+        if (rol.equalsIgnoreCase("soporte ti") || rol.equalsIgnoreCase("tecnico")) {
+            return "redirect:/incidencias/panel-tecnico";
         }
 
         List<Incidencia> misIncidencias = incidenciaService.obtenerPorUsuario(usuarioLogueado);
 
         long pendientes = misIncidencias.stream().filter(i -> i.getEstado().equalsIgnoreCase("PENDIENTE")).count();
         long enProceso = misIncidencias.stream().filter(i -> i.getEstado().equalsIgnoreCase("EN PROCESO")).count();
-        long resueltas = misIncidencias.stream().filter(i -> i.getEstado().equalsIgnoreCase("ATENDIDA")).count();
+        long resueltas = misIncidencias.stream().filter(i -> i.getEstado().equalsIgnoreCase("RESUELTA") || i.getEstado().equalsIgnoreCase("ATENDIDA")).count();
 
-        model.addAttribute("usuarioLogueado", usuarioLogueado);
+        model.addAttribute("usuarioLogueado", usuarioLogueado); 
         model.addAttribute("incidencias", misIncidencias);
         model.addAttribute("totalPendientes", pendientes);
         model.addAttribute("totalEnProceso", enProceso);
@@ -58,15 +81,36 @@ public class IncidenciaController {
         return "panel-docente";
     }
     
+    /**
+     * Muestra el formulario para crear un nuevo ticket de incidencia.
+     * @param session La sesión HTTP actual.
+     * @param model El modelo para pasar datos a la vista.
+     * @return La vista del formulario.
+     */
     @GetMapping("/incidencias/nueva")
     public String mostrarFormularioIncidencia(HttpSession session, Model model) {
-        if (session.getAttribute("usuarioLogueado") == null) {
-            return "redirect:/login";
+        Usuario usuarioLogueado = (Usuario) session.getAttribute("usuarioLogueado");
+        if (usuarioLogueado == null) return "redirect:/login";
+        
+        String rol = usuarioLogueado.getRol().trim();
+        if (rol.equalsIgnoreCase("soporte ti") || rol.equalsIgnoreCase("tecnico")) {
+            return "redirect:/incidencias/panel-tecnico";
         }
-        model.addAttribute("usuarioLogueado", session.getAttribute("usuarioLogueado"));
-        return "nueva-incidencia";
+
+        model.addAttribute("usuarioLogueado", usuarioLogueado);
+        return "nueva-incidencia"; 
     }
 
+    /**
+     * Valida, procesa y guarda una nueva incidencia, emitiendo una notificación en tiempo real.
+     * @param tipoIncidencia Descripción del problema.
+     * @param categoria Categoría técnica.
+     * @param prioridad Nivel de urgencia.
+     * @param ubicacion Lugar del incidente.
+     * @param session La sesión HTTP actual.
+     * @param model El modelo para errores.
+     * @return Redirección al panel del docente.
+     */
     @PostMapping("/incidencias/guardar")
     public String guardarIncidencia(
             @RequestParam("tipoIncidencia") String tipoIncidencia,
@@ -105,6 +149,12 @@ public class IncidenciaController {
     // 2. VISTAS Y ACCIONES DEL ADMINISTRADOR
     // ==========================================
 
+    /**
+     * Muestra el panel de control exclusivo para administradores.
+     * @param session Sesión actual.
+     * @param model Modelo para la vista.
+     * @return Vista del panel administrador.
+     */
     @GetMapping("/admin/dashboard")
     public String verPanelAdmin(HttpSession session, Model model) {
         Usuario u = (Usuario) session.getAttribute("usuarioLogueado");
@@ -116,7 +166,7 @@ public class IncidenciaController {
 
         long pendientes = todas.stream().filter(i -> i.getEstado().equalsIgnoreCase("PENDIENTE")).count();
         long enProceso = todas.stream().filter(i -> i.getEstado().equalsIgnoreCase("EN PROCESO")).count();
-        long resueltas = todas.stream().filter(i -> i.getEstado().equalsIgnoreCase("ATENDIDA")).count();
+        long resueltas = todas.stream().filter(i -> i.getEstado().equalsIgnoreCase("ATENDIDA") || i.getEstado().equalsIgnoreCase("RESUELTA")).count();
 
         model.addAttribute("usuarioLogueado", u);
         model.addAttribute("incidencias", todas);
@@ -127,6 +177,12 @@ public class IncidenciaController {
         return "panel-admin";
     }
 
+    /**
+     * Genera y descarga un reporte en formato Excel de todas las incidencias.
+     * @param session Sesión actual.
+     * @return Archivo Excel descargable.
+     * @throws IOException Si ocurre un error al generar el archivo.
+     */
     @GetMapping("/admin/reporte/excel")
     public ResponseEntity<byte[]> descargarExcel(HttpSession session) throws IOException {
         Usuario u = (Usuario) session.getAttribute("usuarioLogueado");
@@ -147,10 +203,16 @@ public class IncidenciaController {
     // 3. VISTAS Y ACCIONES DEL TÉCNICO DE TI
     // ==========================================
 
+    /**
+     * Muestra el panel de TI diseñado por el equipo para la gestión rápida de tickets.
+     * @param session Sesión actual.
+     * @param model Modelo para la vista.
+     * @return Vista del panel TI.
+     */
     @GetMapping("/ti/dashboard")
     public String verPanelTI(HttpSession session, Model model) {
         Usuario u = (Usuario) session.getAttribute("usuarioLogueado");
-        if (u == null || (!u.getRol().equalsIgnoreCase("ti") && !u.getRol().equalsIgnoreCase("soporte ti"))) {
+        if (u == null || (!u.getRol().equalsIgnoreCase("ti") && !u.getRol().equalsIgnoreCase("soporte ti") && !u.getRol().equalsIgnoreCase("tecnico"))) {
             return "redirect:/login";
         }
 
@@ -158,7 +220,7 @@ public class IncidenciaController {
 
         long pendientes = todas.stream().filter(i -> i.getEstado().equalsIgnoreCase("PENDIENTE")).count();
         long enProceso = todas.stream().filter(i -> i.getEstado().equalsIgnoreCase("EN PROCESO")).count();
-        long resueltas = todas.stream().filter(i -> i.getEstado().equalsIgnoreCase("ATENDIDA") || i.getEstado().equalsIgnoreCase("RECHAZADA")).count();
+        long resueltas = todas.stream().filter(i -> i.getEstado().equalsIgnoreCase("ATENDIDA") || i.getEstado().equalsIgnoreCase("RESUELTA") || i.getEstado().equalsIgnoreCase("RECHAZADA")).count();
 
         model.addAttribute("usuarioLogueado", u);
         model.addAttribute("incidencias", todas);
@@ -169,10 +231,16 @@ public class IncidenciaController {
         return "panel-ti";
     }
 
+    /**
+     * Asigna una incidencia pendiente al técnico actual.
+     * @param id ID de la incidencia.
+     * @param session Sesión actual.
+     * @return Redirección al dashboard TI.
+     */
     @PostMapping("/ti/asignar")
     public String tomarIncidencia(@RequestParam("id") Integer id, HttpSession session) {
         Usuario u = (Usuario) session.getAttribute("usuarioLogueado");
-        if (u == null || (!u.getRol().equalsIgnoreCase("ti") && !u.getRol().equalsIgnoreCase("soporte ti"))) {
+        if (u == null || (!u.getRol().equalsIgnoreCase("ti") && !u.getRol().equalsIgnoreCase("soporte ti") && !u.getRol().equalsIgnoreCase("tecnico"))) {
             return "redirect:/login";
         }
 
@@ -186,6 +254,14 @@ public class IncidenciaController {
         return "redirect:/ti/dashboard";
     }
 
+    /**
+     * Resuelve o rechaza una incidencia, agregando una resolución formal.
+     * @param id ID de la incidencia.
+     * @param nuevoEstado Estado final.
+     * @param resolucion Texto de la resolución.
+     * @param session Sesión actual.
+     * @return Redirección al dashboard TI.
+     */
     @PostMapping("/ti/resolver")
     public String resolverIncidencia(
             @RequestParam("id") Integer id,
@@ -194,29 +270,155 @@ public class IncidenciaController {
             HttpSession session) {
         
         Usuario u = (Usuario) session.getAttribute("usuarioLogueado");
-        if (u == null || (!u.getRol().equalsIgnoreCase("ti") && !u.getRol().equalsIgnoreCase("soporte ti"))) {
+        if (u == null || (!u.getRol().equalsIgnoreCase("ti") && !u.getRol().equalsIgnoreCase("soporte ti") && !u.getRol().equalsIgnoreCase("tecnico"))) {
             return "redirect:/login";
         }
 
         Incidencia inc = incidenciaService.obtenerPorId(id);
         if (inc != null) {
-            inc.setEstado(nuevoEstado.toUpperCase()); // "ATENDIDA" o "RECHAZADA"
-            inc.setResolucion(resolucion);
+            inc.setEstado(nuevoEstado.toUpperCase()); 
+            inc.setResolucion(resolucion); // Nota: Asegúrate de que tu modelo Incidencia tenga este atributo si Edward lo usó.
             inc.setFechaCierre(LocalDateTime.now());
-            inc.setAsignadoA(u.getNombres() + " " + u.getApellidos()); // Asegurar asignación
+            inc.setAsignadoA(u.getNombres() + " " + u.getApellidos());
             incidenciaService.guardar(inc);
         }
 
         return "redirect:/ti/dashboard";
     }
 
-    // Suscripción SSE para recibir notificaciones de incidencias
+    // ==========================================
+    // 4. RUTAS DEL PANEL TÉCNICO ORIGINAL (SOPORTE)
+    // ==========================================
+
+    /**
+     * Muestra el panel técnico con funcionalidades de ordenamiento por prioridad.
+     * @param session La sesión HTTP actual.
+     * @param model El modelo para la vista.
+     * @return La vista del panel técnico original.
+     */
+    @GetMapping("/incidencias/panel-tecnico")
+    public String verPanelTecnico(HttpSession session, Model model) {
+        Usuario usuarioLogueado = (Usuario) session.getAttribute("usuarioLogueado");
+        if (usuarioLogueado == null) return "redirect:/login";
+        
+        String rol = usuarioLogueado.getRol().trim();
+        if (!rol.equalsIgnoreCase("soporte ti") && !rol.equalsIgnoreCase("tecnico") && !rol.equalsIgnoreCase("administrador")) {
+            return "redirect:/incidencias/mis-incidencias"; 
+        }
+
+        List<Incidencia> todasIncidencias = incidenciaService.obtenerTodas();
+
+        long pendientes = todasIncidencias.stream().filter(i -> i.getEstado().equalsIgnoreCase("PENDIENTE")).count();
+        long enProceso = todasIncidencias.stream().filter(i -> i.getEstado().equalsIgnoreCase("EN PROCESO")).count();
+        long resueltas = todasIncidencias.stream().filter(i -> i.getEstado().equalsIgnoreCase("RESUELTA") || i.getEstado().equalsIgnoreCase("ATENDIDA")).count();
+
+        List<Incidencia> activas = todasIncidencias.stream()
+                .filter(i -> !i.getEstado().equalsIgnoreCase("RESUELTA") && !i.getEstado().equalsIgnoreCase("ATENDIDA"))
+                .sorted((i1, i2) -> Integer.compare(obtenerPesoPrioridad(i1.getPrioridad()), obtenerPesoPrioridad(i2.getPrioridad())))
+                .toList();
+
+        List<Incidencia> historialResueltas = todasIncidencias.stream()
+                .filter(i -> i.getEstado().equalsIgnoreCase("RESUELTA") || i.getEstado().equalsIgnoreCase("ATENDIDA"))
+                .sorted((i1, i2) -> i2.getIdIncidencia().compareTo(i1.getIdIncidencia()))
+                .toList();
+
+        model.addAttribute("usuarioLogueado", usuarioLogueado);
+        model.addAttribute("incidenciasActivas", activas);
+        model.addAttribute("incidenciasResueltas", historialResueltas);
+        model.addAttribute("totalPendientes", pendientes);
+        model.addAttribute("totalEnProceso", enProceso);
+        model.addAttribute("totalResueltas", resueltas);
+
+        return "panel-tecnico"; 
+    }
+
+    /**
+     * Actualiza el estado de una incidencia y gestiona la subida de evidencia fotográfica.
+     * @param idIncidencia Identificador de la incidencia.
+     * @param nuevoEstado El nuevo estado a asignar.
+     * @param archivo Archivo de evidencia física.
+     * @return Redirección al panel técnico.
+     */
+    @PostMapping("/incidencias/actualizar-estado")
+    public String actualizarEstado(
+            @RequestParam("idIncidencia") Integer idIncidencia, 
+            @RequestParam("nuevoEstado") String nuevoEstado,
+            @RequestParam(value = "archivoEvidencia", required = false) MultipartFile archivo) {
+        
+        Incidencia incidencia = incidenciaService.obtenerPorId(idIncidencia); 
+        
+        if (incidencia != null) {
+            incidencia.setEstado(nuevoEstado);
+            
+            if (nuevoEstado.equals("RESUELTA") || nuevoEstado.equals("ATENDIDA")) {
+                incidencia.setFechaCierre(LocalDateTime.now());
+            }  
+            
+            if ((nuevoEstado.equals("RESUELTA") || nuevoEstado.equals("ATENDIDA")) && archivo != null && !archivo.isEmpty()) {
+                try {
+                    String extension = FilenameUtils.getExtension(archivo.getOriginalFilename());
+                    String nombreFoto = "evidencia_ticket_" + idIncidencia + "." + extension;
+                    
+                    Path rutaCarpeta = Paths.get("uploads/evidencias");
+                    if (!Files.exists(rutaCarpeta)) {
+                        Files.createDirectories(rutaCarpeta);
+                    }
+                    
+                    Path rutaCompleta = rutaCarpeta.resolve(nombreFoto);
+                    Files.copy(archivo.getInputStream(), rutaCompleta, StandardCopyOption.REPLACE_EXISTING);
+                    
+                    incidencia.setEvidenciaUrl(nombreFoto);
+                    
+                } catch (IOException | IllegalArgumentException e) { 
+                    System.out.println("Error fatal al subir la foto de evidencia: " + e.getMessage());
+                }
+            }
+
+            incidenciaService.guardar(incidencia);
+        }
+        
+        return "redirect:/incidencias/panel-tecnico";
+    }
+    
+    /**
+     * Calcula el peso numérico de una prioridad.
+     * @param prioridad Texto de la prioridad.
+     * @return Valor numérico.
+     */
+    private int obtenerPesoPrioridad(String prioridad) {
+        if (prioridad == null) return 3;
+        if (prioridad.equalsIgnoreCase("ALTA")) return 1;
+        if (prioridad.equalsIgnoreCase("MEDIA")) return 2;
+        return 3;
+    }
+    
+    // ==========================================
+    // 5. API Y NOTIFICACIONES
+    // ==========================================
+
+    /**
+     * Suscripción SSE (Server-Sent Events) para recibir notificaciones en vivo.
+     * @param session Sesión actual.
+     * @return Objeto SseEmitter para mantener la conexión abierta.
+     */
     @GetMapping("/api/notificaciones/suscripcion")
     public SseEmitter suscribirNotificaciones(HttpSession session) {
-        // Permitir suscripción solo a usuarios logueados (idealmente TI, pero permitimos general)
         if (session.getAttribute("usuarioLogueado") == null) {
             return null;
         }
         return notificationService.subscribe();
+    }
+    
+    /**
+     * Endpoint API clásico para consultar el total de tickets pendientes (Polling).
+     * @param session La sesión HTTP actual.
+     * @return El conteo total de incidencias PENDIENTES.
+     */
+    @GetMapping("/api/conteo-pendientes")
+    @ResponseBody
+    public long contarIncidenciasPendientes(HttpSession session) {
+        return incidenciaService.obtenerTodas().stream()
+                .filter(i -> i.getEstado().equalsIgnoreCase("PENDIENTE"))
+                .count();
     }
 }
