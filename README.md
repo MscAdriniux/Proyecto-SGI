@@ -1,179 +1,179 @@
-# 📘 Documentación de Casos de Uso - Sistema de Gestión de Incidentes (SGI)
+# Sistema de Gestión de Incidencias (SGI)
 
-Este documento detalla los Casos de Uso del sistema, ilustrando las interacciones directas entre los actores (Docentes, Técnicos/Administradores) y el sistema. 
+Sistema web desarrollado en Java con Spring Boot para la gestión de incidencias de docentes y soporte TI.
 
----
+## Características
 
-## 🔒 Módulo de Seguridad y Autenticación
-
-### CU-01: Iniciar Sesión
-**Actores:** Docente, Técnico / Administrador
-**Descripción:** Permite a un usuario autenticarse en el sistema. El sistema valida las credenciales y, de ser correctas, le otorga acceso a los módulos correspondientes según su rol.
-
-```mermaid
-flowchart LR
-    %% Actores
-    D((Docente))
-    A((Admin / Técnico))
-
-    %% Sistema
-    subgraph SGI [Módulo de Seguridad]
-        direction TB
-        UC1([CU-01: Iniciar Sesión])
-    end
-
-    %% Relaciones
-    D --- UC1
-    A --- UC1
-```
-
-### CU-02: Cerrar Sesión
-**Actores:** Docente, Técnico / Administrador
-**Descripción:** Permite al usuario finalizar su sesión activa de forma segura, destruyendo sus credenciales temporales en el servidor y redirigiéndolo a la pantalla de inicio.
-
-```mermaid
-flowchart LR
-    %% Actores
-    D((Docente))
-    A((Admin / Técnico))
-
-    %% Sistema
-    subgraph SGI [Módulo de Seguridad]
-        direction TB
-        UC2([CU-02: Cerrar Sesión])
-    end
-
-    %% Relaciones
-    D --- UC2
-    A --- UC2
-```
+- Inicio de sesión de usuarios
+- Registro de incidencias
+- Validación de incidencias duplicadas
+- Asignación de prioridad
+- Panel para docentes
+- Panel para personal TI
+- Panel de administración
+- Gestión del estado de incidencias
+- Generación de reportes en Excel
 
 ---
 
-## 📊 Módulo del Panel Docente
+## Tecnologías utilizadas
 
-### CU-03: Visualizar Panel de Control (Dashboard)
-**Actores:** Docente
-**Descripción:** El sistema presenta al docente un resumen de sus tickets históricos, mostrando contadores actualizados (Pendientes, En Proceso, Resueltas) y la lista detallada de sus reportes.
+- Java 17+
+- Spring Boot
+- Maven
+- Thymeleaf
+- MySQL
+- HTML, CSS y JavaScript
 
-```mermaid
-flowchart LR
-    %% Actores
-    D((Docente))
+---
 
-    %% Sistema
-    subgraph SGI [Módulo Panel Docente]
-        direction TB
-        UC3([CU-03: Visualizar Panel de Control])
-    end
+## Estructura del proyecto
 
-    %% Relaciones
-    D --- UC3
-```
-
-### CU-04: Filtrar Mis Incidencias
-**Actores:** Docente
-**Descripción:** El usuario puede aplicar filtros rápidos en su panel para visualizar únicamente las tarjetas de incidencias que coincidan con un estado específico.
-
-```mermaid
-flowchart LR
-    %% Actores
-    D((Docente))
-
-    %% Sistema
-    subgraph SGI [Módulo Panel Docente]
-        direction TB
-        UC4([CU-04: Filtrar Mis Incidencias])
-    end
-
-    %% Relaciones
-    D --- UC4
-```
-
-### CU-05: Gestionar Preferencias de Interfaz
-**Actores:** Docente, Técnico / Administrador
-**Descripción:** Permite al usuario alternar entre el "Modo Claro" y el "Modo Oscuro" de la interfaz gráfica. El sistema recuerda esta preferencia localmente.
-
-```mermaid
-flowchart LR
-    %% Actores
-    D((Docente))
-    A((Admin / Técnico))
-
-    %% Sistema
-    subgraph SGI [Módulo Panel Docente]
-        direction TB
-        UC5([CU-05: Gestionar Preferencias de Interfaz])
-    end
-
-    %% Relaciones
-    D --- UC5
-    A --- UC5
+```bash
+Proyecto-SGI-main/
+│
+├── src/main/java/com/sgi/
+│   ├── controller/
+│   ├── model/
+│   ├── repository/
+│   ├── service/
+│   └── SistemaGestionIncidencias.java
+│
+├── src/main/resources/
+│   ├── static/
+│   ├── templates/
+│   └── application.properties
+│
+└── pom.xml
 ```
 
 ---
 
-## 🛠 Módulo de Gestión de Incidencias
+## Requisitos
 
-### CU-06: Registrar Nueva Incidencia
-**Actores:** Docente
-**Descripción:** El docente completa un formulario detallando el problema (ubicación, categoría, prioridad). El sistema registra la información y la asocia a su cuenta.
+Antes de ejecutar el proyecto asegúrate de tener instalado:
 
-```mermaid
-flowchart LR
-    %% Actores
-    D((Docente))
+- Java JDK 17 o superior
+- Maven
+- MySQL Server
+- MySQL Workbench (opcional)
+- Visual Studio Code o NetBeans
 
-    %% Sistema
-    subgraph SGI [Módulo Gestión de Incidencias]
-        direction TB
-        UC6([CU-06: Registrar Nueva Incidencia])
-    end
+---
 
-    %% Relaciones
-    D --- UC6
+## Configuración de la base de datos
+
+### 1. Crear la base de datos en MySQL
+
+```sql
+CREATE DATABASE sgi;
 ```
 
-### CU-07: Buscar en Catálogo Inteligente
-**Actores:** Docente
-**Descripción:** Durante la creación de una incidencia, el docente utiliza un buscador interactivo que le sugiere problemas comunes estandarizados directamente desde la base de datos del sistema.
+### 2. Configurar el archivo application.properties
 
-```mermaid
-flowchart LR
-    %% Actores
-    D((Docente))
+Ubicación:
 
-    %% Sistema
-    subgraph SGI [Módulo Gestión de Incidencias]
-        direction TB
-        UC7([CU-07: Buscar en Catálogo Inteligente])
-    end
+```bash
+src/main/resources/application.properties
+```
 
-    %% Relaciones
-    D --- UC7
+Ejemplo:
+
+```properties
+spring.datasource.url=jdbc:mysql://localhost:3306/sgi
+spring.datasource.username=root
+spring.datasource.password=TU_PASSWORD
+
+spring.jpa.hibernate.ddl-auto=update
+spring.jpa.show-sql=true
 ```
 
 ---
 
-## 📈 Módulo de Inteligencia de Negocio / Soporte
+## Cómo ejecutar el proyecto
 
-### CU-08: Exportar Reporte de Incidencias
-**Actores:** Técnico / Administrador (Y Docente si se habilita)
-**Descripción:** El usuario solicita un consolidado de las incidencias. El sistema procesa los datos y genera un archivo Excel (.xlsx) listo para su descarga y análisis.
+### Opción 1: Desde Visual Studio Code
 
-```mermaid
-flowchart LR
-    %% Actores
-    A((Admin / Técnico))
-    D((Docente))
+1. Abrir la carpeta del proyecto
+2. Instalar las extensiones de Java
+3. Esperar que Maven cargue las dependencias
+4. Ejecutar la clase:
 
-    %% Sistema
-    subgraph SGI [Módulo de Reportes]
-        direction TB
-        UC8([CU-08: Exportar Reporte de Incidencias])
-    end
-
-    %% Relaciones
-    A --- UC8
-    D -.- UC8
+```bash
+SistemaGestionIncidencias.java
 ```
+
+---
+
+### Opción 2: Desde terminal
+
+Abrir una terminal en la carpeta del proyecto y ejecutar:
+
+```bash
+mvn spring-boot:run
+```
+
+---
+
+## Acceso al sistema
+
+Abrir en el navegador:
+
+```bash
+http://localhost:8080
+```
+
+---
+
+## Plantillas disponibles
+
+- login.html
+- nueva-incidencia.html
+- panel-admin.html
+- panel-docente.html
+- panel-ti.html
+
+---
+
+## Funcionalidad del sistema
+
+### Docente
+- Registrar incidencias
+- Consultar estado de incidencias
+
+### Personal TI
+- Ver incidencias asignadas
+- Cambiar estado:
+  - Resuelto
+  - No resuelto
+
+### Administrador
+- Ver todas las incidencias
+- Gestionar reportes
+
+---
+
+## Generación de reportes
+
+El sistema incluye generación de reportes Excel mediante:
+
+```java
+ExcelReportService.java
+```
+
+---
+
+## Autor
+
+Proyecto académico desarrollado por:
+
+- Hilasaca Torres, Kriss Angela
+- Huerta Tejada, Adrian Jorge
+- Peralta Caceres, Edward Robert
+- Sotelo Caceres, Diego Luis
+
+---
+
+## Licencia
+
+Proyecto desarrollado con fines educativos.

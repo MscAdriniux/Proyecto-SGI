@@ -2,6 +2,7 @@ package com.sgi.service;
 
 import com.sgi.model.Usuario;
 import com.sgi.repository.UsuarioRepository;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -14,7 +15,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class UsuarioService {
 
-      /**
+    /**
      * Constructor por defecto.
      */
     public UsuarioService() {}
@@ -69,4 +70,12 @@ public class UsuarioService {
         return usuarioRepository.save(nuevoUsuario);
     }
     
+    /**
+     * Obtiene una lista de usuarios filtrados por su rol en el sistema.
+     * @param rol El rol a buscar (ej. "docente", "administrador").
+     * @return Una lista de usuarios que poseen el rol especificado.
+     */
+    public List<Usuario> obtenerPorRol(String rol) {
+        return usuarioRepository.findByRol(rol);
+    }
 }

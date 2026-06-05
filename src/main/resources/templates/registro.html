@@ -1,43 +1,83 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Registro - Sistema de Gestión de Incidencias</title>
-    <style>
-        body { font-family: Arial, sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; background-color: #f4f4f9; margin: 0; }
-        .registro-container { background: white; padding: 30px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); width: 350px; text-align: center; }
-        input, select { width: 90%; padding: 10px; margin: 10px 0; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; }
-        button { width: 100%; padding: 10px; background-color: #28a745; color: white; border: none; border-radius: 4px; cursor: pointer; margin-top: 10px; }
-        button:hover { background-color: #218838; }
-        .error-msj { color: red; font-size: 14px; margin-bottom: 10px; }
-        .link-login { display: block; margin-top: 15px; font-size: 14px; color: #0056b3; text-decoration: none; }
-    </style>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro - Sistema de Incidencias</title>
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" th:href="@{/estilos.css}">
 </head>
-<body>
 
-    <div class="registro-container">
-        <h2>Crear Cuenta</h2>
-        
-        <div th:if="${error}" class="error-msj">
-            <p th:text="${error}"></p>
+<body class="d-flex flex-column align-items-center justify-content-center min-vh-100 position-relative">
+
+    <button class="theme-toggle" id="themeToggleBtn" aria-label="Cambiar tema">
+        <i class="fa-regular fa-moon" id="themeIcon"></i>
+    </button>
+
+    <div class="text-center mb-4 mt-3">
+        <div class="logo-circle mb-3">
+            <i class="fa-solid fa-graduation-cap"></i>
+        </div>
+        <h2 class="fw-bold mb-1" style="letter-spacing: -0.5px;">Sistema de Incidencias</h2>
+        <div class="subtitle">Universidad Tecnológica del Perú</div>
+    </div>
+
+    <div class="login-card" style="width: 100%; max-width: 480px;">
+        <h4 class="text-center fw-bold mb-4">Crear Cuenta</h4>
+
+        <div th:if="${error}" class="alert alert-danger text-center p-2 mb-3" role="alert" style="font-size: 0.9rem;">
+            <p class="m-0" th:text="${error}"></p>
         </div>
 
         <form action="/registro" method="post">
-            <input type="text" name="nombres" placeholder="Nombres" required>
-            <input type="text" name="apellidos" placeholder="Apellidos" required>
-            <input type="email" name="correo" placeholder="Correo de la institución" required>
-            <input type="password" name="contrasena" placeholder="Contraseña" required>
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label class="form-label">Nombres</label>
+                    <input type="text" name="nombres" class="form-control" style="border-left: 1px solid var(--border-input); border-top-left-radius: 8px; border-bottom-left-radius: 8px;" placeholder="Ej: Juan" required>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label class="form-label">Apellidos</label>
+                    <input type="text" name="apellidos" class="form-control" style="border-left: 1px solid var(--border-input); border-top-left-radius: 8px; border-bottom-left-radius: 8px;" placeholder="Ej: Pérez" required>
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Correo Institucional</label>
+                <div class="input-group">
+                    <span class="input-group-text"><i class="fa-regular fa-envelope"></i></span>
+                    <input type="email" name="correo" class="form-control" placeholder="correo@utp.edu.pe" required>
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Contraseña</label>
+                <div class="input-group">
+                    <span class="input-group-text"><i class="fa-solid fa-lock"></i></span>
+                    <input type="password" name="contrasena" class="form-control" placeholder="••••••••" required>
+                </div>
+            </div>
+
+            <div class="mb-4">
+                <label class="form-label">Rol en el Sistema</label>
+                <select name="rol" class="form-select form-control" style="border-left: 1px solid var(--border-input); border-top-left-radius: 8px; border-bottom-left-radius: 8px;" required>
+                    <option value="" disabled selected>Selecciona tu rol...</option>
+                    <option value="docente">Docente</option>
+                    <option value="soporte ti">Soporte TI</option>
+                    <option value="administrador">Administrador</option>
+                </select>
+            </div>
+
+            <button type="submit" class="btn btn-login w-100 mb-3">Registrar Usuario</button>
             
-            <select name="rol" required>
-                <option value="" disabled selected>Selecciona tu rol...</option>
-                <option value="docente">Docente</option>
-                <option value="administrador">Administrador</option>
-                <option value="soporte ti">Soporte TI</option>
-            </select>
-            
-            <button type="submit">Registrar Usuario</button>
+            <div class="text-center">
+                <a href="/login" class="text-decoration-none small fw-bold text-muted">¿Ya tienes cuenta? Inicia sesión aquí</a>
+            </div>
         </form>
     </div>
 
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script th:src="@{/script.js}"></script>
 </body>
 </html>

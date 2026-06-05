@@ -9,7 +9,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 
 /**
  * Controlador encargado de gestionar el acceso al sistema.
@@ -70,6 +69,7 @@ public class LoginController {
             
             // Guardamos al usuario en la sesión para que las demás pantallas lo reconozcan
             session.setAttribute("usuarioLogueado", usuarioAutenticado); 
+            
             // Obtenemos el rol
             String rol = usuarioAutenticado.getRol(); 
             // Salvavidas por si un usuario viejo no tiene rol en la BD
@@ -83,8 +83,9 @@ public class LoginController {
             if (rol.equalsIgnoreCase("administrador") || rol.equalsIgnoreCase("admin")) {
                 return "redirect:/admin/dashboard";
                 
-            } else if (rol.equalsIgnoreCase("soporte ti") || rol.equalsIgnoreCase("tecnico")) {
-                return "redirect:/incidencias/panel-tecnico";
+            } else if (rol.equalsIgnoreCase("soporte ti") || rol.equalsIgnoreCase("ti") || rol.equalsIgnoreCase("tecnico")) {
+                // INTEGRACIÓN: Apuntamos al nuevo dashboard de TI
+                return "redirect:/ti/dashboard"; 
                 
             } else {
                 return "redirect:/incidencias/mis-incidencias";
@@ -162,23 +163,5 @@ public class LoginController {
     public String cerrarSesion(HttpSession session) {
         session.invalidate();
         return "redirect:/login";
-    }
-
-    // ==========================================
-    // 4. RUTAS TEMPORALES DE PRUEBA (Para evitar el 404)
-    // ==========================================
-
-    /**
-     * Endpoint temporal (Placeholder) para verificar el enrutamiento del rol Administrador.
-     * Evita errores 404 en el sistema hasta que se desarrolle la vista real del dashboard.
-     * @param session La sesión HTTP actual para recuperar y validar los datos del usuario.
-     * @return Código HTML inyectado directamente en el navegador con confirmación de éxito o error.
-     */
-    @GetMapping("/admin/dashboard")
-    @ResponseBody 
-    public String panelAdmin(HttpSession session) {
-        Usuario u = (Usuario) session.getAttribute("usuarioLogueado");
-        if(u == null) return "Acceso denegado. <a href='/login'>Inicia sesión</a>";
-        return "<h1>¡Éxito total!</h1><p>Bienvenido Administrador <b>" + u.getNombres() + "</b>. Tu login funciona perfecto.</p><br><a href='/logout'>Cerrar Sesión</a>";
     }
 }

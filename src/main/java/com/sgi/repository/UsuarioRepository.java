@@ -1,6 +1,7 @@
 package com.sgi.repository;
 
 import com.sgi.model.Usuario;
+import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -19,4 +20,12 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Integer> {
      * @return La entidad Usuario si se encuentra coincidencia, o null si no existe.
      */
     Usuario findByCorreo(String correo);
+    
+    /**
+     * Busca una lista de usuarios basada en su nivel de acceso.
+     * Útil para mostrar listas específicas, como todos los técnicos o todos los docentes.
+     * @param rol El rol asignado a buscar (ej. "soporte ti", "docente").
+     * @return Una lista con los usuarios que coincidan con el rol solicitado.
+     */
+    List<Usuario> findByRol(String rol);
 }

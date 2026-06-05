@@ -1,12 +1,17 @@
 // 1. Inicializamos el catálogo vacío (se llenará dinámicamente desde la Base de Datos)
 let catalogoIncidencias = [];
 
-// 2. Al cargar la página, pedimos los datos al backend (Controlador REST)
+// 2. Al cargar la página, pedimos los datos al backend (Controlador REST de Diego)
 document.addEventListener("DOMContentLoaded", function() {
     fetch('/api/catalogo')
-        .then(response => response.json()) // Convertimos la respuesta de Java a JSON
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
         .then(data => {
-            catalogoIncidencias = data; // Llenamos nuestro arreglo vacío
+            catalogoIncidencias = data; // Llenamos nuestro arreglo con los datos reales
             console.log("Catálogo cargado exitosamente desde la BD:", catalogoIncidencias);
         })
         .catch(error => console.error("Error al cargar el catálogo de incidencias:", error));
@@ -38,7 +43,7 @@ inputBuscador.addEventListener('input', function() {
         return;
     }
 
-    // Filtrar catálogo (ahora busca en la data traída de MySQL)
+    // Filtrar el catálogo dinámico traído de la base de datos
     const coincidencias = catalogoIncidencias.filter(inc => 
         inc.nombre.toLowerCase().includes(textoBuscado)
     );

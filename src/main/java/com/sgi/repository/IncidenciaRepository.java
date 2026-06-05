@@ -29,5 +29,22 @@ public interface IncidenciaRepository extends JpaRepository<Incidencia, Integer>
      * @return Una lista con las incidencias que tengan ese estado.
      */
     List<Incidencia> findByEstado(String estado);
+
+    /**
+     * Verifica si existe una incidencia activa de un tipo específico en una ubicación dada.
+     * Utilizado para prevenir la creación de tickets duplicados en el sistema.
+     * @param ubicacion El lugar físico de la incidencia.
+     * @param tipoIncidencia La descripción o título del problema.
+     * @param estados Lista de estados considerados "activos" (ej. PENDIENTE, EN PROCESO).
+     * @return true si existe al menos una coincidencia, false en caso contrario.
+     */
+    boolean existsByUbicacionAndTipoIncidenciaAndEstadoIn(String ubicacion, String tipoIncidencia, List<String> estados);
+
+    /**
+     * Busca todas las incidencias que han sido asignadas a un técnico en particular.
+     * @param asignadoA El nombre del técnico responsable.
+     * @return Una lista con las incidencias asignadas a dicho técnico.
+     */
+    List<Incidencia> findByAsignadoA(String asignadoA);
     
 }

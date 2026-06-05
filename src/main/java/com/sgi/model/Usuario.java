@@ -1,4 +1,4 @@
-package com.sgi.model;
+ppackage com.sgi.model;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -15,11 +15,6 @@ import jakarta.persistence.Table;
 @Table(name = "usuario")
 public class Usuario {
 
-      /**
-     * Constructor por defecto.
-     */
-    
-    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_usuario") // Mapea tu columna id_usuario de MySQL a Java

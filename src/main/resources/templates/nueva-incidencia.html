@@ -45,6 +45,10 @@
         <div class="login-card p-5">
             <h4 class="fw-bold mb-4">Reportar Nueva Incidencia</h4>
 
+            <div th:if="${error}" class="alert alert-danger text-center p-2 mb-3" role="alert" style="font-size: 0.9rem;">
+                <p class="m-0" th:text="${error}"></p>
+            </div>
+
             <form action="/incidencias/guardar" method="post" id="formIncidencia">
                 
                 <div class="mb-4 position-relative">
@@ -87,5 +91,6 @@
     </div>
 
     <script th:src="@{/script.js}"></script>
-    <script th:src="@{/buscador.js}"></script> </body>
+    <script th:src="@{/buscador.js}"></script> 
+</body>
 </html>

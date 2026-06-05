@@ -21,20 +21,20 @@
 }
 
 [data-theme="dark"] {
-    /* Modo Oscuro (Nuevo Negro Profundo y Elegante) */
-    --bg-body: #0a0a0a;          /* Fondo general súper oscuro */
-    --text-main: #e0e0e0;        /* Gris claro ergonómico para no cansar la vista */
-    --text-subtitle: #888888;    /* Gris apagado para textos secundarios */
-    --bg-card: #141414;          /* Gris casi negro para diferenciar tarjetas del fondo */
-    --border-card: #2d2d2d;      /* Borde oscuro muy sutil */
-    --bg-input: #1c1c1c;         /* Cajas de texto perfectamente integradas */
+    /* Modo Oscuro */
+    --bg-body: #0a0a0a;         
+    --text-main: #e0e0e0;        
+    --text-subtitle: #888888;   
+    --bg-card: #141414;          
+    --border-card: #2d2d2d;      
+    --bg-input: #1c1c1c;        
     --border-input: #333333;
     --text-input: #e0e0e0;
     --icon-input: #6b7280;
-    --bg-logo-circle: #e0e0e0;   /* Círculo del logo invertido */
-    --icon-logo-circle: #0a0a0a; /* Ícono del logo oscuro */
-    --bg-btn: #e0e0e0;           /* Botón principal claro */
-    --text-btn: #0a0a0a;         /* Texto del botón principal oscuro */
+    --bg-logo-circle: #e0e0e0;   
+    --icon-logo-circle: #0a0a0a; 
+    --bg-btn: #e0e0e0;          
+    --text-btn: #0a0a0a;         
     --bg-toggle: #1c1c1c;
     --icon-toggle: #e0e0e0;
 }
@@ -162,12 +162,12 @@ h1, h2, h3, h4, h5, h6, p, span {
 .btn-login:hover, .btn-login:focus {
     background-color: var(--bg-btn) !important;
     color: var(--text-btn) !important;
-    opacity: 0.85; /* Solo bajamos un poco la opacidad para el efecto visual */
+    opacity: 0.85; 
     box-shadow: none;
 }
 
 /* ==========================================
-   5. PANEL DE DOCENTE (DASHBOARD)
+   5. PANEL DE DOCENTE Y TI (DASHBOARD)
    ========================================== */
 .dashboard-body {
     background-color: var(--bg-body);
@@ -179,7 +179,7 @@ h1, h2, h3, h4, h5, h6, p, span {
     transition: background-color 0.3s ease, border-color 0.3s ease;
 }
 
-.summary-card, .incidencias-container, .tarjeta-incidencia {
+.summary-card, .incidencias-container, .tarjeta-incidencia, .incidencia-item-card {
     background-color: var(--bg-card) !important;
     border: 1px solid var(--border-card) !important;
     border-radius: 12px;
@@ -207,39 +207,34 @@ h1, h2, h3, h4, h5, h6, p, span {
     background-color: var(--bg-body);
     transition: all 0.3s ease;
 }
+
 /* ==========================================
-   MEJORA DE BOTONES DE ACCIÓN (Estilo plano y sobrio)
+   6. MEJORA DE BOTONES Y BOOTSTRAP OVERRIDES
    ========================================== */
 
-/* 1. Estilo base para botones oscuros */
+/* Estilo base para botones oscuros */
 .btn-dark {
     background-color: var(--bg-btn) !important;
     color: var(--text-btn) !important;
     border: 1px solid var(--bg-btn) !important;
-    transition: opacity 0.3s ease !important; /* Solo animamos la opacidad */
+    transition: opacity 0.3s ease !important; 
 }
 
-/* Efecto Hover (Igual al de Iniciar Sesión) */
 .btn-dark:hover, .btn-dark:focus {
     background-color: var(--bg-btn) !important;
     color: var(--text-btn) !important;
-    opacity: 0.85 !important; /* El mismo efecto sutil del login */
-    box-shadow: none !important; /* Nos aseguramos de quitar sombras por defecto */
-    transform: none !important; /* Sin movimientos */
+    opacity: 0.85 !important; 
+    box-shadow: none !important; 
+    transform: none !important; 
 }
 
-/* 2. Para el Modo Oscuro */
-[data-theme="dark"] .btn-dark {
-    background-color: var(--bg-btn) !important; 
-    color: var(--text-btn) !important;
-    border-color: var(--bg-btn) !important;
+/* Ajustes extras para el Modo Oscuro en botones Bootstrap (Aporte de Edward) */
+[data-theme="dark"] .btn-light {
+    background-color: var(--bg-input) !important;
+    border-color: var(--border-input) !important;
+    color: var(--text-main) !important;
 }
-/*data*/
-[data-theme="dark"] .btn-dark:hover, 
-[data-theme="dark"] .btn-dark:focus {
-    background-color: var(--bg-btn) !important;
-    color: var(--text-btn) !important;
-    opacity: 0.85 !important;
-    box-shadow: none !important;
-    transform: none !important;
+
+[data-theme="dark"] .btn-light:hover {
+    background-color: var(--border-card) !important;
 }
