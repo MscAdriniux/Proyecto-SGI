@@ -77,7 +77,10 @@ public class ExcelReportService {
                 createCell(row, 8, fechaCierreStr, dataCellStyle);
 
                 createCell(row, 9, inc.getAsignadoA() != null ? inc.getAsignadoA() : "Sin asignar", dataCellStyle);
-                createCell(row, 10, inc.getResolucion() != null ? inc.getResolucion() : "", dataCellStyle);
+                String estadoEvidencia = (inc.getEvidenciaUrl() != null && !inc.getEvidenciaUrl().isEmpty()) 
+                         ? "Con evidencia adjunta" 
+                         : "Sin evidencia";
+                createCell(row, 10, estadoEvidencia, dataCellStyle);
             }
 
             // Auto-ajustar tamaño de las columnas para mejor lectura

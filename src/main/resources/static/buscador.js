@@ -1,15 +1,23 @@
-// Catálogo predefinido de incidencias
-const catalogoIncidencias = [
-    { nombre: "Proyector no enciende", categoria: "Hardware", prioridad: "ALTA" },
-    { nombre: "Computadora no da video", categoria: "Hardware", prioridad: "ALTA" },
-    { nombre: "No hay conexión a Internet en el aula", categoria: "Redes", prioridad: "ALTA" },
-    { nombre: "Falta cable HDMI", categoria: "Equipamiento", prioridad: "MEDIA" },
-    { nombre: "Software AutoCAD no abre", categoria: "Software", prioridad: "MEDIA" },
-    { nombre: "Licencia de programa expirada", categoria: "Software", prioridad: "MEDIA" },
-    { nombre: "Aire acondicionado gotea", categoria: "Infraestructura", prioridad: "BAJA" },
-    { nombre: "Pizarra en mal estado", categoria: "Infraestructura", prioridad: "BAJA" }
-];
+// 1. Inicializamos el catálogo vacío (se llenará dinámicamente desde la Base de Datos)
+let catalogoIncidencias = [];
 
+// 2. Al cargar la página, pedimos los datos al backend (Controlador REST de Diego)
+document.addEventListener("DOMContentLoaded", function() {
+    fetch('/api/catalogo')
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(data => {
+            catalogoIncidencias = data; // Llenamos nuestro arreglo con los datos reales
+            console.log("Catálogo cargado exitosamente desde la BD:", catalogoIncidencias);
+        })
+        .catch(error => console.error("Error al cargar el catálogo de incidencias:", error));
+});
+
+// 3. Capturamos todos los elementos del DOM
 const inputBuscador = document.getElementById('buscador');
 const listaSugerencias = document.getElementById('listaSugerencias');
 const btnCrear = document.getElementById('btnCrear');
@@ -23,7 +31,7 @@ const catReal = document.getElementById('categoriaReal');
 const priReal = document.getElementById('prioridadReal');
 const tipoReal = document.getElementById('tipoIncidenciaReal');
 
-// Evento al escribir en el buscador
+// 4. Evento al escribir en el buscador
 inputBuscador.addEventListener('input', function() {
     const textoBuscado = this.value.toLowerCase();
     listaSugerencias.innerHTML = '';
@@ -35,7 +43,7 @@ inputBuscador.addEventListener('input', function() {
         return;
     }
 
-    // Filtrar catálogo
+    // Filtrar el catálogo dinámico traído de la base de datos
     const coincidencias = catalogoIncidencias.filter(inc => 
         inc.nombre.toLowerCase().includes(textoBuscado)
     );
@@ -74,13 +82,14 @@ inputBuscador.addEventListener('input', function() {
     }
 });
 
-// Ocultar lista si hace clic fuera
+// 5. Ocultar lista si hace clic fuera del buscador
 document.addEventListener('click', function(e) {
     if (e.target !== inputBuscador) {
         listaSugerencias.style.display = 'none';
     }
 });
 
+// 6. Función para limpiar todos los campos
 function resetearCampos() {
     catVisual.value = '';
     catReal.value = '';
