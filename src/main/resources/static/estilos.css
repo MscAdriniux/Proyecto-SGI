@@ -1,0 +1,240 @@
+/* ==========================================
+   1. VARIABLES DE TEMA (CLARO Y OSCURO)
+   ========================================== */
+:root {
+    /* Modo Claro (Tus colores limpios) */
+    --bg-body: #f8f9fa;
+    --text-main: #111827;
+    --text-subtitle: #6b7280;
+    --bg-card: #ffffff;
+    --border-card: #e5e7eb;
+    --bg-input: #f3f4f6;
+    --border-input: #e5e7eb;
+    --text-input: #111827;
+    --icon-input: #9ca3af;
+    --bg-logo-circle: #030712;
+    --icon-logo-circle: #ffffff;
+    --bg-btn: #030712;
+    --text-btn: #ffffff;
+    --bg-toggle: #e5e7eb;
+    --icon-toggle: #374151;
+}
+
+[data-theme="dark"] {
+    /* Modo Oscuro */
+    --bg-body: #0a0a0a;         
+    --text-main: #e0e0e0;        
+    --text-subtitle: #888888;   
+    --bg-card: #141414;          
+    --border-card: #2d2d2d;      
+    --bg-input: #1c1c1c;        
+    --border-input: #333333;
+    --text-input: #e0e0e0;
+    --icon-input: #6b7280;
+    --bg-logo-circle: #e0e0e0;   
+    --icon-logo-circle: #0a0a0a; 
+    --bg-btn: #e0e0e0;          
+    --text-btn: #0a0a0a;         
+    --bg-toggle: #1c1c1c;
+    --icon-toggle: #e0e0e0;
+}
+
+/* ==========================================
+   2. ESTILOS GENERALES Y BASE
+   ========================================== */
+body {
+    background-color: var(--bg-body) !important;
+    color: var(--text-main) !important;
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+h1, h2, h3, h4, h5, h6, p, span {
+    color: var(--text-main);
+    transition: color 0.3s ease;
+}
+
+.subtitle {
+    color: var(--text-subtitle);
+    font-size: 0.95rem;
+    transition: color 0.3s ease;
+}
+
+.text-muted {
+    color: var(--text-subtitle) !important;
+    transition: color 0.3s ease;
+}
+
+/* ==========================================
+   3. COMPONENTES COMPARTIDOS (Inputs, Botones, Toggle)
+   ========================================== */
+.theme-toggle {
+    position: absolute;
+    top: 24px;
+    right: 24px;
+    background-color: var(--bg-toggle);
+    border: none;
+    border-radius: 8px;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--icon-toggle);
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.input-group-text {
+    background-color: var(--bg-input) !important;
+    border: 1px solid var(--border-input) !important;
+    border-right: none !important;
+    color: var(--icon-input) !important;
+    border-top-left-radius: 8px;
+    border-bottom-left-radius: 8px;
+    transition: all 0.3s ease;
+}
+
+.form-control {
+    background-color: var(--bg-input) !important;
+    border: 1px solid var(--border-input) !important;
+    border-left: none !important;
+    border-top-right-radius: 8px;
+    border-bottom-right-radius: 8px;
+    color: var(--text-input) !important;
+    padding: 10px 12px;
+    font-size: 0.95rem;
+    transition: all 0.3s ease;
+}
+
+.form-control:focus {
+    border-color: var(--text-subtitle) !important;
+    box-shadow: none;
+}
+
+.form-control::placeholder {
+    color: var(--text-subtitle) !important;
+}
+
+.form-label {
+    font-size: 0.85rem;
+    font-weight: 700;
+    margin-bottom: 0.4rem;
+}
+
+/* ==========================================
+   4. PANTALLA DE LOGIN
+   ========================================== */
+.logo-circle {
+    width: 64px;
+    height: 64px;
+    background-color: var(--bg-logo-circle);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto;
+    color: var(--icon-logo-circle);
+    font-size: 26px;
+    transition: all 0.3s ease;
+}
+
+.login-card {
+    background-color: var(--bg-card);
+    border: 1px solid var(--border-card);
+    border-radius: 16px;
+    padding: 40px;
+    transition: all 0.3s ease;
+}
+
+.btn-login {
+    background-color: var(--bg-btn) !important;
+    color: var(--text-btn) !important;
+    border: 1px solid var(--bg-btn) !important;
+    border-radius: 8px;
+    padding: 12px;
+    font-weight: 600;
+    font-size: 0.95rem;
+    margin-top: 10px;
+    transition: all 0.3s ease;
+}
+
+.btn-login:hover, .btn-login:focus {
+    background-color: var(--bg-btn) !important;
+    color: var(--text-btn) !important;
+    opacity: 0.85; 
+    box-shadow: none;
+}
+
+/* ==========================================
+   5. PANEL DE DOCENTE Y TI (DASHBOARD)
+   ========================================== */
+.dashboard-body {
+    background-color: var(--bg-body);
+}
+
+.bg-nav {
+    background-color: var(--bg-card) !important;
+    border-color: var(--border-card) !important;
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+.summary-card, .incidencias-container, .tarjeta-incidencia, .incidencia-item-card {
+    background-color: var(--bg-card) !important;
+    border: 1px solid var(--border-card) !important;
+    border-radius: 12px;
+    transition: all 0.3s ease;
+}
+
+.icon-box {
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.filter-group .btn {
+    border-radius: 8px;
+    margin: 0 4px;
+    font-weight: 600;
+}
+
+.empty-state {
+    border: 2px dashed var(--border-card);
+    border-radius: 12px;
+    background-color: var(--bg-body);
+    transition: all 0.3s ease;
+}
+
+/* ==========================================
+   6. MEJORA DE BOTONES Y BOOTSTRAP OVERRIDES
+   ========================================== */
+
+/* Estilo base para botones oscuros */
+.btn-dark {
+    background-color: var(--bg-btn) !important;
+    color: var(--text-btn) !important;
+    border: 1px solid var(--bg-btn) !important;
+    transition: opacity 0.3s ease !important; 
+}
+
+.btn-dark:hover, .btn-dark:focus {
+    background-color: var(--bg-btn) !important;
+    color: var(--text-btn) !important;
+    opacity: 0.85 !important; 
+    box-shadow: none !important; 
+    transform: none !important; 
+}
+
+/* Ajustes extras para el Modo Oscuro en botones Bootstrap (Aporte de Edward) */
+[data-theme="dark"] .btn-light {
+    background-color: var(--bg-input) !important;
+    border-color: var(--border-input) !important;
+    color: var(--text-main) !important;
+}
+
+[data-theme="dark"] .btn-light:hover {
+    background-color: var(--border-card) !important;
+}
