@@ -1,5 +1,6 @@
 package com.sgi.service;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import com.sgi.model.Incidencia;
 import com.sgi.model.Usuario;
 import com.sgi.repository.IncidenciaRepository;
