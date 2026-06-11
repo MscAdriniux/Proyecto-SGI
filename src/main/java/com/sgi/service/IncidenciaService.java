@@ -21,8 +21,14 @@ public class IncidenciaService {
     
     // Método para guardar una nueva incidencia en la base de datos
     public void guardar(Incidencia incidencia) {
-        incidenciaRepository.save(incidencia);
-    }
+    logger.info(
+        "Nueva incidencia registrada. Tipo: {}, Prioridad: {}",
+        incidencia.getTipoIncidencia(),
+        incidencia.getPrioridad()
+    );
+
+    incidenciaRepository.save(incidencia);
+}
 
   
     // MÉTODOS PARA EL PANEL DE TI
