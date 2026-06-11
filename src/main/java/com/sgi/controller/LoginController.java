@@ -14,6 +14,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
 public class LoginController {
+    
+    // Registra eventos relacionados con la autenticación de usuarios.
+    private static final Logger logger =
+        LoggerFactory.getLogger(LoginController.class);
 
     @Autowired
     private UsuarioService usuarioService;
