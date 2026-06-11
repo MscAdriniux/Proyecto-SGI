@@ -10,6 +10,9 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class IncidenciaService {
+    
+    private static final Logger logger =
+        LoggerFactory.getLogger(IncidenciaService.class);
 
     @Autowired
     private IncidenciaRepository incidenciaRepository;
@@ -49,7 +52,14 @@ public class IncidenciaService {
 
         Incidencia incidencia = incidenciaRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Incidencia no encontrada"));
-    
+
+        // Registrar actualización de estado de la incidencia
+        logger.info(
+            "Cambio de estado en incidencia {} -> {}",
+            id,
+            estado
+        );
+        
         incidencia.setEstado(estado);
     
         return incidenciaRepository.save(incidencia);
@@ -59,7 +69,12 @@ public class IncidenciaService {
     
         Incidencia incidencia = incidenciaRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Incidencia no encontrada"));
-    
+        // Registrar agregado de comentario técnico
+        logger.info(
+            "Comentario agregado a incidencia {}",
+            id
+        );
+        
         incidencia.setComentarioAdmin(comentario);
     
         return incidenciaRepository.save(incidencia);
