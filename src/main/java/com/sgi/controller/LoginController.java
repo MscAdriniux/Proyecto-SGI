@@ -115,6 +115,10 @@ public class LoginController {
         
         // Guardar el usuario encriptado
         usuarioService.registrarUsuario(nuevoUsuario);
+
+        // Registrar creación de una nueva cuenta
+        logger.info("Nuevo usuario registrado: {}", correo);
+        
         
         return "redirect:/login";
     }
@@ -125,6 +129,8 @@ public class LoginController {
 
     @GetMapping("/logout")
     public String cerrarSesion(HttpSession session) {
+        // Registrar cierre de sesión
+        logger.info("Cierre de sesión");
         session.invalidate();
         return "redirect:/login";
     }
