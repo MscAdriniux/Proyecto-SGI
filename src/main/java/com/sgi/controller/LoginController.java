@@ -74,6 +74,8 @@ public class LoginController {
         } else {
             // Si llega aquí, significa que se equivocó de correo o contraseña
             model.addAttribute("error", "Correo o contraseña incorrectos");
+            // Registrar intento fallido de autenticación
+            logger.warn("Intento de inicio de sesión fallido: {}", correo);
             return "login"; // Lo devuelve a la vista login.html con el mensaje de error
         }
     }
