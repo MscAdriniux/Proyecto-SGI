@@ -33,6 +33,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @Controller
 @RequestMapping("/incidencias")
 public class IncidenciaController {
+    // Logger para registrar acciones realizadas desde el panel de incidencias
+    private static final Logger logger =
+        LoggerFactory.getLogger(IncidenciaController.class);
 
     @Autowired
     private IncidenciaService incidenciaService;
@@ -103,7 +106,13 @@ public class IncidenciaController {
         nueva.setUbicacion(ubicacion);
         nueva.setUsuario(usuarioLogueado);
         
-        incidenciaService.guardar(nueva); 
+        incidenciaService.guardar(nueva);
+        
+        // Registrar qué usuario reportó la incidencia
+        logger.info(
+            "Incidencia creada por usuario {}",
+            usuarioLogueado.getCorreo()
+        );
 
         return "redirect:/incidencias/mis-incidencias";
     }
@@ -181,7 +190,12 @@ public class IncidenciaController {
                     incidencia.setEvidenciaUrl(nombreFoto);
                     
                 } catch (IOException | IllegalArgumentException e) { // Cambiado a Exception general por si hay errores de rutas
-                    System.out.println("Error fatal al subir la foto de evidencia: " + e.getMessage());
+                    // Registrar errores durante la carga de evidencia
+                    logger.error(
+                        "Error al subir evidencia de incidencia {}",
+                        idIncidencia,
+                        e
+                    );
                 }
             }
 
