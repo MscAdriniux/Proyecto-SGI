@@ -1,5 +1,6 @@
 package com.sgi.controller;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import com.sgi.model.Usuario;
 import com.sgi.service.UsuarioService;
 import jakarta.servlet.http.HttpSession;
