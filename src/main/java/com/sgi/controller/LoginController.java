@@ -48,6 +48,9 @@ public class LoginController {
             
             // Guardamos al usuario en la sesión para que las demás pantallas lo reconozcan
             session.setAttribute("usuarioLogueado", usuarioAutenticado); 
+            //Registrar acceso exitoso al sistema
+            logger.info("Inicio de sesión exitoso: {}", correo);
+            
             // Obtenemos el rol
             String rol = usuarioAutenticado.getRol(); 
             // Salvavidas por si un usuario viejo no tiene rol en la BD
