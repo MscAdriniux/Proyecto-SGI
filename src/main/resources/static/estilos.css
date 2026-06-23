@@ -2,7 +2,7 @@
    1. VARIABLES DE TEMA (CLARO Y OSCURO)
    ========================================== */
 :root {
-    /* Modo Claro (Tus colores limpios) */
+    /* Modo Claro */
     --bg-body: #f8f9fa;
     --text-main: #111827;
     --text-subtitle: #6b7280;
@@ -228,7 +228,7 @@ h1, h2, h3, h4, h5, h6, p, span {
     transform: none !important; 
 }
 
-/* Ajustes extras para el Modo Oscuro en botones Bootstrap (Aporte de Edward) */
+/* Ajustes extras para el Modo Oscuro en botones Bootstrap */
 [data-theme="dark"] .btn-light {
     background-color: var(--bg-input) !important;
     border-color: var(--border-input) !important;
@@ -237,4 +237,53 @@ h1, h2, h3, h4, h5, h6, p, span {
 
 [data-theme="dark"] .btn-light:hover {
     background-color: var(--border-card) !important;
+}
+
+/* ==========================================
+   7. MODALES Y TOASTS DE NOTIFICACIÓN
+   ========================================== */
+#toastContainer {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    z-index: 1060;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    max-width: 350px;
+    width: 100%;
+}
+
+.toast-notif {
+    background-color: var(--bg-card);
+    border: 1px solid var(--border-card);
+    border-radius: 12px;
+    padding: 16px;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    animation: slideIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    transition: all 0.3s ease;
+}
+
+[data-theme="dark"] .toast-notif {
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.5), 0 4px 6px -2px rgba(0, 0, 0, 0.3);
+}
+
+@keyframes slideIn {
+    from { transform: translateX(100%); opacity: 0; }
+    to { transform: translateX(0); opacity: 1; }
+}
+
+@keyframes fadeOut {
+    from { transform: translateX(0); opacity: 1; }
+    to { transform: translateX(100%); opacity: 0; }
+}
+
+.modal-content-custom {
+    background-color: var(--bg-card);
+    border: 1px solid var(--border-card);
+    color: var(--text-main);
+    border-radius: 16px;
 }

@@ -81,14 +81,13 @@ public class LoginController {
             
             // ENRUTADOR INTELIGENTE
             if (rol.equalsIgnoreCase("administrador") || rol.equalsIgnoreCase("admin")) {
-                return "redirect:/admin/dashboard";
+                return "redirect:/admin/panel-admin";
                 
             } else if (rol.equalsIgnoreCase("soporte ti") || rol.equalsIgnoreCase("ti") || rol.equalsIgnoreCase("tecnico")) {
-                // INTEGRACIÓN: Apuntamos al nuevo dashboard de TI
-                return "redirect:/ti/dashboard"; 
+                return "redirect:/incidencias/panel-tecnico";
                 
             } else {
-                return "redirect:/incidencias/mis-incidencias";
+                return "redirect:/incidencias/panel-docente";
             }
             
         } else {

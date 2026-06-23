@@ -56,7 +56,7 @@ public class IncidenciaController {
      * @param model El modelo para pasar datos a la vista.
      * @return La vista del panel del docente.
      */
-    @GetMapping("/incidencias/mis-incidencias")
+    @GetMapping("/incidencias/panel-docente")
     public String verPanelDocente(HttpSession session, Model model) {
         Usuario usuarioLogueado = (Usuario) session.getAttribute("usuarioLogueado");
         if (usuarioLogueado == null) return "redirect:/login";
@@ -142,7 +142,7 @@ public class IncidenciaController {
         // Enviar notificación en tiempo real a los técnicos de TI
         notificationService.notifyNewIncident(nueva.getTipoIncidencia(), nueva.getUbicacion(), nueva.getPrioridad());
 
-        return "redirect:/incidencias/mis-incidencias";
+        return "redirect:/incidencias/panel-docente";
     }
 
     // ==========================================
@@ -155,7 +155,7 @@ public class IncidenciaController {
      * @param model Modelo para la vista.
      * @return Vista del panel administrador.
      */
-    @GetMapping("/admin/dashboard")
+    @GetMapping("/admin/panel-admin")
     public String verPanelAdmin(HttpSession session, Model model) {
         Usuario u = (Usuario) session.getAttribute("usuarioLogueado");
         if (u == null || !u.getRol().equalsIgnoreCase("administrador")) {
@@ -200,94 +200,6 @@ public class IncidenciaController {
     }
 
     // ==========================================
-    // 3. VISTAS Y ACCIONES DEL TÉCNICO DE TI
-    // ==========================================
-
-    /**
-     * Muestra el panel de TI diseñado por el equipo para la gestión rápida de tickets.
-     * @param session Sesión actual.
-     * @param model Modelo para la vista.
-     * @return Vista del panel TI.
-     */
-    @GetMapping("/ti/dashboard")
-    public String verPanelTI(HttpSession session, Model model) {
-        Usuario u = (Usuario) session.getAttribute("usuarioLogueado");
-        if (u == null || (!u.getRol().equalsIgnoreCase("ti") && !u.getRol().equalsIgnoreCase("soporte ti") && !u.getRol().equalsIgnoreCase("tecnico"))) {
-            return "redirect:/login";
-        }
-
-        List<Incidencia> todas = incidenciaService.obtenerTodas();
-
-        long pendientes = todas.stream().filter(i -> i.getEstado().equalsIgnoreCase("PENDIENTE")).count();
-        long enProceso = todas.stream().filter(i -> i.getEstado().equalsIgnoreCase("EN PROCESO")).count();
-        long resueltas = todas.stream().filter(i -> i.getEstado().equalsIgnoreCase("ATENDIDA") || i.getEstado().equalsIgnoreCase("RESUELTA") || i.getEstado().equalsIgnoreCase("RECHAZADA")).count();
-
-        model.addAttribute("usuarioLogueado", u);
-        model.addAttribute("incidencias", todas);
-        model.addAttribute("totalPendientes", pendientes);
-        model.addAttribute("totalEnProceso", enProceso);
-        model.addAttribute("totalResueltas", resueltas);
-
-        return "panel-tecnico";
-    }
-
-    /**
-     * Asigna una incidencia pendiente al técnico actual.
-     * @param id ID de la incidencia.
-     * @param session Sesión actual.
-     * @return Redirección al dashboard TI.
-     */
-    @PostMapping("/ti/asignar")
-    public String tomarIncidencia(@RequestParam("id") Integer id, HttpSession session) {
-        Usuario u = (Usuario) session.getAttribute("usuarioLogueado");
-        if (u == null || (!u.getRol().equalsIgnoreCase("ti") && !u.getRol().equalsIgnoreCase("soporte ti") && !u.getRol().equalsIgnoreCase("tecnico"))) {
-            return "redirect:/login";
-        }
-
-        Incidencia inc = incidenciaService.obtenerPorId(id);
-        if (inc != null && inc.getEstado().equalsIgnoreCase("PENDIENTE")) {
-            inc.setEstado("EN PROCESO");
-            inc.setAsignadoA(u.getNombres() + " " + u.getApellidos());
-            incidenciaService.guardar(inc);
-        }
-
-        return "redirect:/ti/dashboard";
-    }
-
-  
-    
-            /**
-     * Resuelve o rechaza una incidencia, actualizando su estado.
-     * La resolución se basa ahora exclusivamente en la subida de evidencia fotográfica.
-     * @param id ID de la incidencia.
-     * @param nuevoEstado Estado final.
-     * @param session Sesión actual.
-     * @return Redirección al dashboard TI.
-     */
-  
-    @PostMapping("/ti/resolver")
-    public String resolverIncidencia(
-            @RequestParam("id") Integer id,
-            @RequestParam("estado") String nuevoEstado,
-            HttpSession session) {
-        
-        Usuario u = (Usuario) session.getAttribute("usuarioLogueado");
-        if (u == null || (!u.getRol().equalsIgnoreCase("ti") && !u.getRol().equalsIgnoreCase("soporte ti") && !u.getRol().equalsIgnoreCase("tecnico"))) {
-            return "redirect:/login";
-        }
-
-        Incidencia inc = incidenciaService.obtenerPorId(id);
-        if (inc != null) {
-            inc.setEstado(nuevoEstado.toUpperCase()); 
-            inc.setFechaCierre(LocalDateTime.now());
-            inc.setAsignadoA(u.getNombres() + " " + u.getApellidos());
-            incidenciaService.guardar(inc);
-        }
-
-        return "redirect:/ti/dashboard";
-    }
-
-    // ==========================================
     // 4. RUTAS DEL PANEL TÉCNICO ORIGINAL (SOPORTE)
     // ==========================================
 
@@ -304,7 +216,7 @@ public class IncidenciaController {
         
         String rol = usuarioLogueado.getRol().trim();
         if (!rol.equalsIgnoreCase("soporte ti") && !rol.equalsIgnoreCase("tecnico") && !rol.equalsIgnoreCase("administrador")) {
-            return "redirect:/incidencias/mis-incidencias"; 
+            return "redirect:/incidencias/panel-docente"; 
         }
 
         List<Incidencia> todasIncidencias = incidenciaService.obtenerTodas();
