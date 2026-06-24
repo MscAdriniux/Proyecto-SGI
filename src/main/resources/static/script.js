@@ -42,15 +42,16 @@ document.addEventListener("DOMContentLoaded", function() {
     // ------------------------------------------
     // 2. VARIABLES DE BÚSQUEDA Y PAGINACIÓN
     // ------------------------------------------
-    const buscador = document.getElementById('buscadorDocente') || 
-                     document.getElementById('buscadorAdmin') || 
-                     document.getElementById('buscadorTI');
+    // Usamos 'let' para poder reasignarlos si ocurre un refresco por AJAX
+    let buscador = document.getElementById('buscadorDocente') || 
+                   document.getElementById('buscadorAdmin') || 
+                   document.getElementById('buscadorTI');
                      
-    const tarjetas = Array.from(document.querySelectorAll('.incidencia-item-card'));
+    let tarjetas = Array.from(document.querySelectorAll('.incidencia-item-card'));
     let estadoActual = 'TODAS';
     
     // Configuración de la paginación
-    const ITEMS_POR_PAGINA = 5; // <--- Cambia este número si quieres ver más o menos tarjetas
+    const ITEMS_POR_PAGINA = 5; 
     let paginaActual = 1;
     let tarjetasFiltradas = [];
 
@@ -60,7 +61,6 @@ document.addEventListener("DOMContentLoaded", function() {
     window.filtrarIncidencias = function(estadoSeleccionado) {
         estadoActual = estadoSeleccionado;
         
-        // Efecto visual en los botones
         const botonClickeado = event.currentTarget;
         const contenedorBotones = botonClickeado.parentElement;
         
@@ -83,7 +83,7 @@ document.addEventListener("DOMContentLoaded", function() {
     // ------------------------------------------
     function aplicarFiltroCombinado() {
         const textoBuscado = buscador ? buscador.value.toLowerCase() : '';
-        tarjetasFiltradas = []; // Vaciamos la lista temporal
+        tarjetasFiltradas = []; 
 
         tarjetas.forEach(tarjeta => {
             const estadoTarjeta = tarjeta.getAttribute('data-estado').toUpperCase();
@@ -93,13 +93,12 @@ document.addEventListener("DOMContentLoaded", function() {
             const coincideTexto = contenidoTarjeta.includes(textoBuscado);
 
             if (coincideEstado && coincideTexto) {
-                tarjetasFiltradas.push(tarjeta); // Si pasa el filtro, se añade a la lista
+                tarjetasFiltradas.push(tarjeta);
             } else {
-                tarjeta.style.display = 'none';  // Si no, se oculta inmediatamente
+                tarjeta.style.display = 'none';  
             }
         });
 
-        // Reiniciamos a la página 1 cada vez que se busca o filtra algo
         paginaActual = 1; 
         mostrarPagina(paginaActual);
         renderizarPaginacion();
@@ -111,9 +110,9 @@ document.addEventListener("DOMContentLoaded", function() {
 
         tarjetasFiltradas.forEach((tarjeta, index) => {
             if (index >= inicio && index < fin) {
-                tarjeta.style.display = 'block'; // Mostrar solo las de esta página
+                tarjeta.style.display = 'block'; 
             } else {
-                tarjeta.style.display = 'none';  // Ocultar las demás
+                tarjeta.style.display = 'none';  
             }
         });
     }
@@ -128,16 +127,16 @@ document.addEventListener("DOMContentLoaded", function() {
         if (!paginacionUl || !paginacionContainer) return;
 
         const totalPaginas = Math.ceil(tarjetasFiltradas.length / ITEMS_POR_PAGINA);
-        paginacionUl.innerHTML = ''; // Limpiar botones anteriores
+        paginacionUl.innerHTML = ''; 
 
         if (totalPaginas <= 1) {
-            paginacionContainer.style.display = 'none'; // Ocultar si solo hay 1 página
+            paginacionContainer.style.display = 'none'; 
             return;
         }
 
-        paginacionContainer.style.display = 'block'; // Mostrar si hay más de 1 página
+        paginacionContainer.style.display = 'block'; 
 
-        // Crear Botón "Anterior"
+        // Botón "Anterior"
         const btnPrev = document.createElement('li');
         btnPrev.className = `page-item ${paginaActual === 1 ? 'disabled' : ''}`;
         btnPrev.innerHTML = `<a class="page-link" href="#" style="color: var(--text-main); background-color: var(--bg-card); border-color: var(--border-input);">Anterior</a>`;
@@ -151,7 +150,7 @@ document.addEventListener("DOMContentLoaded", function() {
         });
         paginacionUl.appendChild(btnPrev);
 
-        // Crear Números de página
+        // Números de página
         for (let i = 1; i <= totalPaginas; i++) {
             const li = document.createElement('li');
             li.className = `page-item ${paginaActual === i ? 'active' : ''}`;
@@ -166,7 +165,7 @@ document.addEventListener("DOMContentLoaded", function() {
             paginacionUl.appendChild(li);
         }
 
-        // Crear Botón "Siguiente"
+        // Botón "Siguiente"
         const btnNext = document.createElement('li');
         btnNext.className = `page-item ${paginaActual === totalPaginas ? 'disabled' : ''}`;
         btnNext.innerHTML = `<a class="page-link" href="#" style="color: var(--text-main); background-color: var(--bg-card); border-color: var(--border-input);">Siguiente</a>`;
@@ -181,8 +180,115 @@ document.addEventListener("DOMContentLoaded", function() {
         paginacionUl.appendChild(btnNext);
     }
 
-    // Inicializar todo al cargar la página
     if (tarjetas.length > 0) {
         aplicarFiltroCombinado();
     }
+    
+    // ------------------------------------------
+    // 6. SISTEMA DE NOTIFICACIONES EN TIEMPO REAL CON AJAX
+    // ------------------------------------------
+    const badgeNotificaciones = document.getElementById('badgeNotificaciones');
+    const contenedorNotificaciones = document.getElementById('contenedorNotificaciones');
+    const mensajeSinNotificaciones = document.getElementById('mensajeSinNotificaciones');
+    let contadorNuevas = 0;
+
+    if (badgeNotificaciones) {
+        
+        const eventSource = new EventSource('/api/notificaciones/suscripcion');
+
+        eventSource.onmessage = function(event) {
+            
+            // 1. Reproducir sonido de alerta
+            const audio = new Audio('https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3');
+            audio.play().catch(e => console.log("Sonido bloqueado por el navegador"));
+
+            // 2. Aumentar contador de campana
+            contadorNuevas++;
+            badgeNotificaciones.textContent = contadorNuevas;
+            badgeNotificaciones.style.display = 'block';
+
+            if (mensajeSinNotificaciones) {
+                mensajeSinNotificaciones.style.display = 'none';
+            }
+
+            // 3. Crear notificación en el menú lateral
+            let datosNotificacion = event.data;
+            const nuevaNotificacion = document.createElement('div');
+            nuevaNotificacion.className = 'p-3 mb-3 rounded-3 shadow-sm border-start border-4 border-warning';
+            nuevaNotificacion.style.backgroundColor = 'var(--bg-card)';
+            
+            nuevaNotificacion.innerHTML = `
+                <div class="d-flex justify-content-between align-items-center mb-1">
+                    <span class="badge bg-danger-subtle text-danger border border-danger-subtle px-2 py-1">¡NUEVO TICKET!</span>
+                    <small class="text-muted fw-bold">Ahora mismo</small>
+                </div>
+                <p class="mb-0 mt-2" style="font-size: 0.9rem;">${datosNotificacion}</p>
+            `;
+
+            contenedorNotificaciones.insertBefore(nuevaNotificacion, contenedorNotificaciones.children[1] || contenedorNotificaciones.firstChild);
+
+            // ========================================================
+            // 4. MAGIA AJAX: REFRESCO SILENCIOSO DE LAS TARJETAS
+            // ========================================================
+            fetch(window.location.href)
+                .then(response => response.text())
+                .then(html => {
+                    const parser = new DOMParser();
+                    const doc = parser.parseFromString(html, 'text/html');
+                    
+                    const nuevoContenedor = doc.querySelector('.incidencias-container');
+                    const contenedorActual = document.querySelector('.incidencias-container');
+                    
+                    if (nuevoContenedor && contenedorActual) {
+                        // Reemplazamos el HTML viejo por el nuevo
+                        contenedorActual.innerHTML = nuevoContenedor.innerHTML;
+                        
+                        // Reconectamos las tarjetas y el buscador al DOM nuevo
+                        tarjetas = Array.from(document.querySelectorAll('.incidencia-item-card'));
+                        buscador = document.getElementById('buscadorDocente') || 
+                                   document.getElementById('buscadorAdmin') || 
+                                   document.getElementById('buscadorTI');
+                                   
+                        if (buscador) {
+                            buscador.addEventListener('input', aplicarFiltroCombinado);
+                        }
+                        
+                        // Redibujamos la pantalla y los números de paginación
+                        aplicarFiltroCombinado();
+                    }
+                })
+                .catch(err => console.error('Error actualizando bandeja silenciosamente:', err));
+        };
+
+        eventSource.onerror = function(error) {
+            console.error("Conexión de notificaciones perdida. Reintentando...");
+        };
+
+        const offcanvasNotificaciones = document.getElementById('offcanvasNotificaciones');
+        if (offcanvasNotificaciones) {
+            offcanvasNotificaciones.addEventListener('show.bs.offcanvas', function () {
+                contadorNuevas = 0;
+                badgeNotificaciones.textContent = '0';
+                badgeNotificaciones.style.display = 'none';
+            });
+        }
+    }
+    
+    /* ==========================================
+        FUNCIONES GLOBALES (MODALES Y ACCIONES)
+        ========================================== */
+     let modalResolucionInstancia = null;
+
+     window.abrirModalResolucion = function(id) {
+         // 1. Ponemos el ID oculto en el formulario
+         document.getElementById('modalIncidenciaId').value = id;
+
+         // 2. Inicializamos el modal de Bootstrap si no existe
+         if (!modalResolucionInstancia) {
+             modalResolucionInstancia = new bootstrap.Modal(document.getElementById('modalResolucion'));
+         }
+
+         // 3. Lo mostramos en pantalla
+         modalResolucionInstancia.show();
+     };
 });
