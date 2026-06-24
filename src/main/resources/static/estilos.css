@@ -287,3 +287,15 @@ h1, h2, h3, h4, h5, h6, p, span {
     color: var(--text-main);
     border-radius: 16px;
 }
+
+[data-theme="dark"] .btn-outline-dark {
+    color: var(--text-main) !important;
+    border-color: var(--text-main) !important;
+    background-color: transparent !important;
+}
+
+[data-theme="dark"] .btn-outline-dark:hover {
+    color: var(--bg-card) !important;
+    background-color: var(--text-main) !important;
+    border-color: var(--text-main) !important;
+}
