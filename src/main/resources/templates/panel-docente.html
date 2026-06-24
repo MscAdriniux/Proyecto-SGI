@@ -121,8 +121,9 @@
                         </div>
                     </div>
                     
-                    <div class="mt-3 text-muted small" th:if="${incidencia.asignadoA != null}">
-                        Asignado a: <strong th:text="${incidencia.asignadoA}" style="color: var(--text-main);">Técnico</strong>
+                    <div class="mt-3 text-muted small" th:if="${(incidencia.estado == 'EN PROCESO' or incidencia.estado == 'RESUELTA' or incidencia.estado == 'ATENDIDA') && incidencia.asignadoA != null}">
+                        <i class="fa-solid fa-user-gear me-2"></i>
+                        Encargado: <strong class="fw-bold" style="color: var(--text-main);" th:text="${incidencia.asignadoA}">Técnico</strong>
                     </div>
                 </div>
             </div>

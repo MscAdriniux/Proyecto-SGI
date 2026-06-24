@@ -256,17 +256,28 @@ public class IncidenciaController {
     public String actualizarEstado(
             @RequestParam("idIncidencia") Integer idIncidencia, 
             @RequestParam("nuevoEstado") String nuevoEstado,
-            @RequestParam(value = "archivoEvidencia", required = false) MultipartFile archivo) {
+            @RequestParam(value = "archivoEvidencia", required = false) MultipartFile archivo,
+            HttpSession session) { // <-- AGREGADO: HttpSession session
         
+        // Obtenemos al usuario logueado para saber quién es el técnico
+        Usuario tecnico = (Usuario) session.getAttribute("usuarioLogueado");
+        if (tecnico == null) return "redirect:/login";
+
         Incidencia incidencia = incidenciaService.obtenerPorId(idIncidencia); 
         
         if (incidencia != null) {
             incidencia.setEstado(nuevoEstado);
             
+            // LÓGICA: Si el técnico toma la incidencia o la resuelve, guardamos su nombre
+            if (incidencia.getAsignadoA() == null) {
+                incidencia.setAsignadoA(tecnico.getNombres() + " " + tecnico.getApellidos());
+            }
+            
             if (nuevoEstado.equals("RESUELTA") || nuevoEstado.equals("ATENDIDA")) {
                 incidencia.setFechaCierre(LocalDateTime.now());
             }  
             
+            // ... (el resto del código de subida de archivos se mantiene igual)
             if ((nuevoEstado.equals("RESUELTA") || nuevoEstado.equals("ATENDIDA")) && archivo != null && !archivo.isEmpty()) {
                 try {
                     String extension = FilenameUtils.getExtension(archivo.getOriginalFilename());
@@ -283,7 +294,7 @@ public class IncidenciaController {
                     incidencia.setEvidenciaUrl(nombreFoto);
                     
                 } catch (IOException | IllegalArgumentException e) { 
-                    System.out.println("Error fatal al subir la foto de evidencia: " + e.getMessage());
+                    System.out.println("Error fatal al subir la foto: " + e.getMessage());
                 }
             }
 
