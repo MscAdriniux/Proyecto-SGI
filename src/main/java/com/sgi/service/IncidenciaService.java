@@ -3,6 +3,7 @@ package com.sgi.service;
 import com.sgi.model.Incidencia;
 import com.sgi.model.Usuario;
 import com.sgi.repository.IncidenciaRepository;
+import java.util.ArrayList;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -61,7 +62,7 @@ public class IncidenciaService {
 
     /**
      * Recupera absolutamente todos los tickets de la base de datos, sin filtros.
-     * Utilizado principalmente para el dashboard del personal de Soporte TI y Administradores.
+     * Utilizado principalmente para el dashboard de Administradores.
      * @return Lista completa de todas las incidencias del sistema.
      */
     public List<Incidencia> obtenerTodas() {
@@ -80,21 +81,37 @@ public class IncidenciaService {
     /**
      * Busca una incidencia específica utilizando su clave primaria (ID).
      * @param id El identificador único de la incidencia.
-     * @return El objeto Incidencia si existe, o null si no se encuentra (evita que el sistema colapse).
+     * @return El objeto Incidencia si existe, o null si no se encuentra.
      */
     public Incidencia obtenerPorId(Integer id) {
-        // El ".orElse(null)" significa: si no encuentra el ID, que devuelva nulo para que no se caiga el sistema
         return incidenciaRepository.findById(id).orElse(null);
     }
     
     /**
      * Filtra y obtiene todas las incidencias que se encuentren en un estado particular.
-     * Ideal para generar reportes estadísticos o vistas categorizadas.
      * @param estado El estado a buscar (ej. "PENDIENTE", "RESUELTA").
      * @return Lista de incidencias que coincidan con el estado solicitado.
      */
     public List<Incidencia> obtenerPorEstado(String estado) {
         return incidenciaRepository.findByEstado(estado);
+    }
+
+    /**
+     * Obtiene las incidencias correspondientes al panel de un técnico.
+     * Incluye las incidencias "PENDIENTES" (disponibles para tomar) y 
+     * las que ya le han sido asignadas.
+     * @param nombreTecnico Nombre completo del técnico.
+     * @return Lista combinada de incidencias para el técnico.
+     */
+    public List<Incidencia> obtenerIncidenciasParaTecnico(String nombreTecnico) {
+        // Envolvemos en ArrayList para poder mutar la lista con .addAll()
+        List<Incidencia> misIncidencias = new ArrayList<>(incidenciaRepository.findByAsignadoA(nombreTecnico));
+        
+        List<Incidencia> pendientes = incidenciaRepository.findByEstado("PENDIENTE");
+        
+        misIncidencias.addAll(pendientes);
+        
+        return misIncidencias;
     }
 
     /**
