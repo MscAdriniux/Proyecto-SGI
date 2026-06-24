@@ -28,14 +28,14 @@ public class IncidenciaServiceTest {
     @Test
     public void registrarIncidenciaCorrectamente() {
 
-        // Arrange
+        // Preparar
         Incidencia incidencia = new Incidencia();
         incidencia.setCategoria("Hardware");
 
-        // Act
+        // Actuar
         incidenciaService.guardar(incidencia);
 
-        // Assert
+        // Verificar
         assertEquals("ALTA", incidencia.getPrioridad());
 
         verify(incidenciaRepository)
@@ -45,7 +45,7 @@ public class IncidenciaServiceTest {
     @Test
     public void obtenerIncidenciasPorUsuario() {
 
-        // Arrange
+        // Preparar
         Usuario usuario = new Usuario();
 
         Incidencia incidencia1 = new Incidencia();
@@ -57,11 +57,11 @@ public class IncidenciaServiceTest {
         when(incidenciaRepository.findByUsuario(usuario))
                 .thenReturn(incidencias);
 
-        // Act
+        // Actuar
         List<Incidencia> resultado =
                 incidenciaService.obtenerPorUsuario(usuario);
 
-        // Assert
+        // Verificar
         assertEquals(2, resultado.size());
 
         verify(incidenciaRepository)
