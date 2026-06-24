@@ -78,6 +78,7 @@ public class LoginController {
             }  
             // Limpiamos espacios accidentales en la base de datos
             rol = rol.trim(); 
+            usuarioAutenticado.setRol(rol);
             
             // ENRUTADOR INTELIGENTE
             if (rol.equalsIgnoreCase("administrador") || rol.equalsIgnoreCase("admin")) {

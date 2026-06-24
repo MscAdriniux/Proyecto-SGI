@@ -70,7 +70,9 @@ document.addEventListener("DOMContentLoaded", function() {
                     const estadoTarjeta = tarjeta.getAttribute('data-estado');
                     
                     // Si el filtro es "TODAS" o si coincide con el estado exacto de la tarjeta
-                    if (filtro === 'TODAS' || estadoTarjeta.toUpperCase() === filtro) {
+                    if (filtro === 'TODAS' || 
+                        estadoTarjeta.toUpperCase() === filtro || 
+                        (filtro === 'RESUELTA' && (estadoTarjeta.toUpperCase() === 'ATENDIDA' || estadoTarjeta.toUpperCase() === 'RECHAZADA'))) {
                         tarjeta.style.display = 'block'; 
                     } else {
                         tarjeta.style.display = 'none';  
@@ -79,4 +81,33 @@ document.addEventListener("DOMContentLoaded", function() {
             });
         });
     }
+
+// ==========================================
+// 3. BUSCADOR DE INCIDENCIAS (DOCENTE)
+// ==========================================
+const buscador = document.getElementById("buscadorIncidencias");
+
+if (buscador) {
+
+    buscador.addEventListener("keyup", function () {
+
+        const texto = this.value.toLowerCase();
+
+        document.querySelectorAll(".tarjeta-incidencia")
+            .forEach(function (tarjeta) {
+
+                const contenido = tarjeta.textContent.toLowerCase();
+
+                if (contenido.includes(texto)) {
+                    tarjeta.style.display = "block";
+                } else {
+                    tarjeta.style.display = "none";
+                }
+            });
+
+    });
+
+}
+
+
 });

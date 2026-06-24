@@ -45,6 +45,9 @@ public class Incidencia {
     @Column(name = "evidencia_url")
     private String evidenciaUrl;
 
+    @Column(name = "resolucion", length = 300)
+    private String resolucion;
+
     // Relación: Muchas incidencias pertenecen a un solo usuario
     @ManyToOne
     @JoinColumn(name = "id_usuario", nullable = false)
@@ -249,5 +252,21 @@ public class Incidencia {
      */
     public void setUsuario(Usuario usuario) {
         this.usuario = usuario; 
+    }
+
+    /**
+     * Obtiene el detalle de la solución o rechazo de la incidencia.
+     * @return El detalle de la resolución.
+     */
+    public String getResolucion() {
+        return resolucion;
+    }
+
+    /**
+     * Establece el detalle de la solución o rechazo de la incidencia.
+     * @param resolucion El nuevo detalle de resolución a asignar.
+     */
+    public void setResolucion(String resolucion) {
+        this.resolucion = resolucion;
     }
 }

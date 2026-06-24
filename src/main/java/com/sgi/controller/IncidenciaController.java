@@ -61,16 +61,16 @@ public class IncidenciaController {
         Usuario usuarioLogueado = (Usuario) session.getAttribute("usuarioLogueado");
         if (usuarioLogueado == null) return "redirect:/login";
         
-        String rol = usuarioLogueado.getRol().trim();
-        if (rol.equalsIgnoreCase("soporte ti") || rol.equalsIgnoreCase("tecnico")) {
-            return "redirect:/incidencias/panel-tecnico";
+        String rol = usuarioLogueado.getRol() != null ? usuarioLogueado.getRol().trim() : "";
+        if (rol.equalsIgnoreCase("soporte ti") || rol.equalsIgnoreCase("tecnico") || rol.equalsIgnoreCase("ti")) {
+            return "redirect:/ti/dashboard";
         }
 
         List<Incidencia> misIncidencias = incidenciaService.obtenerPorUsuario(usuarioLogueado);
 
         long pendientes = misIncidencias.stream().filter(i -> i.getEstado().equalsIgnoreCase("PENDIENTE")).count();
         long enProceso = misIncidencias.stream().filter(i -> i.getEstado().equalsIgnoreCase("EN PROCESO")).count();
-        long resueltas = misIncidencias.stream().filter(i -> i.getEstado().equalsIgnoreCase("RESUELTA") || i.getEstado().equalsIgnoreCase("ATENDIDA")).count();
+        long resueltas = misIncidencias.stream().filter(i -> i.getEstado().equalsIgnoreCase("RESUELTA") || i.getEstado().equalsIgnoreCase("ATENDIDA") || i.getEstado().equalsIgnoreCase("RECHAZADA")).count();
 
         model.addAttribute("usuarioLogueado", usuarioLogueado); 
         model.addAttribute("incidencias", misIncidencias);
@@ -92,9 +92,9 @@ public class IncidenciaController {
         Usuario usuarioLogueado = (Usuario) session.getAttribute("usuarioLogueado");
         if (usuarioLogueado == null) return "redirect:/login";
         
-        String rol = usuarioLogueado.getRol().trim();
-        if (rol.equalsIgnoreCase("soporte ti") || rol.equalsIgnoreCase("tecnico")) {
-            return "redirect:/incidencias/panel-tecnico";
+        String rol = usuarioLogueado.getRol() != null ? usuarioLogueado.getRol().trim() : "";
+        if (rol.equalsIgnoreCase("soporte ti") || rol.equalsIgnoreCase("tecnico") || rol.equalsIgnoreCase("ti")) {
+            return "redirect:/ti/dashboard";
         }
 
         model.addAttribute("usuarioLogueado", usuarioLogueado);
@@ -158,7 +158,7 @@ public class IncidenciaController {
     @GetMapping("/admin/dashboard")
     public String verPanelAdmin(HttpSession session, Model model) {
         Usuario u = (Usuario) session.getAttribute("usuarioLogueado");
-        if (u == null || !u.getRol().equalsIgnoreCase("administrador")) {
+        if (u == null || u.getRol() == null || !u.getRol().trim().equalsIgnoreCase("administrador")) {
             return "redirect:/login";
         }
 
@@ -166,7 +166,7 @@ public class IncidenciaController {
 
         long pendientes = todas.stream().filter(i -> i.getEstado().equalsIgnoreCase("PENDIENTE")).count();
         long enProceso = todas.stream().filter(i -> i.getEstado().equalsIgnoreCase("EN PROCESO")).count();
-        long resueltas = todas.stream().filter(i -> i.getEstado().equalsIgnoreCase("ATENDIDA") || i.getEstado().equalsIgnoreCase("RESUELTA")).count();
+        long resueltas = todas.stream().filter(i -> i.getEstado().equalsIgnoreCase("ATENDIDA") || i.getEstado().equalsIgnoreCase("RESUELTA") || i.getEstado().equalsIgnoreCase("RECHAZADA")).count();
 
         model.addAttribute("usuarioLogueado", u);
         model.addAttribute("incidencias", todas);
@@ -212,7 +212,11 @@ public class IncidenciaController {
     @GetMapping("/ti/dashboard")
     public String verPanelTI(HttpSession session, Model model) {
         Usuario u = (Usuario) session.getAttribute("usuarioLogueado");
-        if (u == null || (!u.getRol().equalsIgnoreCase("ti") && !u.getRol().equalsIgnoreCase("soporte ti") && !u.getRol().equalsIgnoreCase("tecnico"))) {
+        if (u == null || u.getRol() == null) {
+            return "redirect:/login";
+        }
+        String rol = u.getRol().trim();
+        if (!rol.equalsIgnoreCase("ti") && !rol.equalsIgnoreCase("soporte ti") && !rol.equalsIgnoreCase("tecnico")) {
             return "redirect:/login";
         }
 
@@ -228,7 +232,7 @@ public class IncidenciaController {
         model.addAttribute("totalEnProceso", enProceso);
         model.addAttribute("totalResueltas", resueltas);
 
-        return "panel-tecnico";
+        return "panel-ti";
     }
 
     /**
@@ -269,10 +273,15 @@ public class IncidenciaController {
     public String resolverIncidencia(
             @RequestParam("id") Integer id,
             @RequestParam("estado") String nuevoEstado,
+            @RequestParam("resolucion") String resolucion,
             HttpSession session) {
         
         Usuario u = (Usuario) session.getAttribute("usuarioLogueado");
-        if (u == null || (!u.getRol().equalsIgnoreCase("ti") && !u.getRol().equalsIgnoreCase("soporte ti") && !u.getRol().equalsIgnoreCase("tecnico"))) {
+        if (u == null || u.getRol() == null) {
+            return "redirect:/login";
+        }
+        String rol = u.getRol().trim();
+        if (!rol.equalsIgnoreCase("ti") && !rol.equalsIgnoreCase("soporte ti") && !rol.equalsIgnoreCase("tecnico")) {
             return "redirect:/login";
         }
 
@@ -281,6 +290,7 @@ public class IncidenciaController {
             inc.setEstado(nuevoEstado.toUpperCase()); 
             inc.setFechaCierre(LocalDateTime.now());
             inc.setAsignadoA(u.getNombres() + " " + u.getApellidos());
+            inc.setResolucion(resolucion);
             incidenciaService.guardar(inc);
         }
 
@@ -302,7 +312,7 @@ public class IncidenciaController {
         Usuario usuarioLogueado = (Usuario) session.getAttribute("usuarioLogueado");
         if (usuarioLogueado == null) return "redirect:/login";
         
-        String rol = usuarioLogueado.getRol().trim();
+        String rol = usuarioLogueado.getRol() != null ? usuarioLogueado.getRol().trim() : "";
         if (!rol.equalsIgnoreCase("soporte ti") && !rol.equalsIgnoreCase("tecnico") && !rol.equalsIgnoreCase("administrador")) {
             return "redirect:/incidencias/mis-incidencias"; 
         }
@@ -311,7 +321,7 @@ public class IncidenciaController {
 
         long pendientes = todasIncidencias.stream().filter(i -> i.getEstado().equalsIgnoreCase("PENDIENTE")).count();
         long enProceso = todasIncidencias.stream().filter(i -> i.getEstado().equalsIgnoreCase("EN PROCESO")).count();
-        long resueltas = todasIncidencias.stream().filter(i -> i.getEstado().equalsIgnoreCase("RESUELTA") || i.getEstado().equalsIgnoreCase("ATENDIDA")).count();
+        long resueltas = todasIncidencias.stream().filter(i -> i.getEstado().equalsIgnoreCase("RESUELTA") || i.getEstado().equalsIgnoreCase("ATENDIDA") || i.getEstado().equalsIgnoreCase("RECHAZADA")).count();
 
         List<Incidencia> activas = todasIncidencias.stream()
                 .filter(i -> !i.getEstado().equalsIgnoreCase("RESUELTA") && !i.getEstado().equalsIgnoreCase("ATENDIDA"))
