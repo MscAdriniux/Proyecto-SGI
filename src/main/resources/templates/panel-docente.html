@@ -109,21 +109,29 @@
                     <div class="d-flex flex-wrap gap-4 text-muted small mt-2">
                         <div>
                             <i class="fa-solid fa-location-dot me-2"></i>
-                            Ubicación: <span class="fw-bold" style="color: var(--text-main);" th:text="${incidencia.ubicacion}">Ubicación</span>
+                            Ubicación: <strong th:text="${incidencia.ubicacion}" style="color: var(--text-main);">Ubicación</strong>
                         </div>
                         <div>
                             <i class="fa-solid fa-circle-exclamation me-2"></i>
-                            Categoría: <span class="fw-bold" style="color: var(--text-main);" th:text="${incidencia.categoria}">Categoría</span>
+                            Categoría: <strong th:text="${incidencia.categoria}" style="color: var(--text-main);">Categoría</strong>
                         </div>
                         <div>
                             <i class="fa-regular fa-calendar me-2"></i>
-                            Creado: <span class="fw-bold" style="color: var(--text-main);" th:text="${#temporals.format(incidencia.fechaCreacion, 'dd/MM/yyyy HH:mm')}">Fecha</span>
+                            Creado: <strong th:text="${#temporals.format(incidencia.fechaCreacion, 'dd/MM/yyyy HH:mm')}" style="color: var(--text-main);">Fecha</strong>
                         </div>
                     </div>
                     
-                    <div class="mt-3 text-muted small" th:if="${(incidencia.estado == 'EN PROCESO' or incidencia.estado == 'RESUELTA' or incidencia.estado == 'ATENDIDA') && incidencia.asignadoA != null}">
-                        <i class="fa-solid fa-user-gear me-2"></i>
-                        Encargado: <strong class="fw-bold" style="color: var(--text-main);" th:text="${incidencia.asignadoA}">Técnico</strong>
+                    <hr class="my-3" th:if="${incidencia.asignadoA != null}" style="border-color: var(--border-card);">
+
+                    <div class="row g-2 text-muted small" th:if="${incidencia.asignadoA != null}">
+                        <div class="col-md-6">
+                            <i class="fa-solid fa-user-gear me-2"></i> Técnico Asignado: 
+                            <strong th:text="${incidencia.asignadoA}" style="color: var(--text-main);">Soporte TI</strong>
+                        </div>
+                        <div class="col-md-6" th:if="${incidencia.fechaCierre != null}">
+                            <i class="fa-regular fa-calendar-check me-2"></i> Fecha Resolución: 
+                            <strong th:text="${#temporals.format(incidencia.fechaCierre, 'dd/MM/yyyy HH:mm')}" style="color: var(--text-main);">Fecha</strong>
+                        </div>
                     </div>
                 </div>
             </div>

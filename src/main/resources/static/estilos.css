@@ -299,3 +299,9 @@ h1, h2, h3, h4, h5, h6, p, span {
     background-color: var(--text-main) !important;
     border-color: var(--text-main) !important;
 }
+
+[data-theme="dark"] .alert {
+    background-color: #2d1a1c !important; 
+    color: #ffcccc !important;         
+    border-color: #58151c !important;  
+}
