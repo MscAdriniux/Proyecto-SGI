@@ -87,7 +87,7 @@
                             </div>
                             <div>
                                 <h3 class="mb-0 fw-bold" th:text="${totalResueltas}">0</h3>
-                                <span class="text-muted">Resueltas/Rechazadas</span>
+                                <span class="text-muted">Resueltas/Atendidas</span>
                             </div>
                         </div>
                     </div>
@@ -107,8 +107,8 @@
                             <button class="btn btn-dark active" onclick="filtrarIncidencias('TODAS')">Todas</button>
                             <button class="btn btn-light border" onclick="filtrarIncidencias('PENDIENTE')">Pendiente</button>
                             <button class="btn btn-light border" onclick="filtrarIncidencias('EN PROCESO')">En Proceso</button>
+                            <button class="btn btn-light border" onclick="filtrarIncidencias('RESUELTA')">Resueltas</button>
                             <button class="btn btn-light border" onclick="filtrarIncidencias('ATENDIDA')">Atendida</button>
-                            <button class="btn btn-light border" onclick="filtrarIncidencias('RECHAZADA')">Rechazada</button>
                         </div>
                     </div>
 
@@ -183,10 +183,14 @@
 
                 <nav aria-label="Navegación de incidencias" id="paginacion-container" class="mt-4 mb-2" style="display: none;">
                     <ul class="pagination justify-content-center" id="paginacion-ul">
-                        </ul>
+                    </ul>
                 </nav>
 
-            </div> </div> </div> <footer class="py-4 mt-5 border-top text-center text-muted small shadow-sm" style="background-color: var(--bg-nav); width: 100%;">
+            </div>
+        </div>
+    </div>
+
+    <footer class="py-4 mt-5 border-top text-center text-muted small shadow-sm" style="background-color: var(--bg-nav); width: 100%;">
         <div class="container">
             <span class="fw-bold d-block mb-1"><i class="fa-solid fa-shield-halved me-1"></i> Sistema de Gestión de Incidentes (SGI)</span>
             <span>&copy; 2026 Todos los derechos reservados.</span>
