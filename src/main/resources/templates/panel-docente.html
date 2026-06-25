@@ -71,77 +71,97 @@
             </div>
         </div>
 
-        <div class="incidencias-container p-4 mt-4">
-            <h5 class="fw-bold mb-3">Mis Incidencias</h5>
-            
-            <div class="d-flex justify-content-between align-items-center mb-4 gap-3 flex-wrap"> 
-                <div class="input-group" style="max-width: 400px;"> 
-                    <span class="input-group-text bg-transparent"><i class="fa-solid fa-magnifying-glass"></i></span> 
-                    <input type="text" class="form-control border-start-0" placeholder="Buscar incidencias..."> 
-                </div> 
+            <div class="incidencias-container p-4 mt-4">
+                <h5 class="fw-bold mb-3">Mis Incidencias</h5>
 
-                <div class="btn-group filter-group" id="grupo-filtros"> 
-                    <button class="btn btn-dark active" data-filter="TODAS">Todas</button> 
-                    <button class="btn btn-light border" data-filter="PENDIENTE">Pendiente</button> 
-                    <button class="btn btn-light border" data-filter="EN PROCESO">En Proceso</button> 
-                    <button class="btn btn-light border" data-filter="RESUELTA">Resuelta</button> 
-                </div> 
-            </div>
+                <div class="d-flex justify-content-between align-items-center mb-4 gap-3 flex-wrap"> 
+                    <div class="input-group" style="max-width: 400px;"> 
+                        <span class="input-group-text bg-transparent"><i class="fa-solid fa-magnifying-glass"></i></span> 
+                        <input type="text" id="buscadorDocente" class="form-control border-start-0" placeholder="Buscar incidencias..."> 
+                    </div> 
 
-            <div th:if="${not #lists.isEmpty(incidencias)}">
-                
-                <div th:each="incidencia : ${incidencias}" class="p-4 border rounded-3 mb-3 tarjeta-incidencia" th:data-estado="${incidencia.estado}" style="background-color: var(--bg-card); border-color: var(--border-card) !important;">
-                    
-                    <div class="d-flex align-items-center flex-wrap gap-2 mb-3">
-                        <h5 class="fw-bold mb-0 me-2" th:text="${incidencia.tipoIncidencia} + ' en ' + ${incidencia.ubicacion}">Proyector no enciende</h5>
-                        
-                        <span class="badge rounded-pill px-3 py-2 border" 
-                              th:classappend="${incidencia.prioridad == 'ALTA' ? 'bg-danger-subtle text-danger border-danger-subtle' : (incidencia.prioridad == 'MEDIA' ? 'bg-warning-subtle text-warning border-warning-subtle' : 'bg-success-subtle text-success border-success-subtle')}"
-                              th:text="${incidencia.prioridad}">ALTA</span>
-                              
-                        <span class="badge rounded-pill px-3 py-2 border"
-                              th:classappend="${incidencia.estado == 'PENDIENTE' ? 'bg-secondary-subtle text-secondary border-secondary-subtle' : (incidencia.estado == 'EN PROCESO' ? 'bg-primary-subtle text-primary border-primary-subtle' : 'bg-success-subtle text-success border-success-subtle')}"
-                              th:text="${incidencia.estado}">PENDIENTE</span>
-                    </div>
+                    <div class="btn-group filter-group" id="filterGroupDocente"> 
+                        <button class="btn btn-dark active" onclick="filtrarIncidencias('TODAS')">Todas</button> 
+                        <button class="btn btn-light border" onclick="filtrarIncidencias('PENDIENTE')">Pendiente</button> 
+                        <button class="btn btn-light border" onclick="filtrarIncidencias('EN PROCESO')">En Proceso</button> 
+                        <button class="btn btn-light border" onclick="filtrarIncidencias('RESUELTA')">Resuelta</button> 
+                    </div> 
+                </div>
 
-                    <div class="d-flex flex-wrap gap-4 text-muted small mt-2">
-                        <div>
-                            <i class="fa-regular fa-user me-2"></i>
-                            <span th:text="${usuarioLogueado.nombres} + ' ' + ${usuarioLogueado.apellidos}">Docente</span>
+                <div th:if="${not #lists.isEmpty(incidencias)}">
+
+                    <div th:each="incidencia : ${incidencias}" class="p-4 border rounded-3 mb-3 incidencia-item-card" th:data-estado="${incidencia.estado}" style="background-color: var(--bg-card); border-color: var(--border-card) !important;">
+
+                        <div class="d-flex align-items-center flex-wrap gap-2 mb-3">
+                            <h5 class="fw-bold mb-0 me-2 incidencia-titulo" th:text="${incidencia.tipoIncidencia} + ' en ' + ${incidencia.ubicacion}">Proyector no enciende</h5>
+
+                            <span class="badge rounded-pill px-3 py-2 border" 
+                                th:classappend="${incidencia.prioridad == 'ALTA' ? 'bg-danger-subtle text-danger border-danger-subtle' : (incidencia.prioridad == 'MEDIA' ? 'bg-warning-subtle text-warning border-warning-subtle' : 'bg-success-subtle text-success border-success-subtle')}"
+                                th:text="${incidencia.prioridad}">
+                            </span>
+
+                            <span class="badge rounded-pill px-3 py-2 border"
+                                  th:classappend="${incidencia.estado == 'PENDIENTE' ? 'bg-secondary-subtle text-secondary border-secondary-subtle' : (incidencia.estado == 'EN PROCESO' ? 'bg-primary-subtle text-primary border-primary-subtle' : (incidencia.estado == 'RECHAZADA' ? 'bg-danger-subtle text-danger border-danger-subtle' : 'bg-success-subtle text-success border-success-subtle'))}"
+                                  th:text="${incidencia.estado}">
+                            </span>
                         </div>
-                        <div>
-                            <i class="fa-solid fa-location-dot me-2"></i>
-                            <span th:text="${incidencia.ubicacion}">Ubicación</span>
+
+                        <div class="d-flex flex-wrap gap-4 text-muted small mt-2">
+                            <div>
+                                <i class="fa-solid fa-location-dot me-2"></i>
+                                Ubicación: <strong th:text="${incidencia.ubicacion}" style="color: var(--text-main);">Ubicación</strong>
+                            </div>
+                            <div>
+                                <i class="fa-solid fa-circle-exclamation me-2"></i>
+                                Categoría: <strong th:text="${incidencia.categoria}" style="color: var(--text-main);">Categoría</strong>
+                            </div>
+                            <div>
+                                <i class="fa-regular fa-calendar me-2"></i>
+                                Creado: <strong th:text="${#temporals.format(incidencia.fechaCreacion, 'dd/MM/yyyy HH:mm')}" style="color: var(--text-main);">Fecha</strong>
+                            </div>
                         </div>
-                        <div>
-                            <i class="fa-solid fa-circle-exclamation me-2"></i>
-                            <span th:text="${incidencia.categoria}">Categoría</span>
+
+                        <hr class="my-3" th:if="${incidencia.asignadoA != null}" style="border-color: var(--border-card);">
+
+                        <div class="row g-2 text-muted small" th:if="${incidencia.asignadoA != null}">
+                            <div class="col-md-6">
+                                <i class="fa-solid fa-user-gear me-2"></i> Técnico Asignado: 
+                                <strong th:text="${incidencia.asignadoA}" style="color: var(--text-main);">Soporte TI</strong>
+                            </div>
+                            <div class="col-md-6" th:if="${incidencia.fechaCierre != null}">
+                                <i class="fa-regular fa-calendar-check me-2"></i> Fecha Resolución: 
+                                <strong th:text="${#temporals.format(incidencia.fechaCierre, 'dd/MM/yyyy HH:mm')}" style="color: var(--text-main);">Fecha</strong>
+                            </div>
                         </div>
-                        <div>
-                            <i class="fa-regular fa-calendar me-2"></i>
-                            <span th:text="${#temporals.format(incidencia.fechaCreacion, 'dd MMM yyyy')}">Fecha</span>
-                        </div>
-                    </div>
-                    
-                    <div class="mt-3 text-muted small" th:if="${incidencia.asignadoA != null}">
-                        Asignado a: <strong th:text="${incidencia.asignadoA}" style="color: var(--text-main);">Técnico</strong>
                     </div>
                 </div>
-            </div>
 
-            <div th:if="${#lists.isEmpty(incidencias)}" class="empty-state text-center py-5">
-                <div class="mb-3">
-                    <i class="fa-regular fa-folder-open text-muted" style="font-size: 3rem;"></i>
+                <div th:if="${#lists.isEmpty(incidencias)}" class="empty-state text-center py-5">
+                    <div class="mb-3">
+                        <i class="fa-regular fa-folder-open text-muted" style="font-size: 3rem;"></i>
+                    </div>
+                    <h5 class="fw-bold">Aún no hay incidencias</h5>
+                    <p class="text-muted">Cuando reportes un problema en la sede, aparecerá detallado aquí.</p>
+                    <a href="/incidencias/nueva" class="btn btn-dark mt-2 text-white text-decoration-none">
+                        <i class="fa-solid fa-plus me-2"></i> Crear mi primer reporte
+                    </a>
                 </div>
-                <h5 class="fw-bold">Aún no hay incidencias</h5>
-                <p class="text-muted">Cuando reportes un problema en la sede, aparecerá detallado aquí.</p>
-                <a href="/incidencias/nueva" class="btn btn-dark mt-2 text-white text-decoration-none">
-                    <i class="fa-solid fa-plus me-2"></i> Crear mi primer reporte
-                </a>
             </div>
-
         </div>
+    
+    <nav aria-label="Navegación de incidencias" id="paginacion-container" class="mt-4 mb-2" style="display: none;">
+            <ul class="pagination justify-content-center" id="paginacion-ul">
+                </ul>
+        </nav>
+
     </div>
+
+    <footer class="py-4 mt-5 border-top text-center text-muted small shadow-sm" style="background-color: var(--bg-nav); width: 100%;">
+        <div class="container">
+            <span class="fw-bold d-block mb-1"><i class="fa-solid fa-shield-halved me-1"></i> Sistema de Gestión de Incidentes (SGI)</span>
+            <span>&copy; 2026 Todos los derechos reservados.</span>
+        </div>
+    </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <script th:src="@{/script.js}"></script>
