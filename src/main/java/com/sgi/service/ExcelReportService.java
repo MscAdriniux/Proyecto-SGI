@@ -10,11 +10,12 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Service
-public class ExcelReportService {
+public class ExcelReportService implements ReporteService {
 
     private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
 
-    public byte[] generarReporteIncidencias(List<Incidencia> incidencias) throws IOException {
+    @Override
+    public byte[] generarReporte(List<Incidencia> incidencias) throws IOException {
         try (Workbook workbook = new XSSFWorkbook(); ByteArrayOutputStream out = new ByteArrayOutputStream()) {
             Sheet sheet = workbook.createSheet("Reporte SGI");
 
@@ -91,6 +92,11 @@ public class ExcelReportService {
             workbook.write(out);
             return out.toByteArray();
         }
+    }
+
+    @Override
+    public boolean soportaFormato(String formato) {
+        return "EXCEL".equalsIgnoreCase(formato);
     }
 
     private void createCell(Row row, int column, String value, CellStyle style) {
