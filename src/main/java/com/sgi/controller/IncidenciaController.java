@@ -1,5 +1,6 @@
 package com.sgi.controller;
 
+import com.sgi.model.Aula;
 import org.apache.commons.io.FilenameUtils;
 import org.springframework.web.multipart.MultipartFile;
 import java.nio.file.Files;
@@ -8,6 +9,7 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import com.sgi.model.Incidencia;
 import com.sgi.model.Usuario;
+import com.sgi.repository.AulaRepository;
 import com.sgi.service.IncidenciaService;
 import com.sgi.service.NotificationService;
 import com.sgi.service.ExcelReportService;
@@ -46,6 +48,9 @@ public class IncidenciaController {
     @Autowired
     private ExcelReportService excelReportService;
 
+    @Autowired
+    private AulaRepository aulaRepository; // <-- Inyectado correctamente en la parte superior
+
     // ==========================================
     // 1. VISTAS DEL DOCENTE
     // ==========================================
@@ -60,7 +65,6 @@ public class IncidenciaController {
             return "redirect:/incidencias/panel-tecnico";
         }
 
-        // AQUÍ EL DOCENTE YA ESTABA BIEN: Solo obtiene las suyas
         List<Incidencia> misIncidencias = incidenciaService.obtenerPorUsuario(usuarioLogueado);
 
         long pendientes = misIncidencias.stream().filter(i -> i.getEstado().equalsIgnoreCase("PENDIENTE")).count();
@@ -76,7 +80,7 @@ public class IncidenciaController {
         return "panel-docente";
     }
     
-    @GetMapping("/incidencias/nueva")
+ @GetMapping("/incidencias/nueva")
     public String mostrarFormularioIncidencia(HttpSession session, Model model) {
         Usuario usuarioLogueado = (Usuario) session.getAttribute("usuarioLogueado");
         if (usuarioLogueado == null) return "redirect:/login";
@@ -86,7 +90,13 @@ public class IncidenciaController {
             return "redirect:/incidencias/panel-tecnico";
         }
 
+        // Recuperamos las aulas y pasamos al modelo
+        List<Aula> listaAulas = aulaRepository.findAll();
+        System.out.println("========== AULAS ENCONTRADAS EN MYSQL: " + listaAulas.size() + " ==========");
+        
+        model.addAttribute("aulas", listaAulas);
         model.addAttribute("usuarioLogueado", usuarioLogueado);
+        
         return "nueva-incidencia"; 
     }
 
@@ -106,6 +116,7 @@ public class IncidenciaController {
         if (incidenciaService.existeActivaEnUbicacion(ubicacion, tipoIncidencia)) {
             model.addAttribute("error", "Ya existe un reporte activo para la incidencia '" + tipoIncidencia + "' en la ubicación '" + ubicacion + "'.");
             model.addAttribute("usuarioLogueado", usuarioLogueado);
+            model.addAttribute("aulas", aulaRepository.findAll()); // Recargamos las aulas si hay error
             return "nueva-incidencia";
         }
 
@@ -135,7 +146,7 @@ public class IncidenciaController {
             return "redirect:/login";
         }
 
-        // AQUÍ EL ADMIN TAMBIÉN ESTABA BIEN: Obtiene todas sin filtros
+      
         List<Incidencia> todas = incidenciaService.obtenerTodas();
 
         long pendientes = todas.stream().filter(i -> i.getEstado().equalsIgnoreCase("PENDIENTE")).count();
@@ -159,7 +170,7 @@ public class IncidenciaController {
         }
 
         List<Incidencia> todas = incidenciaService.obtenerTodas();
-        byte[] excelBytes = excelReportService.generarReporteIncidencias(todas);
+        byte[] excelBytes = excelReportService.generarReporte(todas);
 
         return ResponseEntity.ok()
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=Reporte_Incidencias.xlsx")
@@ -181,7 +192,6 @@ public class IncidenciaController {
             return "redirect:/incidencias/panel-docente"; 
         }
 
-        // --- MAGIA AQUÍ: Cambiamos de obtenerTodas() a obtenerIncidenciasParaTecnico() ---
         String nombreTecnico = usuarioLogueado.getNombres() + " " + usuarioLogueado.getApellidos();
         List<Incidencia> misIncidencias = incidenciaService.obtenerIncidenciasParaTecnico(nombreTecnico);
 
