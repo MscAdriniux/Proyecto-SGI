@@ -138,8 +138,13 @@ public class IncidenciaController {
         
         incidenciaService.guardar(nueva); 
 
-        // NOTIFICACIÓN: Docente crea -> Alerta instantánea a todo Soporte TI y Admin
-        notificationService.broadcastCambio("NUEVO: Se ha reportado una nueva incidencia de '" + nueva.getTipoIncidencia() + "' en la ubicación " + nueva.getUbicacion() + " (Prioridad: " + nueva.getPrioridad() + "). Creado por: " + usuarioLogueado.getNombres() + " " + usuarioLogueado.getApellidos() + ".");
+        // NOTIFICACIÓN: Solo el docente creador (para refrescar sus pestañas) y la bolsa global de técnicos reciben el nuevo ticket
+        notificationService.broadcastSegmentado(
+            "NUEVO: Se ha reportado una nueva incidencia de '" + nueva.getTipoIncidencia() + "' en la ubicación " + nueva.getUbicacion() + " (Prioridad: " + nueva.getPrioridad() + "). Creado por: " + usuarioLogueado.getNombres() + " " + usuarioLogueado.getApellidos() + ".",
+            usuarioLogueado.getIdUsuario(), 
+            null, 
+            true
+        );
 
         return "redirect:/incidencias/panel-docente";
     }
@@ -275,21 +280,24 @@ public class IncidenciaController {
 
             incidenciaService.guardar(incidencia);
             
-            // LÓGICA DE NOTIFICACIONES DETALLADAS SEGÚN EL FLUJO DEL TÉCNICO
+            Integer idDocente = incidencia.getUsuario().getIdUsuario();
+            String nombreTecnico = incidencia.getAsignadoA();
             String mensajeBroadcast = "";
-            if (nuevoEstado.equals("EN PROCESO")) {
-                // Notificación: Técnico acepta -> Avisa al Docente y al sistema
-                mensajeBroadcast = "PROCESO: El equipo de Soporte TI ha ACEPTADO tu incidencia de '" + incidencia.getTipoIncidencia() + "' en " + incidencia.getUbicacion() + " (Ticket #" + idIncidencia + "). Ya se encuentra en camino.";
-            } else if (nuevoEstado.equals("ATENDIDA")) {
-                // Notificación: Técnico no puede resolver -> Escala directamente al Administrador
-                mensajeBroadcast = "ESCALADO: ¡ATENCIÓN ADMINISTRADOR! El técnico " + tecnico.getNombres() + " " + tecnico.getApellidos() + " ha marcado como ATENDIDA la incidencia de '" + incidencia.getTipoIncidencia() + "' en " + incidencia.getUbicacion() + " (Ticket #" + idIncidencia + "). El problema ha escalado para su resolución final.";
-            } else if (nuevoEstado.equals("RESUELTA")) {
-                // Notificación: Técnico resuelve directamente
-                mensajeBroadcast = "RESUELTO: Tu incidencia de '" + incidencia.getTipoIncidencia() + "' en " + incidencia.getUbicacion() + " (Ticket #" + idIncidencia + ") ha sido RESUELTA por el técnico " + tecnico.getNombres() + ". El aula se encuentra operativa.";
-            }
             
-            if (!mensajeBroadcast.isEmpty()) {
-                notificationService.broadcastCambio(mensajeBroadcast);
+            if (nuevoEstado.equals("EN PROCESO")) {
+                // Se notifica de forma aislada al docente afectado y a los administradores. Ningún otro docente ni técnico escucha esto.
+                mensajeBroadcast = "PROCESO: El equipo de Soporte TI ha ACEPTADO tu incidencia de '" + incidencia.getTipoIncidencia() + "' en " + incidencia.getUbicacion() + " (Ticket #" + idIncidencia + "). Ya se encuentra en camino.";
+                notificationService.broadcastSegmentado(mensajeBroadcast, idDocente, nombreTecnico, false);
+                
+            } else if (nuevoEstado.equals("ATENDIDA")) {
+                // Escalamiento: Alerta directa al Admin y al docente implicado
+                mensajeBroadcast = "ESCALADO: ¡ATENCIÓN ADMINISTRADOR! El técnico " + tecnico.getNombres() + " " + tecnico.getApellidos() + " ha marcado como ATENDIDA la incidencia de '" + incidencia.getTipoIncidencia() + "' en " + incidencia.getUbicacion() + " (Ticket #" + idIncidencia + "). El problema ha escalado para su resolución final.";
+                notificationService.broadcastSegmentado(mensajeBroadcast, idDocente, nombreTecnico, false);
+                
+            } else if (nuevoEstado.equals("RESUELTA")) {
+                // Cierre directo por técnico
+                mensajeBroadcast = "RESUELTO: Tu incidencia de '" + incidencia.getTipoIncidencia() + "' en " + incidencia.getUbicacion() + " (Ticket #" + idIncidencia + ") ha sido RESUELTA por el técnico " + tecnico.getNombres() + ". El aula se encuentra operativa.";
+                notificationService.broadcastSegmentado(mensajeBroadcast, idDocente, nombreTecnico, false);
             }
         }
         
@@ -314,8 +322,16 @@ public class IncidenciaController {
             incidencia.setComentarioAdmin("Cierre definitivo por el Administrador (Liberado de la bandeja de escalamiento).");
             incidenciaService.guardar(incidencia);
             
-            // NOTIFICACIÓN: Admin resuelve -> Alerta definitiva a Docentes (Saber que se arregló) y Técnicos (Saber que se cerró)
-            notificationService.broadcastCambio("FINAL: El Administrador ha RESUELTO y cerrado definitivamente la incidencia escalada de '" + incidencia.getTipoIncidencia() + "' en " + incidencia.getUbicacion() + " (Ticket #" + incidencia.getIdIncidencia() + "). El aula queda liberada.");
+            Integer idDocente = incidencia.getUsuario().getIdUsuario();
+            String nombreTecnico = incidencia.getAsignadoA();
+
+            // REEMPLAZA LA LÍNEA DEL BROADCAST POR ESTA:
+            notificationService.broadcastSegmentado(
+                "FINAL: El Administrador ha RESUELTO y cerrado definitivamente la incidencia escalada de '" + incidencia.getTipoIncidencia() + "' en " + incidencia.getUbicacion() + " (Ticket #" + incidencia.getIdIncidencia() + "). El aula queda liberada.",
+                idDocente,
+                nombreTecnico,
+                false
+            );
         }
         
         return "redirect:/admin/panel-admin";
@@ -349,10 +365,12 @@ public class IncidenciaController {
 
     @GetMapping("/api/notificaciones/suscripcion")
     public SseEmitter suscribirNotificaciones(HttpSession session) {
-        if (session.getAttribute("usuarioLogueado") == null) {
+        Usuario usuario = (Usuario) session.getAttribute("usuarioLogueado");
+        if (usuario == null) {
             return null;
         }
-        return notificationService.subscribe();
+        String nombreCompleto = usuario.getNombres() + " " + usuario.getApellidos();
+        return notificationService.subscribe(usuario.getIdUsuario(), usuario.getRol(), nombreCompleto);
     }
     
     @GetMapping("/api/conteo-pendientes")
