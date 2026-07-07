@@ -23,6 +23,14 @@
                 <a href="/incidencias/nueva" class="btn btn-dark fw-bold px-3 py-2 rounded-3 text-white text-decoration-none">
                     <i class="fa-solid fa-plus me-2"></i> Nueva Incidencia
                 </a>
+
+                <button class="btn btn-light border position-relative p-2" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNotificaciones" aria-controls="offcanvasNotificaciones" style="background-color: var(--bg-card); color: var(--text-main);">
+                    <i class="fa-regular fa-bell fa-lg"></i>
+                    <span id="badgeNotificaciones" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="display: none; font-size: 0.65rem;">
+                        0
+                    </span>
+                </button>
+
                 <button class="theme-toggle position-static m-0" id="themeToggleBtn">
                     <i class="fa-regular fa-moon" id="themeIcon"></i>
                 </button>
@@ -159,6 +167,24 @@
                 </ul>
         </nav>
 
+    </div>
+    
+    <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasNotificaciones" aria-labelledby="offcanvasNotificacionesLabel" style="background-color: var(--bg-body); color: var(--text-main);">
+        <div class="offcanvas-header border-bottom" style="border-color: var(--border-card) !important;">
+            <h5 class="offcanvas-title fw-bold" id="offcanvasNotificacionesLabel">
+                <i class="fa-solid fa-bell text-warning me-2"></i>Notificaciones
+            </h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close" style="filter: var(--theme-icon-filter);"></button>
+        </div>
+        <div class="offcanvas-body p-3" id="contenedorNotificaciones">
+            
+            <div class="text-center text-muted mt-5" id="mensajeSinNotificaciones">
+                <i class="fa-regular fa-bell-slash mb-3" style="font-size: 3rem; opacity: 0.5;"></i>
+                <p class="fw-bold">No tienes notificaciones nuevas</p>
+                <small>Las incidencias aparecerán aquí en tiempo real.</small>
+            </div>
+
+        </div>
     </div>
 
     <footer class="py-4 mt-5 border-top text-center text-muted small shadow-sm" style="background-color: var(--bg-nav); width: 100%;">

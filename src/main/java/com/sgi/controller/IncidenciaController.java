@@ -138,8 +138,8 @@ public class IncidenciaController {
         
         incidenciaService.guardar(nueva); 
 
-        // Reemplaza el notifyNewIncident anterior por esto:
-        notificationService.broadcastCambio("¡NUEVO TICKET! Se ha reportado la incidencia '" + nueva.getTipoIncidencia() + "' en " + nueva.getUbicacion());
+        // NOTIFICACIÓN: Docente crea -> Alerta instantánea a todo Soporte TI y Admin
+        notificationService.broadcastCambio("NUEVO: Se ha reportado una nueva incidencia de '" + nueva.getTipoIncidencia() + "' en la ubicación " + nueva.getUbicacion() + " (Prioridad: " + nueva.getPrioridad() + "). Creado por: " + usuarioLogueado.getNombres() + " " + usuarioLogueado.getApellidos() + ".");
 
         return "redirect:/incidencias/panel-docente";
     }
@@ -275,8 +275,22 @@ public class IncidenciaController {
 
             incidenciaService.guardar(incidencia);
             
-            // DISPARADOR EN TIEMPO REAL AL ACTUALIZAR ESTADO (PENDIENTE -> EN PROCESO -> ATENDIDA)
-            notificationService.broadcastCambio("El ticket #" + idIncidencia + " ha cambiado al estado: " + nuevoEstado);
+            // LÓGICA DE NOTIFICACIONES DETALLADAS SEGÚN EL FLUJO DEL TÉCNICO
+            String mensajeBroadcast = "";
+            if (nuevoEstado.equals("EN PROCESO")) {
+                // Notificación: Técnico acepta -> Avisa al Docente y al sistema
+                mensajeBroadcast = "PROCESO: El equipo de Soporte TI ha ACEPTADO tu incidencia de '" + incidencia.getTipoIncidencia() + "' en " + incidencia.getUbicacion() + " (Ticket #" + idIncidencia + "). Ya se encuentra en camino.";
+            } else if (nuevoEstado.equals("ATENDIDA")) {
+                // Notificación: Técnico no puede resolver -> Escala directamente al Administrador
+                mensajeBroadcast = "ESCALADO: ¡ATENCIÓN ADMINISTRADOR! El técnico " + tecnico.getNombres() + " " + tecnico.getApellidos() + " ha marcado como ATENDIDA la incidencia de '" + incidencia.getTipoIncidencia() + "' en " + incidencia.getUbicacion() + " (Ticket #" + idIncidencia + "). El problema ha escalado para su resolución final.";
+            } else if (nuevoEstado.equals("RESUELTA")) {
+                // Notificación: Técnico resuelve directamente
+                mensajeBroadcast = "RESUELTO: Tu incidencia de '" + incidencia.getTipoIncidencia() + "' en " + incidencia.getUbicacion() + " (Ticket #" + idIncidencia + ") ha sido RESUELTA por el técnico " + tecnico.getNombres() + ". El aula se encuentra operativa.";
+            }
+            
+            if (!mensajeBroadcast.isEmpty()) {
+                notificationService.broadcastCambio(mensajeBroadcast);
+            }
         }
         
         return "redirect:/incidencias/panel-tecnico";
@@ -300,8 +314,8 @@ public class IncidenciaController {
             incidencia.setComentarioAdmin("Cierre definitivo por el Administrador (Liberado de la bandeja de escalamiento).");
             incidenciaService.guardar(incidencia);
             
-            // DISPARADOR EN TIEMPO REAL AL RESOLVER DESDE EL PANEL ADMIN
-            notificationService.broadcastCambio("La incidencia en la ubicación '" + incidencia.getUbicacion() + "' ha sido RESUELTA definitivamente por el Administrador.");
+            // NOTIFICACIÓN: Admin resuelve -> Alerta definitiva a Docentes (Saber que se arregló) y Técnicos (Saber que se cerró)
+            notificationService.broadcastCambio("FINAL: El Administrador ha RESUELTO y cerrado definitivamente la incidencia escalada de '" + incidencia.getTipoIncidencia() + "' en " + incidencia.getUbicacion() + " (Ticket #" + incidencia.getIdIncidencia() + "). El aula queda liberada.");
         }
         
         return "redirect:/admin/panel-admin";
