@@ -200,9 +200,9 @@ document.addEventListener("DOMContentLoaded", function() {
             
             // 1. Reproducir sonido de alerta
             const audio = new Audio('https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3');
-            audio.play().catch(e => console.log("Sonido bloqueado por el navegador"));
+            audio.play().catch(e => console.log("Sonido bloqueado por restricciones del navegador"));
 
-            // 2. Aumentar contador de campana
+            // 2. Incrementar indicador visual de la campana
             contadorNuevas++;
             badgeNotificaciones.textContent = contadorNuevas;
             badgeNotificaciones.style.display = 'block';
@@ -211,15 +211,19 @@ document.addEventListener("DOMContentLoaded", function() {
                 mensajeSinNotificaciones.style.display = 'none';
             }
 
-            // 3. Crear notificación en el menú lateral
+            // 3. Evaluar el texto para colocar una etiqueta llamativa en el menú lateral
             let datosNotificacion = event.data;
+            let tipoTag = "ACTUALIZACIÓN";
+            if (datosNotificacion.toUpperCase().includes("NUEVO")) tipoTag = "¡NUEVO TICKET!";
+            if (datosNotificacion.toUpperCase().includes("RESUELTA")) tipoTag = "SOLUCIONADO";
+
             const nuevaNotificacion = document.createElement('div');
             nuevaNotificacion.className = 'p-3 mb-3 rounded-3 shadow-sm border-start border-4 border-warning';
             nuevaNotificacion.style.backgroundColor = 'var(--bg-card)';
             
             nuevaNotificacion.innerHTML = `
                 <div class="d-flex justify-content-between align-items-center mb-1">
-                    <span class="badge bg-danger-subtle text-danger border border-danger-subtle px-2 py-1">¡NUEVO TICKET!</span>
+                    <span class="badge bg-danger-subtle text-danger border border-danger-subtle px-2 py-1">${tipoTag}</span>
                     <small class="text-muted fw-bold">Ahora mismo</small>
                 </div>
                 <p class="mb-0 mt-2" style="font-size: 0.9rem;">${datosNotificacion}</p>
@@ -227,38 +231,46 @@ document.addEventListener("DOMContentLoaded", function() {
 
             contenedorNotificaciones.insertBefore(nuevaNotificacion, contenedorNotificaciones.children[1] || contenedorNotificaciones.firstChild);
 
-            // ========================================================
-            // 4. MAGIA AJAX: REFRESCO SILENCIOSO DE LAS TARJETAS
-            // ========================================================
+            // ========================================================================
+            // 4. MAGIA AJAX GLOBAL: REFRESCO SILENCIOSO DE BANDEJA Y CONTADORES MÁSTERS
+            // ========================================================================
             fetch(window.location.href)
                 .then(response => response.text())
                 .then(html => {
                     const parser = new DOMParser();
                     const doc = parser.parseFromString(html, 'text/html');
                     
+                    // Acción A: Refrescar la grilla de incidencias activa
                     const nuevoContenedor = doc.querySelector('.incidencias-container');
                     const contenedorActual = document.querySelector('.incidencias-container');
-                    
                     if (nuevoContenedor && contenedorActual) {
-                        // Reemplazamos el HTML viejo por el nuevo
                         contenedorActual.innerHTML = nuevoContenedor.innerHTML;
-                        
-                        // Reconectamos las tarjetas y el buscador al DOM nuevo
-                        tarjetas = Array.from(document.querySelectorAll('.incidencia-item-card'));
-                        buscador = document.getElementById('buscadorDocente') || 
-                                   document.getElementById('buscadorAdmin') || 
-                                   document.getElementById('buscadorTI');
-                                   
-                        if (buscador) {
-                            buscador.addEventListener('input', aplicarFiltroCombinado);
-                        }
-                        
-                        // Redibujamos la pantalla y los números de paginación
-                        aplicarFiltroCombinado();
+                    }
+                    
+                    // Acción B: Refrescar las tarjetas de métricas (números del tope de la pantalla)
+                    const nuevasMetricas = doc.querySelector('.row.mb-4.g-3');
+                    const metricasActuales = document.querySelector('.row.mb-4.g-3');
+                    if (nuevasMetricas && metricasActuales) {
+                        metricasActuales.innerHTML = nuevasMetricas.innerHTML;
+                    }
+                    
+                    // Acción C: Reapuntar referencias y refrescar filtros aplicados
+                    tarjetas = Array.from(document.querySelectorAll('.incidencia-item-card'));
+                    buscador = document.getElementById('buscadorDocente') || 
+                               document.getElementById('buscadorAdmin') || 
+                               document.getElementById('buscadorTI');
+                               
+                    if (buscador) {
+                        buscador.addEventListener('input', aplicarFiltroCombinado);
+                    }
+                    
+                    // Re-ejecutar ordenamientos y SLAs automáticos
+                    aplicarFiltroCombinado();
+                    if (typeof verificarTiemposEspera === 'function') {
                         verificarTiemposEspera();
                     }
                 })
-                .catch(err => console.error('Error actualizando bandeja silenciosamente:', err));
+                .catch(err => console.error('Error al sincronizar las bandejas en tiempo real:', err));
         };
 
         eventSource.onerror = function(error) {

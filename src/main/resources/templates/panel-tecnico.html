@@ -108,8 +108,8 @@
                             th:text="${incidencia.prioridad}">
                         </span>
 
-                        <span class="badge rounded-pill px-3 py-2 border"
-                            th:classappend="${incidencia.estado == 'PENDIENTE' ? 'bg-secondary-subtle text-secondary border-secondary-subtle' : (incidencia.estado == 'EN PROCESO' ? 'bg-primary-subtle text-primary border-primary-subtle' : (incidencia.estado == 'RECHAZADA' ? 'bg-danger-subtle text-danger border-danger-subtle' : 'bg-success-subtle text-success border-success-subtle'))}"
+                        <span class="badge rounded-pill px-3 py-2 border" 
+                            th:classappend="${incidencia.estado == 'PENDIENTE' ? 'bg-secondary-subtle text-secondary border-secondary-subtle' : (incidencia.estado == 'EN PROCESO' ? 'bg-primary-subtle text-primary border-primary-subtle' : (incidencia.estado == 'ATENDIDA' ? 'bg-warning-subtle text-warning border-warning-subtle' : 'bg-success-subtle text-success border-success-subtle'))}" 
                             th:text="${incidencia.estado}">
                         </span>
                     </div>
@@ -267,7 +267,6 @@
                             <select name="nuevoEstado" class="form-select form-control" style="border-left: 1px solid var(--border-input); border-top-left-radius: 8px; border-bottom-left-radius: 8px;" required>
                                 <option value="RESUELTA">RESUELTA</option>
                                 <option value="ATENDIDA">ATENDIDA</option>
-                                <option value="RECHAZADA">RECHAZADA</option>
                             </select>
                         </div>
 
@@ -278,7 +277,7 @@
                         </div>
                     </div>
                     <div class="modal-footer border-top-0 p-4 pt-0 d-flex gap-2">
-                        <button type="submit" class="btn btn-dark text-white fw-bold py-2 flex-grow-1 rounded-3">Confirmar Solución</button>
+                        <button type="submit" class="btn btn-dark text-white fw-bold py-2 flex-grow-1 rounded-3">Resolver Indicente</button>
                         <button type="button" class="btn btn-light border py-2 px-3 rounded-3" data-bs-dismiss="modal">Cancelar</button>
                     </div>
                 </form>

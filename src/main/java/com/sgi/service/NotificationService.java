@@ -52,4 +52,22 @@ public class NotificationService {
         
         emitters.removeAll(deadEmitters);
     }
+    
+    /**
+     * Transmite un mensaje de actualización global a todas las pantallas activas.
+     */
+    public void broadcastCambio(String mensaje) {
+        List<SseEmitter> deadEmitters = new CopyOnWriteArrayList<>();
+        
+        for (SseEmitter emitter : emitters) {
+            try {
+                // Al no asignarle un nombre específico, viaja como evento "message" nativo
+                emitter.send(SseEmitter.event().data(mensaje));
+            } catch (IOException e) {
+                deadEmitters.add(emitter);
+            }
+        }
+        
+        emitters.removeAll(deadEmitters);
+    }
 }

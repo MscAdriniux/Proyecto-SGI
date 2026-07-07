@@ -126,8 +126,8 @@
                                     th:text="${incidencia.prioridad}">
                                 </span>
 
-                                <span class="badge rounded-pill px-3 py-2 border"
-                                    th:classappend="${incidencia.estado == 'PENDIENTE' ? 'bg-secondary-subtle text-secondary border-secondary-subtle' : (incidencia.estado == 'EN PROCESO' ? 'bg-primary-subtle text-primary border-primary-subtle' : (incidencia.estado == 'RECHAZADA' ? 'bg-danger-subtle text-danger border-danger-subtle' : 'bg-success-subtle text-success border-success-subtle'))}"
+                                <span class="badge rounded-pill px-3 py-2 border" 
+                                    th:classappend="${incidencia.estado == 'PENDIENTE' ? 'bg-secondary-subtle text-secondary border-secondary-subtle' : (incidencia.estado == 'EN PROCESO' ? 'bg-primary-subtle text-primary border-primary-subtle' : (incidencia.estado == 'ATENDIDA' ? 'bg-warning-subtle text-warning border-warning-subtle' : 'bg-success-subtle text-success border-success-subtle'))}" 
                                     th:text="${incidencia.estado}">
                                 </span>
                             </div>

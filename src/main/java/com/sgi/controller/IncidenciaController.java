@@ -138,8 +138,8 @@ public class IncidenciaController {
         
         incidenciaService.guardar(nueva); 
 
-        // Enviar notificación en tiempo real a los técnicos de TI
-        notificationService.notifyNewIncident(nueva.getTipoIncidencia(), nueva.getUbicacion(), nueva.getPrioridad());
+        // Reemplaza el notifyNewIncident anterior por esto:
+        notificationService.broadcastCambio("¡NUEVO TICKET! Se ha reportado la incidencia '" + nueva.getTipoIncidencia() + "' en " + nueva.getUbicacion());
 
         return "redirect:/incidencias/panel-docente";
     }
@@ -274,6 +274,9 @@ public class IncidenciaController {
             }
 
             incidenciaService.guardar(incidencia);
+            
+            // DISPARADOR EN TIEMPO REAL AL ACTUALIZAR ESTADO (PENDIENTE -> EN PROCESO -> ATENDIDA)
+            notificationService.broadcastCambio("El ticket #" + idIncidencia + " ha cambiado al estado: " + nuevoEstado);
         }
         
         return "redirect:/incidencias/panel-tecnico";
@@ -296,6 +299,9 @@ public class IncidenciaController {
             incidencia.setFechaCierre(LocalDateTime.now());
             incidencia.setComentarioAdmin("Cierre definitivo por el Administrador (Liberado de la bandeja de escalamiento).");
             incidenciaService.guardar(incidencia);
+            
+            // DISPARADOR EN TIEMPO REAL AL RESOLVER DESDE EL PANEL ADMIN
+            notificationService.broadcastCambio("La incidencia en la ubicación '" + incidencia.getUbicacion() + "' ha sido RESUELTA definitivamente por el Administrador.");
         }
         
         return "redirect:/admin/panel-admin";
