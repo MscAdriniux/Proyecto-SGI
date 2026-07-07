@@ -72,7 +72,7 @@
                     </div>
                     <div>
                         <h3 class="mb-0 fw-bold" th:text="${totalResueltas}">0</h3>
-                        <span class="text-muted">Resueltas</span>
+                        <span class="text-muted">Resueltas/Atendidas</span>
                     </div>
                 </div>
             </div>
@@ -90,15 +90,19 @@
                     <button class="btn btn-dark active" onclick="filtrarIncidencias('TODAS')">Todas</button>
                     <button class="btn btn-light border" onclick="filtrarIncidencias('PENDIENTE')">Pendiente</button>
                     <button class="btn btn-light border" onclick="filtrarIncidencias('EN PROCESO')">En Proceso</button>
-                    <button class="btn btn-light border" onclick="filtrarIncidencias('RESUELTA')">Resuelta</button>
+                    <button class="btn btn-light border" onclick="filtrarIncidencias('RESUELTA')">Resueltas</button>
+                    <button class="btn btn-light border" onclick="filtrarIncidencias('ATENDIDA')">Atendida</button>
                 </div>
             </div>
 
-            <div th:if="${not #lists.isEmpty(incidenciasActivas) or not #lists.isEmpty(incidenciasResueltas)}">
+            <div th:if="${not #lists.isEmpty(incidencias)}">
                 
-                <div th:each="incidencia : ${incidenciasActivas}" class="p-4 border rounded-3 mb-3 incidencia-item-card" 
-                       th:data-estado="${incidencia.estado}"
-                       style="background-color: var(--bg-card); border-color: var(--border-card) !important;">
+                <div th:each="incidencia : ${incidencias}" class="p-4 border rounded-3 mb-3 incidencia-item-card" 
+                     th:data-estado="${incidencia.estado}"
+                     th:data-prioridad="${incidencia.prioridad}"
+                     th:data-fecha="${#temporals.format(incidencia.fechaCreacion, 'yyyy-MM-dd''T''HH:mm:ss')}"
+                     th:styleappend="${incidencia.estado == 'RESUELTA' or incidencia.estado == 'ATENDIDA' ? 'background-color: var(--bg-body); opacity: 0.85;' : 'background-color: var(--bg-card);'}"
+                     style="border-color: var(--border-card) !important;">
                     
                     <div class="d-flex align-items-center flex-wrap gap-2 mb-3">
                         <h5 class="fw-bold mb-0 me-2 incidencia-titulo" th:text="${incidencia.tipoIncidencia} + ' en ' + ${incidencia.ubicacion}">Incidencia</h5>
@@ -108,8 +112,8 @@
                             th:text="${incidencia.prioridad}">
                         </span>
 
-                        <span class="badge rounded-pill px-3 py-2 border" 
-                            th:classappend="${incidencia.estado == 'PENDIENTE' ? 'bg-secondary-subtle text-secondary border-secondary-subtle' : (incidencia.estado == 'EN PROCESO' ? 'bg-primary-subtle text-primary border-primary-subtle' : (incidencia.estado == 'ATENDIDA' ? 'bg-warning-subtle text-warning border-warning-subtle' : 'bg-success-subtle text-success border-success-subtle'))}" 
+                        <span class="badge rounded-pill px-3 py-2 border"
+                            th:classappend="${incidencia.estado == 'PENDIENTE' ? 'bg-secondary-subtle text-secondary border-secondary-subtle' : (incidencia.estado == 'EN PROCESO' ? 'bg-primary-subtle text-primary border-primary-subtle' : (incidencia.estado == 'ATENDIDA' ? 'bg-warning-subtle text-warning border-warning-subtle' : 'bg-success-subtle text-success border-success-subtle'))}"
                             th:text="${incidencia.estado}">
                         </span>
                     </div>
@@ -133,75 +137,33 @@
                         </div>
                     </div>
                     
-                    <hr class="my-3" th:if="${incidencia.fechaCierre != null}" style="border-color: var(--border-card);">
+                    <hr class="my-3" th:if="${incidencia.fechaCierre != null or incidencia.asignadoA != null}" style="border-color: var(--border-card);">
                     
-                    <div class="row g-2 text-muted small" th:if="${incidencia.fechaCierre != null}">
-                        <div class="col-md-12">
+                    <div class="row g-2 text-muted small" th:if="${incidencia.fechaCierre != null or incidencia.asignadoA != null}">
+                        <div class="col-md-6" th:if="${incidencia.asignadoA != null}">
+                            <i class="fa-solid fa-user-gear me-2"></i> Técnico Asignado: 
+                            <strong th:text="${incidencia.asignadoA}" style="color: var(--text-main);">Soporte TI</strong>
+                        </div>
+                        <div class="col-md-6" th:if="${incidencia.fechaCierre != null}">
                             <i class="fa-regular fa-calendar-check me-2"></i> Fecha Resolución: 
                             <strong th:text="${#temporals.format(incidencia.fechaCierre, 'dd/MM/yyyy HH:mm')}" style="color: var(--text-main);">Fecha</strong>
                         </div>
                     </div>
 
                     <div class="mt-3 d-flex gap-2">
-                        <form action="/incidencias/actualizar-estado" method="post" th:if="${incidencia.estado == 'PENDIENTE'}">
+                        <form action="/incidencias/actualizar-estado" method="post" th:if="${incidencia.estado == 'PENDIENTE'}" class="m-0">
                             <input type="hidden" name="idIncidencia" th:value="${incidencia.idIncidencia}">
                             <input type="hidden" name="nuevoEstado" value="EN PROCESO">
-                            <button type="submit" class="btn btn-dark text-white fw-bold px-4 rounded-3 btn-sm">
+                            <button type="submit" class="btn btn-dark text-white fw-bold px-4 rounded-3 btn-sm shadow-sm">
                                 <i class="fa-solid fa-hand-holding-hand me-2"></i> Tomar Incidencia
                             </button>
                         </form>
                         
                         <button class="btn btn-outline-dark fw-bold px-4 rounded-3 btn-sm" 
                                 th:if="${incidencia.estado == 'EN PROCESO'}" 
-                                th:onclick="'abrirModalResolucion(' + ${incidencia.idIncidencia} + ')'">
+                                th:onclick="'window.abrirModalResolucion(' + ${incidencia.idIncidencia} + ')'">
                             <i class="fa-solid fa-square-check me-2"></i> Resolver Incidente
                         </button>
-                    </div>
-                </div>
-
-                <div th:each="incidencia : ${incidenciasResueltas}" class="p-4 border rounded-3 mb-3 incidencia-item-card" 
-                    th:data-estado="${incidencia.estado}"
-                    style="background-color: var(--bg-body); border-color: var(--border-card) !important; opacity: 0.85;">
-
-                    <div class="d-flex align-items-center flex-wrap gap-2 mb-3">
-                        <h5 class="fw-bold mb-0 me-2 incidencia-titulo" th:text="${incidencia.tipoIncidencia} + ' en ' + ${incidencia.ubicacion}">Incidencia</h5>
-
-                        <span class="badge rounded-pill px-3 py-2 border" 
-                            th:classappend="${incidencia.prioridad == 'ALTA' ? 'bg-danger-subtle text-danger border-danger-subtle' : (incidencia.prioridad == 'MEDIA' ? 'bg-warning-subtle text-warning border-warning-subtle' : 'bg-success-subtle text-success border-success-subtle')}"
-                            th:text="${incidencia.prioridad}">
-                        </span>
-
-                        <span class="badge rounded-pill px-3 py-2 border bg-success-subtle text-success border-success-subtle"
-                            th:text="${incidencia.estado}">
-                        </span>
-                    </div>
-
-                    <div class="d-flex flex-wrap gap-4 text-muted small mt-2">
-                        <div>
-                            <i class="fa-regular fa-user me-2"></i>
-                            Docente: <strong th:text="${incidencia.usuario.nombres} + ' ' + ${incidencia.usuario.apellidos}" style="color: var(--text-main);">Docente</strong>
-                        </div>
-                        <div>
-                            <i class="fa-solid fa-location-dot me-2"></i>
-                            Ubicación: <strong th:text="${incidencia.ubicacion}" style="color: var(--text-main);">Ubicación</strong>
-                        </div>
-                        <div>
-                            <i class="fa-solid fa-circle-exclamation me-2"></i>
-                            Categoría: <strong th:text="${incidencia.categoria}" style="color: var(--text-main);">Categoría</strong>
-                        </div>
-                        <div>
-                            <i class="fa-regular fa-calendar me-2"></i>
-                            Creado: <strong th:text="${#temporals.format(incidencia.fechaCreacion, 'dd/MM/yyyy HH:mm')}" style="color: var(--text-main);">Fecha</strong>
-                        </div>
-                    </div>
-
-                    <hr class="my-3" th:if="${incidencia.fechaCierre != null}" style="border-color: var(--border-card);">
-                    
-                    <div class="row g-2 text-muted small" th:if="${incidencia.fechaCierre != null}">
-                        <div class="col-md-12">
-                            <i class="fa-regular fa-calendar-check me-2"></i> Fecha Resolución: 
-                            <strong th:text="${#temporals.format(incidencia.fechaCierre, 'dd/MM/yyyy HH:mm')}" style="color: var(--text-main);">Fecha</strong>
-                        </div>
                     </div>
 
                     <div class="mt-3" th:if="${incidencia.evidenciaUrl != null}">
@@ -212,12 +174,12 @@
                 </div>
             </div>
 
-            <div th:if="${#lists.isEmpty(incidenciasActivas) and #lists.isEmpty(incidenciasResueltas)}" class="empty-state text-center py-5">
+            <div th:if="${#lists.isEmpty(incidencias)}" class="empty-state text-center py-5">
                 <div class="mb-3">
                     <i class="fa-regular fa-folder-open text-muted" style="font-size: 3rem;"></i>
                 </div>
                 <h5 class="fw-bold">No hay incidencias reportadas</h5>
-                <p class="text-muted">Todo está en orden por ahora.</p>
+                <p class="text-muted">Todo está en orden por ahora en la sede.</p>
             </div>
 
         </div> 
@@ -251,7 +213,7 @@
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content modal-content-custom">
                 <div class="modal-header border-bottom-0 p-4">
-                    <h5 class="modal-title fw-bold" id="modalResolucionLabel">Cerrar y Resolver Incidencia</h5>
+                    <h5 class="modal-title fw-bold" id="modalResolucionLabel">Cerrar o Escalar Incidencia</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" style="filter: var(--theme-icon-filter);"></button>
                 </div>
                 <form action="/incidencias/actualizar-estado" method="post" enctype="multipart/form-data">
@@ -265,19 +227,19 @@
                         <div class="mb-3">
                             <label class="form-label">Seleccionar Estado</label>
                             <select name="nuevoEstado" class="form-select form-control" style="border-left: 1px solid var(--border-input); border-top-left-radius: 8px; border-bottom-left-radius: 8px;" required>
-                                <option value="RESUELTA">RESUELTA</option>
-                                <option value="ATENDIDA">ATENDIDA</option>
+                                <option value="RESUELTA">RESUELTA (Solucionado localmente)</option>
+                                <option value="ATENDIDA">ATENDIDA (Escalar a Administrador)</option>
                             </select>
                         </div>
 
                         <div class="mb-3">
                             <label class="form-label fw-bold"><i class="fa-solid fa-file-arrow-up me-2"></i>Evidencia o Reporte Adjunto (Opcional)</label>
                             <input type="file" name="archivoEvidencia" class="form-control" accept="image/*,.pdf,.doc,.docx" style="border-left: 1px solid var(--border-input); border-top-left-radius: 8px; border-bottom-left-radius: 8px;">
-                            <div class="form-text mt-2">Sube una fotografía de la solución o un documento detallado en caso de escalar el problema.</div>
+                            <div class="form-text mt-2">Sube una fotografía de la solución o un documento detallado en caso de escalar el problema al Admin.</div>
                         </div>
                     </div>
                     <div class="modal-footer border-top-0 p-4 pt-0 d-flex gap-2">
-                        <button type="submit" class="btn btn-dark text-white fw-bold py-2 flex-grow-1 rounded-3">Resolver Indicente</button>
+                        <button type="submit" class="btn btn-dark text-white fw-bold py-2 flex-grow-1 rounded-3">Confirmar Estado</button>
                         <button type="button" class="btn btn-light border py-2 px-3 rounded-3" data-bs-dismiss="modal">Cancelar</button>
                     </div>
                 </form>

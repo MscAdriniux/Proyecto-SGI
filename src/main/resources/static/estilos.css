@@ -305,3 +305,80 @@ h1, h2, h3, h4, h5, h6, p, span {
     color: #ffcccc !important;         
     border-color: #58151c !important;  
 }
+
+/* ========================================== 
+   8. DISEÑO RESPONSIVO (AJUSTES PARA MÓVILES) 
+   ========================================== */
+
+@media (max-width: 768px) {
+    /* 1. Navbar: Convertir en columna y centrar elementos */
+    .navbar .container-fluid {
+        flex-direction: column;
+        gap: 15px;
+        text-align: center;
+    }
+    
+    .navbar .d-flex {
+        flex-wrap: wrap;
+        justify-content: center;
+        width: 100%;
+        gap: 10px !important;
+    }
+
+    /* 2. Botones de Filtro: Habilitar Scroll Horizontal tipo App */
+    .filter-group {
+        display: flex;
+        overflow-x: auto;
+        white-space: nowrap;
+        width: 100%;
+        padding-bottom: 8px; /* Espacio para no pisar la barra de scroll */
+        -webkit-overflow-scrolling: touch; /* Scroll suave en iOS */
+        border-radius: 8px;
+    }
+    
+    /* Evitar que los botones del filtro pierdan su forma al hacer scroll */
+    .filter-group .btn {
+        flex: 0 0 auto;
+    }
+
+    /* 3. Tarjetas de Incidencia: Reducir márgenes para ganar espacio */
+    .incidencia-item-card {
+        padding: 1rem !important; 
+    }
+    
+    .incidencia-titulo {
+        font-size: 1.1rem;
+    }
+
+    /* 4. Tarjetas de Métricas (Top): Centrar íconos y texto */
+    .summary-card {
+        flex-direction: column;
+        text-align: center;
+        padding: 1.5rem 1rem !important;
+    }
+    
+    .summary-card .icon-box {
+        margin-bottom: 10px;
+    }
+
+    /* 5. Buscador: Que ocupe el 100% del ancho en móviles */
+    .incidencias-container .input-group {
+        max-width: 100% !important;
+    }
+
+    /* 6. Toast de Notificaciones: Ajustar al ancho del celular */
+    #toastContainer {
+        right: 15px;
+        left: 15px;
+        bottom: 15px;
+        max-width: auto;
+        width: calc(100% - 30px);
+    }
+}
+
+/* Ajuste extra para pantallas extra pequeñas (iPhone SE, etc) */
+@media (max-width: 400px) {
+    .btn-logout span {
+        display: none; /* Oculta el texto "Cerrar Sesión", deja solo el ícono */
+    }
+}

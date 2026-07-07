@@ -215,19 +215,13 @@ public class IncidenciaController {
         long enProceso = misIncidencias.stream().filter(i -> i.getEstado().equalsIgnoreCase("EN PROCESO")).count();
         long resueltas = misIncidencias.stream().filter(i -> i.getEstado().equalsIgnoreCase("RESUELTA") || i.getEstado().equalsIgnoreCase("ATENDIDA")).count();
 
-        List<Incidencia> activas = misIncidencias.stream()
-                .filter(i -> !i.getEstado().equalsIgnoreCase("RESUELTA") && !i.getEstado().equalsIgnoreCase("ATENDIDA"))
+        // UNIFICACIÓN DE LISTA MÁSTER: Ordenada por prioridad y más reciente primero
+        List<Incidencia> listaUnificada = misIncidencias.stream()
                 .sorted(comparadorIncidencias)
                 .toList();
 
-        List<Incidencia> historialResueltas = misIncidencias.stream()
-                .filter(i -> i.getEstado().equalsIgnoreCase("RESUELTA") || i.getEstado().equalsIgnoreCase("ATENDIDA"))
-                .sorted((i1, i2) -> i2.getIdIncidencia().compareTo(i1.getIdIncidencia()))
-                .toList();
-
         model.addAttribute("usuarioLogueado", usuarioLogueado);
-        model.addAttribute("incidenciasActivas", activas);
-        model.addAttribute("incidenciasResueltas", historialResueltas);
+        model.addAttribute("incidencias", listaUnificada); // <-- Enviamos una sola lista master
         model.addAttribute("totalPendientes", pendientes);
         model.addAttribute("totalEnProceso", enProceso);
         model.addAttribute("totalResueltas", resueltas);
