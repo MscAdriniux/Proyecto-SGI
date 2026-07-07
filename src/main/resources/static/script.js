@@ -255,6 +255,7 @@ document.addEventListener("DOMContentLoaded", function() {
                         
                         // Redibujamos la pantalla y los números de paginación
                         aplicarFiltroCombinado();
+                        verificarTiemposEspera();
                     }
                 })
                 .catch(err => console.error('Error actualizando bandeja silenciosamente:', err));
@@ -291,4 +292,63 @@ document.addEventListener("DOMContentLoaded", function() {
          // 3. Lo mostramos en pantalla
          modalResolucionInstancia.show();
      };
+});
+
+/* ==========================================
+   7. CONTROL DE TIEMPOS DE ESPERA (SLA)
+   ========================================== */
+function verificarTiemposEspera() {
+    // 1. Configuración de límites de tiempo en minutos según prioridad
+    const LIMITES_MINUTOS = {
+        'ALTA': 5,
+        'MEDIA': 7,
+        'BAJA': 10
+    };
+    
+    // 2. Información de contacto del administrador
+    const INFO_ADMIN = "Administrador de Soporte TI al +51 987 654 321";
+
+    // 3. Obtener solo las tarjetas que están PENDIENTES
+    const tarjetasPendientes = document.querySelectorAll('.incidencia-item-card[data-estado="PENDIENTE"]');
+    const ahora = new Date();
+
+    tarjetasPendientes.forEach(tarjeta => {
+        const prioridad = tarjeta.getAttribute('data-prioridad');
+        const fechaStr = tarjeta.getAttribute('data-fecha');
+        
+        if (!prioridad || !fechaStr) return;
+
+        const fechaCreacion = new Date(fechaStr);
+        // Calcular la diferencia en minutos
+        const diferenciaMinutos = (ahora - fechaCreacion) / (1000 * 60);
+        const limite = LIMITES_MINUTOS[prioridad] || 60;
+
+        // Comprobar si ya existe la alerta para no duplicarla
+        let alertaDiv = tarjeta.querySelector('.alerta-tiempo-espera');
+
+        if (diferenciaMinutos >= limite) {
+            if (!alertaDiv) {
+                // Crear y agregar el mensaje de advertencia
+                alertaDiv = document.createElement('div');
+                alertaDiv.className = 'alerta-tiempo-espera alert alert-warning border-warning-subtle mt-3 mb-0 p-3 d-flex align-items-center shadow-sm rounded-3 fade show';
+                alertaDiv.innerHTML = `
+                    <div class="fs-4 me-3" style="color: inherit;">
+                        <i class="fa-solid fa-clock-rotate-left"></i>
+                    </div>
+                    <div style="color: inherit;">
+                        <strong class="d-block">Tiempo de espera prolongado</strong>
+                        <span class="small">Esta incidencia lleva más de ${limite} minutos sin atención. Por favor, comuníquese con el <strong>${INFO_ADMIN}</strong>.</span>
+                    </div>
+                `;
+                tarjeta.appendChild(alertaDiv);
+            }
+        }
+    });
+}
+
+// Ejecutar la validación al cargar la página
+document.addEventListener("DOMContentLoaded", function() {
+    verificarTiemposEspera();
+    // Volver a verificar cada 1 minuto (60000 milisegundos)
+    setInterval(verificarTiemposEspera, 60000);
 });

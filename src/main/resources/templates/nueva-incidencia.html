@@ -90,10 +90,11 @@
 
                     <div id="listaAulas" class="position-absolute w-100 shadow rounded-3 mt-1" style="display: none; max-height: 200px; overflow-y: auto; z-index: 1000; border: 1px solid var(--border-card); background-color: var(--bg-card);">
                         <div th:each="aula : ${aulas}" 
-                             class="sugerencia-item aula-item" 
-                             th:attr="data-id=${aula.idAula}, data-texto=${aula.codigoVisual}"
-                             th:text="${aula.codigoVisual}">
-                        </div>
+                            class="sugerencia-item aula-item" 
+                            th:data-id="${aula.idAula}" 
+                            th:data-texto="${aula.codigoVisual}"
+                            th:text="${aula.codigoVisual}">
+                       </div>
                     </div>
                 </div>
 

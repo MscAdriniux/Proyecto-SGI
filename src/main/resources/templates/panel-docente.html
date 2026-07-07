@@ -90,7 +90,12 @@
 
                 <div th:if="${not #lists.isEmpty(incidencias)}">
 
-                    <div th:each="incidencia : ${incidencias}" class="p-4 border rounded-3 mb-3 incidencia-item-card" th:data-estado="${incidencia.estado}" style="background-color: var(--bg-card); border-color: var(--border-card) !important;">
+                    <div th:each="incidencia : ${incidencias}" 
+                    class="p-4 border rounded-3 mb-3 incidencia-item-card" 
+                    th:data-estado="${incidencia.estado}" 
+                    th:data-prioridad="${incidencia.prioridad}"
+                    th:data-fecha="${#temporals.format(incidencia.fechaCreacion, 'yyyy-MM-dd''T''HH:mm:ss')}"
+                    style="background-color: var(--bg-card); border-color: var(--border-card) !important;">
 
                         <div class="d-flex align-items-center flex-wrap gap-2 mb-3">
                             <h5 class="fw-bold mb-0 me-2 incidencia-titulo" th:text="${incidencia.tipoIncidencia} + ' en ' + ${incidencia.ubicacion}">Proyector no enciende</h5>
