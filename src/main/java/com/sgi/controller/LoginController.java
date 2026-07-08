@@ -77,6 +77,11 @@ public class LoginController {
             // Guardamos al usuario en la sesión para que las demás pantallas lo reconozcan
             session.setAttribute("usuarioLogueado", usuarioAutenticado); 
             
+            logger.info(
+            "AUDITORIA | Usuario={} | Acción=Inicio de sesión",
+            usuarioAutenticado.getCorreo()
+    );
+            
             // Obtenemos el rol
             String rol = usuarioAutenticado.getRol(); 
             // Salvavidas por si un usuario viejo no tiene rol en la BD
@@ -101,7 +106,10 @@ public class LoginController {
             // Si llega aquí, significa que se equivocó de correo o contraseña
             model.addAttribute("error", "Correo o contraseña incorrectos");
             // Registrar intento fallido de autenticación
-            logger.warn("Intento de inicio de sesión fallido: {}", correo);
+            logger.warn(
+                    "AUDITORIA | Usuario={} | Acción=Intento de inicio de sesión fallido",
+                    correo
+            );
             return "login"; // Lo devuelve a la vista login.html con el mensaje de error
         }
     }
@@ -156,7 +164,10 @@ public class LoginController {
         usuarioService.registrarUsuario(nuevoUsuario);
 
         // Registrar creación de una nueva cuenta
-        logger.info("Nuevo usuario registrado: {}", correo);
+        logger.info(
+        "AUDITORIA | Usuario={} | Acción=Registro de usuario",
+        correo
+);
         
         
         return "redirect:/login";
@@ -173,10 +184,22 @@ public class LoginController {
      */
     @GetMapping("/logout")
     public String cerrarSesion(HttpSession session) {
-        // Registrar cierre de sesión
-        logger.info("Cierre de sesión");
+
+        Usuario u=(Usuario)session.getAttribute("usuarioLogueado");
+
+        if(u!=null){
+
+            logger.info(
+                    "AUDITORIA | Usuario={} | Acción=Cierre de sesión",
+                    u.getCorreo()
+            );
+
+        }
+
         session.invalidate();
+
         return "redirect:/login";
+
     }
 
     // ==========================================

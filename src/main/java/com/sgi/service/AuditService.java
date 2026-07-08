@@ -5,7 +5,6 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -24,88 +23,64 @@ public class AuditService {
 
         List<AuditLog> lista = new ArrayList<>();
 
-        Path path = Paths.get(LOG_FILE);
-
-        if (!Files.exists(path)) {
-            return lista;
-        }
-
         try {
 
-            List<String> lineas = Files.readAllLines(path);
+            List<String> lineas = Files.readAllLines(Paths.get(LOG_FILE));
 
             for (String linea : lineas) {
 
-                if (linea.length() < 20) {
+                // SOLO mostrar líneas de auditoría
+                if (!linea.contains("AUDITORIA |")) {
                     continue;
                 }
 
-                try {
+                AuditLog log = new AuditLog();
 
-                    String fechaTexto = linea.substring(0, 19);
+                // Fecha
+                String fecha = linea.substring(0,19);
+                log.setFecha(LocalDateTime.parse(fecha, FORMATTER));
 
-                    LocalDateTime fecha =
-                            LocalDateTime.parse(fechaTexto, FORMATTER);
+                // Nivel
+                if(linea.contains(" INFO "))
+                    log.setNivel("INFO");
+                else if(linea.contains("WARN"))
+                    log.setNivel("WARN");
+                else if(linea.contains("ERROR"))
+                    log.setNivel("ERROR");
+                else
+                    log.setNivel("DEBUG");
 
-                    String nivel = "";
+                // Módulo
+                int iniLogger=linea.indexOf(log.getNivel())+log.getNivel().length();
+                int finLogger=linea.indexOf("- AUDITORIA");
+                log.setModulo(linea.substring(iniLogger,finLogger).trim());
 
-                    if (linea.contains(" INFO ")) {
-                        nivel = "INFO";
-                    } else if (linea.contains(" WARN ")) {
-                        nivel = "WARN";
-                    } else if (linea.contains(" ERROR ")) {
-                        nivel = "ERROR";
-                    } else if (linea.contains(" DEBUG ")) {
-                        nivel = "DEBUG";
-                    }
+                // Usuario
+                String usuario="-";
 
-                    String modulo = "";
-
-                    int inicioLogger = linea.indexOf(nivel);
-
-                    if (inicioLogger > 0) {
-
-                        String resto = linea.substring(inicioLogger + nivel.length());
-
-                        int guion = resto.indexOf("-");
-
-                        if (guion > 0) {
-
-                            modulo = resto.substring(0, guion).trim();
-
-                        }
-
-                    }
-
-                    String accion = "";
-
-                    int indice = linea.indexOf("-");
-
-                    if (indice > 0) {
-
-                        accion = linea.substring(indice + 1).trim();
-
-                    }
-
-                    AuditLog log = new AuditLog();
-
-                    log.setFecha(fecha);
-                    log.setNivel(nivel);
-                    log.setModulo(modulo);
-                    log.setUsuario("-");
-                    log.setAccion(accion);
-
-                    lista.add(log);
-
-                } catch (Exception ex) {
-
-                    // Ignorar líneas mal formadas
-
+                if(linea.contains("Usuario=")){
+                    int ini=linea.indexOf("Usuario=")+8;
+                    int fin=linea.indexOf("| Acción");
+                    usuario=linea.substring(ini,fin).trim();
                 }
+
+                log.setUsuario(usuario);
+
+                // Acción
+                String accion="";
+
+                if(linea.contains("Acción=")){
+                    int ini=linea.indexOf("Acción=")+7;
+                    accion=linea.substring(ini).trim();
+                }
+
+                log.setAccion(accion);
+
+                lista.add(log);
 
             }
 
-        } catch (IOException e) {
+        } catch(IOException e){
 
             e.printStackTrace();
 
