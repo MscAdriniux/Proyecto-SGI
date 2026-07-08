@@ -121,11 +121,26 @@ public class IncidenciaService {
      * @param tipoIncidencia El título o descripción del problema.
      * @return true si ya existe un reporte en curso, false si es seguro registrarlo.
      */
+    /**
+     * Verifica si existe una incidencia activa del mismo tipo en una ubicación específica.
+     * Ahora incluye el estado ATENDIDA como un bloqueo activo.
+     */
     public boolean existeActivaEnUbicacion(String ubicacion, String tipoIncidencia) {
         return incidenciaRepository.existsByUbicacionAndTipoIncidenciaAndEstadoIn(
             ubicacion, 
             tipoIncidencia, 
-            List.of("PENDIENTE", "EN PROCESO")
+            List.of("PENDIENTE", "EN PROCESO", "ATENDIDA")
+        );
+    }
+
+    /**
+     * Método auxiliar para verificar si el bloqueo se debe específicamente a un ticket ATENDIDO.
+     */
+    public boolean esIncidenciaAtendida(String ubicacion, String tipoIncidencia) {
+        return incidenciaRepository.existsByUbicacionAndTipoIncidenciaAndEstadoIn(
+            ubicacion, 
+            tipoIncidencia, 
+            List.of("ATENDIDA")
         );
     }
     
