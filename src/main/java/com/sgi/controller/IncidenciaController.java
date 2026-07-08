@@ -133,7 +133,7 @@ public class IncidenciaController {
         incidenciaService.guardar(nueva); 
         
         logger.info(
-            "AUDITORIA | Usuario={} | Acción=Registró incidencia | Tipo={} | Ubicación={}",
+            "AUDITORIA | Módulo=Gestión de Incidencias | Usuario={} | Acción=Registró incidencia | Tipo={} | Ubicación={}",
             usuarioLogueado.getCorreo(),
             tipoIncidencia,
             ubicacion
@@ -169,8 +169,10 @@ public class IncidenciaController {
         model.addAttribute("totalEnProceso", enProceso);
         model.addAttribute("totalResueltas", resueltas);
 
+        
+        
         logger.info(
-            "AUDITORIA | Usuario={} | Acción=Ingresó al Panel Administrador",
+            "AUDITORIA | Módulo=Panel Administrador | Usuario={} | Acción=Ingresó al Panel Administrador",
             u.getCorreo()
         );
         
@@ -188,7 +190,7 @@ public class IncidenciaController {
         byte[] excelBytes = excelReportService.generarReporte(todas);
         
         logger.info(
-            "AUDITORIA | Usuario={} | Acción=Exportó reporte Excel",
+            "AUDITORIA | Módulo=Reportes | Usuario={} | Acción=Exportó reporte Excel",
             u.getCorreo()
         );
 
@@ -285,7 +287,7 @@ public class IncidenciaController {
             incidenciaService.guardar(incidencia);
             
             logger.info(
-                "AUDITORIA | Usuario={} | Acción=Cambió estado | Ticket={} | Estado={}",
+                "AUDITORIA | Módulo=Gestión de Incidencias | Usuario={} | Acción=Cambió estado | Ticket={} | Estado={}",
                 tecnico.getCorreo(),
                 incidencia.getIdIncidencia(),
                 nuevoEstado

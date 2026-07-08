@@ -51,9 +51,15 @@ public class AuditService {
                     log.setNivel("DEBUG");
 
                 // Módulo
-                int iniLogger=linea.indexOf(log.getNivel())+log.getNivel().length();
-                int finLogger=linea.indexOf("- AUDITORIA");
-                log.setModulo(linea.substring(iniLogger,finLogger).trim());
+                String modulo = "-";
+
+                if (linea.contains("Módulo=")) {
+                    int ini = linea.indexOf("Módulo=") + "Módulo=".length();
+                    int fin = linea.indexOf("| Usuario");
+                    modulo = linea.substring(ini, fin).trim();
+                }
+
+                log.setModulo(modulo);
 
                 // Usuario
                 String usuario="-";

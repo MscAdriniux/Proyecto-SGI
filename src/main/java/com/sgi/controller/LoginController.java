@@ -78,9 +78,9 @@ public class LoginController {
             session.setAttribute("usuarioLogueado", usuarioAutenticado); 
             
             logger.info(
-            "AUDITORIA | Usuario={} | Acción=Inicio de sesión",
-            usuarioAutenticado.getCorreo()
-    );
+                "AUDITORIA | Módulo=Autenticación | Usuario={} | Acción=Inicio de sesión",
+                usuarioAutenticado.getCorreo()
+            );
             
             // Obtenemos el rol
             String rol = usuarioAutenticado.getRol(); 
@@ -107,8 +107,8 @@ public class LoginController {
             model.addAttribute("error", "Correo o contraseña incorrectos");
             // Registrar intento fallido de autenticación
             logger.warn(
-                    "AUDITORIA | Usuario={} | Acción=Intento de inicio de sesión fallido",
-                    correo
+                "AUDITORIA | Módulo=Autenticación | Usuario={} | Acción=Intento de inicio de sesión fallido",
+                correo
             );
             return "login"; // Lo devuelve a la vista login.html con el mensaje de error
         }
@@ -165,9 +165,9 @@ public class LoginController {
 
         // Registrar creación de una nueva cuenta
         logger.info(
-        "AUDITORIA | Usuario={} | Acción=Registro de usuario",
-        correo
-);
+            "AUDITORIA | Módulo=Gestión de Usuarios | Usuario={} | Acción=Registro de usuario",
+            correo
+        );
         
         
         return "redirect:/login";
@@ -190,8 +190,8 @@ public class LoginController {
         if(u!=null){
 
             logger.info(
-                    "AUDITORIA | Usuario={} | Acción=Cierre de sesión",
-                    u.getCorreo()
+                "AUDITORIA | Módulo=Autenticación | Usuario={} | Acción=Cierre de sesión",
+                u.getCorreo()
             );
 
         }

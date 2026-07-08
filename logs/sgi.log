@@ -49,3 +49,109 @@
 2026-07-08 00:22:24 [http-nio-8080-exec-1] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
 2026-07-08 00:22:24 [http-nio-8080-exec-1] INFO  o.s.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
 2026-07-08 00:22:24 [http-nio-8080-exec-1] INFO  o.s.web.servlet.DispatcherServlet - Completed initialization in 0 ms
+2026-07-08 00:50:52 [main] INFO  com.sgi.SistemaGestionIncidencias - Starting SistemaGestionIncidencias using Java 22.0.2 with PID 25844 (C:\Users\kriss\Documents\NetBeansProjects\Proyecto-SGI\target\classes started by kriss in C:\Users\kriss\Documents\NetBeansProjects\Proyecto-SGI)
+2026-07-08 00:50:52 [main] DEBUG com.sgi.SistemaGestionIncidencias - Running with Spring Boot v3.2.5, Spring v6.1.6
+2026-07-08 00:50:52 [main] INFO  com.sgi.SistemaGestionIncidencias - No active profile set, falling back to 1 default profile: "default"
+2026-07-08 00:50:53 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-07-08 00:50:53 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 87 ms. Found 5 JPA repository interfaces.
+2026-07-08 00:50:54 [main] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port 8080 (http)
+2026-07-08 00:50:54 [main] INFO  o.a.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8080"]
+2026-07-08 00:50:54 [main] INFO  o.a.catalina.core.StandardService - Starting service [Tomcat]
+2026-07-08 00:50:54 [main] INFO  o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.20]
+2026-07-08 00:50:54 [main] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2026-07-08 00:50:54 [main] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 1981 ms
+2026-07-08 00:50:55 [main] INFO  o.s.o.j.p.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-07-08 00:50:55 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2026-07-08 00:50:55 [main] INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@a826ff8
+2026-07-08 00:50:55 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2026-07-08 00:50:55 [main] WARN  org.hibernate.orm.deprecation - HHH90000025: MySQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2026-07-08 00:50:57 [main] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-07-08 00:50:57 [main] WARN  o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2026-07-08 00:50:58 [main] INFO  o.a.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8080"]
+2026-07-08 00:50:58 [main] WARN  o.s.b.w.s.c.AnnotationConfigServletWebServerApplicationContext - Exception encountered during context initialization - cancelling refresh attempt: org.springframework.context.ApplicationContextException: Failed to start bean 'webServerStartStop'
+2026-07-08 00:50:58 [main] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
+2026-07-08 00:50:58 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
+2026-07-08 00:50:58 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.
+2026-07-08 00:50:58 [main] INFO  o.s.b.a.l.ConditionEvaluationReportLogger - 
+
+Error starting ApplicationContext. To display the condition evaluation report re-run your application with 'debug' enabled.
+2026-07-08 00:50:58 [main] ERROR o.s.b.d.LoggingFailureAnalysisReporter - 
+
+***************************
+APPLICATION FAILED TO START
+***************************
+
+Description:
+
+Web server failed to start. Port 8080 was already in use.
+
+Action:
+
+Identify and stop the process that's listening on port 8080 or configure this application to listen on another port.
+
+2026-07-08 00:51:32 [main] INFO  com.sgi.SistemaGestionIncidencias - Starting SistemaGestionIncidencias using Java 22.0.2 with PID 25344 (C:\Users\kriss\Documents\NetBeansProjects\Proyecto-SGI\target\classes started by kriss in C:\Users\kriss\Documents\NetBeansProjects\Proyecto-SGI)
+2026-07-08 00:51:32 [main] DEBUG com.sgi.SistemaGestionIncidencias - Running with Spring Boot v3.2.5, Spring v6.1.6
+2026-07-08 00:51:32 [main] INFO  com.sgi.SistemaGestionIncidencias - No active profile set, falling back to 1 default profile: "default"
+2026-07-08 00:51:33 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-07-08 00:51:33 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 92 ms. Found 5 JPA repository interfaces.
+2026-07-08 00:51:34 [main] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port 8080 (http)
+2026-07-08 00:51:34 [main] INFO  o.a.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8080"]
+2026-07-08 00:51:34 [main] INFO  o.a.catalina.core.StandardService - Starting service [Tomcat]
+2026-07-08 00:51:34 [main] INFO  o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.20]
+2026-07-08 00:51:34 [main] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2026-07-08 00:51:34 [main] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 1870 ms
+2026-07-08 00:51:34 [main] INFO  o.s.o.j.p.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-07-08 00:51:35 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2026-07-08 00:51:35 [main] INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@49889154
+2026-07-08 00:51:35 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2026-07-08 00:51:35 [main] WARN  org.hibernate.orm.deprecation - HHH90000025: MySQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2026-07-08 00:51:36 [main] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-07-08 00:51:37 [main] WARN  o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2026-07-08 00:51:37 [main] INFO  o.a.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8080"]
+2026-07-08 00:51:37 [main] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port 8080 (http) with context path ''
+2026-07-08 00:51:37 [main] INFO  com.sgi.SistemaGestionIncidencias - Started SistemaGestionIncidencias in 6.51 seconds (process running for 7.053)
+2026-07-08 00:51:38 [http-nio-8080-exec-1] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-07-08 00:51:38 [http-nio-8080-exec-1] INFO  o.s.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+2026-07-08 00:51:38 [http-nio-8080-exec-1] INFO  o.s.web.servlet.DispatcherServlet - Completed initialization in 1 ms
+2026-07-08 00:52:10 [http-nio-8080-exec-5] INFO  com.sgi.controller.LoginController - AUDITORIA | Módulo=Autenticación | Usuario=kriss.angela0@utp.edu.pe | Acción=Inicio de sesión
+2026-07-08 00:52:10 [http-nio-8080-exec-9] INFO  c.s.controller.IncidenciaController - AUDITORIA | Usuario=kriss.angela0@utp.edu.pe | Acción=Ingresó al Panel Administrador
+2026-07-08 00:52:40 [http-nio-8080-exec-3] INFO  com.sgi.controller.LoginController - AUDITORIA | Módulo=Autenticación | Usuario=kriss.angela0@utp.edu.pe | Acción=Cierre de sesión
+2026-07-08 00:52:42 [http-nio-8080-exec-7] INFO  com.sgi.controller.LoginController - AUDITORIA | Módulo=Autenticación | Usuario=kriss.angela0@utp.edu.pe | Acción=Inicio de sesión
+2026-07-08 00:52:42 [http-nio-8080-exec-8] INFO  c.s.controller.IncidenciaController - AUDITORIA | Usuario=kriss.angela0@utp.edu.pe | Acción=Ingresó al Panel Administrador
+2026-07-08 00:52:53 [http-nio-8080-exec-5] INFO  c.s.controller.IncidenciaController - AUDITORIA | Usuario=kriss.angela0@utp.edu.pe | Acción=Exportó reporte Excel
+2026-07-08 01:03:26 [main] INFO  com.sgi.SistemaGestionIncidencias - Starting SistemaGestionIncidencias using Java 22.0.2 with PID 16420 (C:\Users\kriss\Documents\NetBeansProjects\Proyecto-SGI\target\classes started by kriss in C:\Users\kriss\Documents\NetBeansProjects\Proyecto-SGI)
+2026-07-08 01:03:26 [main] DEBUG com.sgi.SistemaGestionIncidencias - Running with Spring Boot v3.2.5, Spring v6.1.6
+2026-07-08 01:03:26 [main] INFO  com.sgi.SistemaGestionIncidencias - No active profile set, falling back to 1 default profile: "default"
+2026-07-08 01:03:26 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-07-08 01:03:27 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 100 ms. Found 5 JPA repository interfaces.
+2026-07-08 01:03:27 [main] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port 8080 (http)
+2026-07-08 01:03:27 [main] INFO  o.a.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8080"]
+2026-07-08 01:03:27 [main] INFO  o.a.catalina.core.StandardService - Starting service [Tomcat]
+2026-07-08 01:03:27 [main] INFO  o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.20]
+2026-07-08 01:03:27 [main] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2026-07-08 01:03:27 [main] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 1821 ms
+2026-07-08 01:03:28 [main] INFO  o.s.o.j.p.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-07-08 01:03:28 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2026-07-08 01:03:28 [main] INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@6f3b13d0
+2026-07-08 01:03:28 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2026-07-08 01:03:28 [main] WARN  org.hibernate.orm.deprecation - HHH90000025: MySQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2026-07-08 01:03:30 [main] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-07-08 01:03:30 [main] WARN  o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2026-07-08 01:03:31 [main] INFO  o.a.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8080"]
+2026-07-08 01:03:31 [main] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port 8080 (http) with context path ''
+2026-07-08 01:03:31 [main] INFO  com.sgi.SistemaGestionIncidencias - Started SistemaGestionIncidencias in 5.996 seconds (process running for 6.472)
+2026-07-08 01:03:52 [http-nio-8080-exec-1] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-07-08 01:03:52 [http-nio-8080-exec-1] INFO  o.s.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+2026-07-08 01:03:52 [http-nio-8080-exec-1] INFO  o.s.web.servlet.DispatcherServlet - Completed initialization in 3 ms
+2026-07-08 01:03:54 [http-nio-8080-exec-5] INFO  com.sgi.controller.LoginController - AUDITORIA | Módulo=Autenticación | Usuario=kriss.angela0@utp.edu.pe | Acción=Inicio de sesión
+2026-07-08 01:03:54 [http-nio-8080-exec-8] INFO  c.s.controller.IncidenciaController - AUDITORIA | Módulo=Panel Administrador | Usuario=kriss.angela0@utp.edu.pe | Acción=Ingresó al Panel Administrador
+2026-07-08 01:04:29 [http-nio-8080-exec-4] INFO  com.sgi.controller.LoginController - AUDITORIA | Módulo=Autenticación | Usuario=kriss.angela0@utp.edu.pe | Acción=Inicio de sesión
+2026-07-08 01:04:29 [http-nio-8080-exec-9] INFO  c.s.controller.IncidenciaController - AUDITORIA | Módulo=Panel Administrador | Usuario=kriss.angela0@utp.edu.pe | Acción=Ingresó al Panel Administrador
+2026-07-08 01:04:36 [http-nio-8080-exec-1] INFO  c.s.controller.IncidenciaController - AUDITORIA | Módulo=Reportes | Usuario=kriss.angela0@utp.edu.pe | Acción=Exportó reporte Excel
+2026-07-08 01:04:45 [http-nio-8080-exec-2] INFO  c.s.controller.IncidenciaController - AUDITORIA | Módulo=Reportes | Usuario=kriss.angela0@utp.edu.pe | Acción=Exportó reporte Excel
+2026-07-08 01:05:16 [http-nio-8080-exec-3] INFO  com.sgi.controller.LoginController - AUDITORIA | Módulo=Autenticación | Usuario=kriss.angela0@utp.edu.pe | Acción=Cierre de sesión
+2026-07-08 01:07:33 [http-nio-8080-exec-10] INFO  com.sgi.controller.LoginController - AUDITORIA | Módulo=Gestión de Usuarios | Usuario=inesug@utp.edu.pe | Acción=Registro de usuario
+2026-07-08 01:07:42 [http-nio-8080-exec-2] INFO  com.sgi.controller.LoginController - AUDITORIA | Módulo=Autenticación | Usuario=inesug@utp.edu.pe | Acción=Inicio de sesión
+2026-07-08 01:08:38 [http-nio-8080-exec-5] INFO  com.sgi.controller.LoginController - AUDITORIA | Módulo=Autenticación | Usuario=inesug@utp.edu.pe | Acción=Cierre de sesión
+2026-07-08 01:09:10 [http-nio-8080-exec-3] INFO  com.sgi.controller.LoginController - AUDITORIA | Módulo=Gestión de Usuarios | Usuario=paker@utp.edu.pe | Acción=Registro de usuario
+2026-07-08 01:09:16 [http-nio-8080-exec-4] INFO  com.sgi.controller.LoginController - AUDITORIA | Módulo=Autenticación | Usuario=paker@utp.edu.pe | Acción=Inicio de sesión
