@@ -306,6 +306,22 @@ h1, h2, h3, h4, h5, h6, p, span {
     border-color: #58151c !important;  
 }
 
+  .filter-box {
+      background-color: var(--bg-card); 
+      border: 1px solid var(--border-card);
+      border-radius: 12px; padding: 20px;
+  }
+        .table-custom { 
+            color: var(--text-main);
+        }
+        .table-custom th { 
+            background-color: var(--bg-nav);
+            color: var(--text-main);
+            border-bottom: 2px solid var(--border-card);
+        }
+        .table-custom td {
+            border-color: var(--border-card);
+            vertical-align: middle; }
 /* ========================================== 
    8. DISEÑO RESPONSIVO (AJUSTES PARA MÓVILES) 
    ========================================== */
