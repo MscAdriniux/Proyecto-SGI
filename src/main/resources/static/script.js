@@ -194,70 +194,145 @@ document.addEventListener("DOMContentLoaded", function() {
 
     if (badgeNotificaciones) {
         
+        // ------------------------------------------
+        // 6. SISTEMA DE NOTIFICACIONES EN TIEMPO REAL ABSOLUTO (CROSS-PANEL)
+        // ------------------------------------------
+        // Inicializamos la conexión SSE de forma obligatoria para todos los paneles del sistema
         const eventSource = new EventSource('/api/notificaciones/suscripcion');
 
         eventSource.onmessage = function(event) {
-            
-            // 1. Reproducir sonido de alerta
-            const audio = new Audio('https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3');
-            audio.play().catch(e => console.log("Sonido bloqueado por el navegador"));
 
-            // 2. Aumentar contador de campana
-            contadorNuevas++;
-            badgeNotificaciones.textContent = contadorNuevas;
-            badgeNotificaciones.style.display = 'block';
+            // 1. Sonido de alerta global
+            const audio = new Audio('https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3');
+            audio.play().catch(e => console.log("Sonido bloqueado por políticas del navegador"));
+
+            // 2. Capturar elementos del panel de notificaciones del técnico (si existen)
+            const badgeNotificaciones = document.getElementById('badgeNotificaciones');
+            const contenedorNotificaciones = document.getElementById('contenedorNotificaciones');
+            const mensajeSinNotificaciones = document.getElementById('mensajeSinNotificaciones');
+
+            if (badgeNotificaciones) {
+                let contadorActual = parseInt(badgeNotificaciones.textContent) || 0;
+                contadorActual++;
+                badgeNotificaciones.textContent = contadorActual;
+                badgeNotificaciones.style.display = 'block';
+            }
 
             if (mensajeSinNotificaciones) {
                 mensajeSinNotificaciones.style.display = 'none';
             }
 
-            // 3. Crear notificación en el menú lateral
-            let datosNotificacion = event.data;
-            const nuevaNotificacion = document.createElement('div');
-            nuevaNotificacion.className = 'p-3 mb-3 rounded-3 shadow-sm border-start border-4 border-warning';
-            nuevaNotificacion.style.backgroundColor = 'var(--bg-card)';
-            
-            nuevaNotificacion.innerHTML = `
-                <div class="d-flex justify-content-between align-items-center mb-1">
-                    <span class="badge bg-danger-subtle text-danger border border-danger-subtle px-2 py-1">¡NUEVO TICKET!</span>
-                    <small class="text-muted fw-bold">Ahora mismo</small>
-                </div>
-                <p class="mb-0 mt-2" style="font-size: 0.9rem;">${datosNotificacion}</p>
-            `;
+            // 3. PROCESAMIENTO INTELIGENTE DEL MENSAJE (PREFIJOS)
+            let rawMensaje = event.data;
+            let textoLimpio = rawMensaje;
+            let etiquetaHtml = `<span class="badge bg-secondary-subtle text-secondary border border-secondary-subtle px-2 py-1">AVISO</span>`;
+            let estiloBorde = "border-start border-4 border-secondary";
 
-            contenedorNotificaciones.insertBefore(nuevaNotificacion, contenedorNotificaciones.children[1] || contenedorNotificaciones.firstChild);
+            if (rawMensaje.startsWith("NUEVO:")) {
+                textoLimpio = rawMensaje.replace("NUEVO:", "").trim();
+                etiquetaHtml = `<span class="badge bg-danger text-white px-2 py-1"><i class="fa-solid fa-triangle-exclamation me-1"></i>¡NUEVO TICKET!</span>`;
+                estiloBorde = "border-start border-4 border-danger";
+            } else if (rawMensaje.startsWith("PROCESO:")) {
+                textoLimpio = rawMensaje.replace("PROCESO:", "").trim();
+                etiquetaHtml = `<span class="badge bg-primary text-white px-2 py-1"><i class="fa-solid fa-screwdriver-wrench me-1"></i>EN PROCESO</span>`;
+                estiloBorde = "border-start border-4 border-primary";
+            } else if (rawMensaje.startsWith("ESCALADO:")) {
+                textoLimpio = rawMensaje.replace("ESCALADO:", "").trim();
+                etiquetaHtml = `<span class="badge bg-warning text-dark px-2 py-1"><i class="fa-solid fa-arrow-up-right-path me-1"></i>TICKET ESCALADO</span>`;
+                estiloBorde = "border-start border-4 border-warning";
+            } else if (rawMensaje.startsWith("RESUELTO:") || rawMensaje.startsWith("FINAL:")) {
+                textoLimpio = rawMensaje.startsWith("RESUELTO:") ? rawMensaje.replace("RESUELTO:", "").trim() : rawMensaje.replace("FINAL:", "").trim();
+                etiquetaHtml = `<span class="badge bg-success text-white px-2 py-1"><i class="fa-solid fa-circle-check me-1"></i>SOLUCIONADO</span>`;
+                estiloBorde = "border-start border-4 border-success";
+            }
 
-            // ========================================================
-            // 4. MAGIA AJAX: REFRESCO SILENCIOSO DE LAS TARJETAS
-            // ========================================================
+            // Si la barra lateral de notificaciones existe en el DOM actual, inyectamos la tarjeta formateada
+            if (contenedorNotificaciones) {
+                const nuevaNotificacion = document.createElement('div');
+                nuevaNotificacion.className = `p-3 mb-3 rounded-3 shadow-sm ${estiloBorde}`;
+                nuevaNotificacion.style.backgroundColor = 'var(--bg-card)';
+
+                nuevaNotificacion.innerHTML = `
+                    <div class="d-flex justify-content-between align-items-center mb-1">
+                        ${etiquetaHtml}
+                        <small class="text-muted fw-bold">Ahora mismo</small>
+                    </div>
+                    <p class="mb-0 mt-2" style="font-size: 0.9rem; line-height: 1.4;">${textoLimpio}</p>
+                `;
+                contenedorNotificaciones.insertBefore(nuevaNotificacion, contenedorNotificaciones.children[1] || contenedorNotificaciones.firstChild);
+            }
+
+            // ========================================================================
+            // 4. ACTUALIZACIÓN DINÁMICA POR AJAX (Sincronización cross-panel de tarjetas)
+            // ========================================================================
+            const textoAntesDeRefrescar = buscador ? buscador.value : '';
+            const estadoAntesDeRefrescar = estadoActual;
+
             fetch(window.location.href)
                 .then(response => response.text())
                 .then(html => {
                     const parser = new DOMParser();
                     const doc = parser.parseFromString(html, 'text/html');
-                    
+
                     const nuevoContenedor = doc.querySelector('.incidencias-container');
                     const contenedorActual = document.querySelector('.incidencias-container');
-                    
                     if (nuevoContenedor && contenedorActual) {
-                        // Reemplazamos el HTML viejo por el nuevo
                         contenedorActual.innerHTML = nuevoContenedor.innerHTML;
-                        
-                        // Reconectamos las tarjetas y el buscador al DOM nuevo
-                        tarjetas = Array.from(document.querySelectorAll('.incidencia-item-card'));
-                        buscador = document.getElementById('buscadorDocente') || 
-                                   document.getElementById('buscadorAdmin') || 
-                                   document.getElementById('buscadorTI');
-                                   
-                        if (buscador) {
-                            buscador.addEventListener('input', aplicarFiltroCombinado);
-                        }
-                        
-                        // Redibujamos la pantalla y los números de paginación
-                        aplicarFiltroCombinado();
+                    }
+
+                    const nuevasMetricas = doc.querySelector('.row.mb-4.g-3');
+                    const metricasActuales = document.querySelector('.row.mb-4.g-3');
+                    if (nuevasMetricas && metricasActuales) {
+                        metricasActuales.innerHTML = nuevasMetricas.innerHTML;
+                    }
+
+                    buscador = document.getElementById('buscadorDocente') || 
+                               document.getElementById('buscadorAdmin') || 
+                               document.getElementById('buscadorTI');
+
+                    if (buscador) {
+                        buscador.value = textoAntesDeRefrescar;
+                        buscador.addEventListener('input', aplicarFiltroCombinado);
+                    }
+
+                    estadoActual = estadoAntesDeRefrescar;
+                    const contenedorBotones = document.getElementById('filterGroupDocente') || 
+                                             document.getElementById('filterGroupAdmin') || 
+                                             document.getElementById('filterGroupTI');
+
+                    if (contenedorBotones) {
+                        contenedorBotones.querySelectorAll('.btn').forEach(b => {
+                            const textoBoton = b.innerText.trim().toUpperCase();
+                            let esActivo = false;
+
+                            if (estadoActual === 'TODAS' && textoBoton === 'TODAS') esActivo = true;
+                            if (estadoActual === 'PENDIENTE' && textoBoton === 'PENDIENTE') esActivo = true;
+                            if (estadoActual === 'EN PROCESO' && textoBoton === 'EN PROCESO') esActivo = true;
+                            if (estadoActual === 'RESUELTA' && (textoBoton === 'RESUELTA' || textoBoton === 'RESUELTAS')) esActivo = true;
+                            if (estadoActual === 'ATENDIDA' && textoBoton === 'ATENDIDA') esActivo = true;
+
+                            if (esActivo) {
+                                b.classList.remove('btn-light', 'border');
+                                b.classList.add('btn-dark', 'active');
+                            } else {
+                                b.classList.remove('btn-dark', 'active');
+                                b.classList.add('btn-light', 'border');
+                            }
+                        });
+                    }
+
+                    tarjetas = Array.from(document.querySelectorAll('.incidencia-item-card'));
+
+                    aplicarFiltroCombinado();
+                    if (typeof verificarTiemposEspera === 'function') {
+                        verificarTiemposEspera();
                     }
                 })
-                .catch(err => console.error('Error actualizando bandeja silenciosamente:', err));
+                .catch(err => console.error('Error de sincronización cross-panel:', err));
+        };
+
+        eventSource.onerror = function(error) {
+            console.error("Conexión de tiempo real interrumpida con el servidor. Reintentando...");
         };
 
         eventSource.onerror = function(error) {
@@ -291,4 +366,63 @@ document.addEventListener("DOMContentLoaded", function() {
          // 3. Lo mostramos en pantalla
          modalResolucionInstancia.show();
      };
+});
+
+/* ==========================================
+   7. CONTROL DE TIEMPOS DE ESPERA (SLA)
+   ========================================== */
+function verificarTiemposEspera() {
+    // 1. Configuración de límites de tiempo en minutos según prioridad
+    const LIMITES_MINUTOS = {
+        'ALTA': 5,
+        'MEDIA': 7,
+        'BAJA': 10
+    };
+    
+    // 2. Información de contacto del administrador
+    const INFO_ADMIN = "Administrador de Soporte TI al +51 987 654 321";
+
+    // 3. Obtener solo las tarjetas que están PENDIENTES
+    const tarjetasPendientes = document.querySelectorAll('.incidencia-item-card[data-estado="PENDIENTE"]');
+    const ahora = new Date();
+
+    tarjetasPendientes.forEach(tarjeta => {
+        const prioridad = tarjeta.getAttribute('data-prioridad');
+        const fechaStr = tarjeta.getAttribute('data-fecha');
+        
+        if (!prioridad || !fechaStr) return;
+
+        const fechaCreacion = new Date(fechaStr);
+        // Calcular la diferencia en minutos
+        const diferenciaMinutos = (ahora - fechaCreacion) / (1000 * 60);
+        const limite = LIMITES_MINUTOS[prioridad] || 60;
+
+        // Comprobar si ya existe la alerta para no duplicarla
+        let alertaDiv = tarjeta.querySelector('.alerta-tiempo-espera');
+
+        if (diferenciaMinutos >= limite) {
+            if (!alertaDiv) {
+                // Crear y agregar el mensaje de advertencia
+                alertaDiv = document.createElement('div');
+                alertaDiv.className = 'alerta-tiempo-espera alert alert-warning border-warning-subtle mt-3 mb-0 p-3 d-flex align-items-center shadow-sm rounded-3 fade show';
+                alertaDiv.innerHTML = `
+                    <div class="fs-4 me-3" style="color: inherit;">
+                        <i class="fa-solid fa-clock-rotate-left"></i>
+                    </div>
+                    <div style="color: inherit;">
+                        <strong class="d-block">Tiempo de espera prolongado</strong>
+                        <span class="small">Esta incidencia lleva más de ${limite} minutos sin atención. Por favor, comuníquese con el <strong>${INFO_ADMIN}</strong>.</span>
+                    </div>
+                `;
+                tarjeta.appendChild(alertaDiv);
+            }
+        }
+    });
+}
+
+// Ejecutar la validación al cargar la página
+document.addEventListener("DOMContentLoaded", function() {
+    verificarTiemposEspera();
+    // Volver a verificar cada 1 minuto (60000 milisegundos)
+    setInterval(verificarTiemposEspera, 60000);
 });
