@@ -15,7 +15,24 @@ public class AuditoriaController {
     @GetMapping("/admin/auditoria")
     public String mostrarAuditoria(Model model) {
 
-        model.addAttribute("logs", auditService.obtenerLogs());
+        var logs = auditService.obtenerLogs();
+
+        long info = logs.stream()
+                .filter(log -> "INFO".equalsIgnoreCase(log.getNivel()))
+                .count();
+
+        long warn = logs.stream()
+                .filter(log -> "WARN".equalsIgnoreCase(log.getNivel()))
+                .count();
+
+        long error = logs.stream()
+                .filter(log -> "ERROR".equalsIgnoreCase(log.getNivel()))
+                .count();
+
+        model.addAttribute("logs", logs);
+        model.addAttribute("info", info);
+        model.addAttribute("warn", warn);
+        model.addAttribute("error", error);
 
         return "auditoria";
     }

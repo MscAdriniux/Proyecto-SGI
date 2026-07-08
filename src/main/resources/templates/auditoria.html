@@ -11,11 +11,144 @@
 
 <body class="bg-light">
 
-<div class="container mt-4">
+    <div class="container-fluid mt-4">
 
-    <h2 class="mb-4">
-        Auditoría del Sistema
-    </h2>
+    <div class="row mb-4">
+
+        <div class="col-12">
+
+            <div class="card shadow">
+
+                <div class="card-body">
+
+                    <h2 class="fw-bold mb-1">
+
+                        <i class="fa-solid fa-shield-halved text-primary"></i>
+
+                        Auditoría del Sistema
+
+                    </h2>
+
+                    <p class="text-muted mb-0">
+
+                        Monitoreo de eventos registrados mediante Logback.
+
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+        
+        <div class="row mb-4">
+
+    <div class="col-md-3">
+
+        <div class="card border-0 shadow">
+
+            <div class="card-body text-center">
+
+                <h6 class="text-muted">
+
+                    INFO
+
+                </h6>
+
+                <h2 class="text-success">
+
+                    <span th:text="${info}">0</span>
+
+                </h2>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="col-md-3">
+
+        <div class="card border-0 shadow">
+
+            <div class="card-body text-center">
+
+                <h6 class="text-muted">
+
+                    WARN
+
+                </h6>
+
+                <h2 class="text-warning">
+
+                    <span th:text="${warn}">0</span>
+
+                </h2>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="col-md-3">
+
+        <div class="card border-0 shadow">
+
+            <div class="card-body text-center">
+
+                <h6 class="text-muted">
+
+                    ERROR
+
+                </h6>
+
+                <h2 class="text-danger">
+
+                    <span th:text="${error}">0</span>
+
+                </h2>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="col-md-3">
+
+        <div class="card border-0 shadow">
+
+            <div class="card-body text-center">
+
+                <h6 class="text-muted">
+
+                    TOTAL
+
+                </h6>
+
+                <h2 class="text-primary">
+
+                    <span th:text="${logs.size()}"></span>
+
+                </h2>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+        
+        
+        
+        
+        
+        
+
 
     <table class="table table-bordered table-hover">
 
