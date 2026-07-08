@@ -6,14 +6,24 @@ import org.slf4j.LoggerFactory;
 import com.sgi.model.Incidencia;
 import com.sgi.model.Usuario;
 import com.sgi.repository.IncidenciaRepository;
-
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+/**
+ * Servicio encargado de manejar la lógica de negocio de las incidencias.
+ * Actúa como un intermediario seguro entre los controladores (vistas) y 
+ * el repositorio (base de datos).
+ */
 @Service
 public class IncidenciaService {
+    
+    /**
+     * Constructor por defecto.
+     */
+    public IncidenciaService() {}
 
     // Registra operaciones relacionadas con las incidencias
     private static final Logger logger =
@@ -29,18 +39,32 @@ public class IncidenciaService {
 
     // Guardar una incidencia
     public void guardar(Incidencia incidencia) {
-
-        // Registrar la creación de una nueva incidencia
-        logger.info(
-                "Nueva incidencia registrada. Tipo: {}, Prioridad: {}",
-                incidencia.getTipoIncidencia(),
-                incidencia.getPrioridad()
-        );
-
+        // Asignación de prioridad automática en el backend basada en la categoría
+        if (incidencia.getCategoria() != null) {
+            String cat = incidencia.getCategoria().toLowerCase();
+            if (cat.contains("hardware") || cat.contains("red")) {
+                incidencia.setPrioridad("ALTA");
+            } else if (cat.contains("software") || cat.contains("equipamiento")) {
+                incidencia.setPrioridad("MEDIA");
+            } else {
+                incidencia.setPrioridad("BAJA");
+            }
+        } else if (incidencia.getPrioridad() == null) {
+            incidencia.setPrioridad("BAJA");
+        }
+        
         incidenciaRepository.save(incidencia);
     }
 
-    // Obtener todas las incidencias
+    // =============================
+    // MÉTODOS PARA EL PANEL DE TI Y ADMIN
+    // =============================
+
+    /**
+     * Recupera absolutamente todos los tickets de la base de datos, sin filtros.
+     * Utilizado principalmente para el dashboard de Administradores.
+     * @return Lista completa de todas las incidencias del sistema.
+     */
     public List<Incidencia> obtenerTodas() {
         return incidenciaRepository.findAll();
     }
@@ -83,7 +107,46 @@ public class IncidenciaService {
         return incidenciaRepository.save(incidencia);
     }
 
+    
+    /**
+     * Filtra y obtiene todas las incidencias que se encuentren en un estado particular.
+     * @param estado El estado a buscar (ej. "PENDIENTE", "RESUELTA").
+     * @return Lista de incidencias que coincidan con el estado solicitado.
+     */
     public List<Incidencia> obtenerPorEstado(String estado) {
         return incidenciaRepository.findByEstado(estado);
+    }
+
+    /**
+     * Obtiene las incidencias correspondientes al panel de un técnico.
+     * Incluye las incidencias "PENDIENTES" (disponibles para tomar) y 
+     * las que ya le han sido asignadas.
+     * @param nombreTecnico Nombre completo del técnico.
+     * @return Lista combinada de incidencias para el técnico.
+     */
+    public List<Incidencia> obtenerIncidenciasParaTecnico(String nombreTecnico) {
+        // Envolvemos en ArrayList para poder mutar la lista con .addAll()
+        List<Incidencia> misIncidencias = new ArrayList<>(incidenciaRepository.findByAsignadoA(nombreTecnico));
+        
+        List<Incidencia> pendientes = incidenciaRepository.findByEstado("PENDIENTE");
+        
+        misIncidencias.addAll(pendientes);
+        
+        return misIncidencias;
+    }
+
+    /**
+     * Verifica si existe una incidencia activa del mismo tipo en una ubicación específica.
+     * Evita la duplicidad de reportes para el mismo problema en la misma aula/laboratorio.
+     * @param ubicacion El lugar físico (ej. Laboratorio G302).
+     * @param tipoIncidencia El título o descripción del problema.
+     * @return true si ya existe un reporte en curso, false si es seguro registrarlo.
+     */
+    public boolean existeActivaEnUbicacion(String ubicacion, String tipoIncidencia) {
+        return incidenciaRepository.existsByUbicacionAndTipoIncidenciaAndEstadoIn(
+            ubicacion, 
+            tipoIncidencia, 
+            List.of("PENDIENTE", "EN PROCESO")
+        );
     }
 }

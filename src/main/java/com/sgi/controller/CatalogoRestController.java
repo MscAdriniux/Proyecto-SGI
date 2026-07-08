@@ -1,8 +1,9 @@
 package com.sgi.controller;
 
 import com.sgi.model.CatalogoIncidencia;
-import com.sgi.repository.CatalogoIncidenciaRepository;
+import com.sgi.service.CatalogoService; // 1. Importamos el servicio
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -14,11 +15,15 @@ import java.util.List;
 public class CatalogoRestController {
 
     @Autowired
-    private CatalogoIncidenciaRepository repository;
+    private CatalogoService catalogoService; 
 
     @GetMapping
-    public List<CatalogoIncidencia> obtenerCatalogo() {
-        // Esto va a MySQL, saca todo el catálogo y lo transforma en JSON automáticamente
-        return repository.findAll();
+    public ResponseEntity<List<CatalogoIncidencia>> obtenerCatalogo() {
+        List<CatalogoIncidencia> catalogo = catalogoService.obtenerTodoElCatalogo(); // 3. Llamamos al servicio
+        
+        if (catalogo.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.ok(catalogo);
     }
 }
