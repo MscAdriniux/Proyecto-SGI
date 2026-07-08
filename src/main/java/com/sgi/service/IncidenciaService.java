@@ -128,4 +128,13 @@ public class IncidenciaService {
             List.of("PENDIENTE", "EN PROCESO")
         );
     }
+    
+  
+    /**
+     * Obtiene una lista filtrada de incidencias a partir de sus IDs.
+     * Utilizado por el Centro de Reportes para exportación selectiva.
+     */
+    public List<Incidencia> obtenerPorListaIds(List<Integer> ids) {
+        return incidenciaRepository.findAllById(ids);
+    }
 }
