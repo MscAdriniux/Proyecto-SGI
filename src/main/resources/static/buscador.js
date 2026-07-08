@@ -135,7 +135,11 @@ document.addEventListener("DOMContentLoaded", function() {
             if (filtro.length > 0) {
                 listaAulas.style.display = "block";
                 itemsAulas.forEach(item => {
-                    const texto = item.getAttribute("data-texto").toLowerCase();
+                    // Obtenemos el atributo de forma segura
+                    const dataTexto = item.getAttribute("data-texto");
+                    // Si no existe o es nulo, usamos una cadena vacía para evitar que rompa el script
+                    const texto = dataTexto ? dataTexto.toLowerCase() : "";
+
                     if (texto.includes(filtro)) {
                         item.style.display = "block";
                         hayResultados = true;
