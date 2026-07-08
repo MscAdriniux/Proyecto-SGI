@@ -25,7 +25,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 /**
  * Controlador principal para la gestión de incidencias.
  * Unifica los flujos de Docentes, Soporte TI y Administradores, integrando
@@ -33,6 +34,8 @@ import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
  */
 @Controller
 public class IncidenciaController {
+    private static final Logger logger =
+        LoggerFactory.getLogger(IncidenciaController.class);
 
     /**
      * Constructor por defecto.
@@ -137,6 +140,13 @@ public class IncidenciaController {
         nueva.setUsuario(usuarioLogueado);
         
         incidenciaService.guardar(nueva); 
+        
+        logger.info(
+            "AUDITORIA | Módulo=Gestión de Incidencias | Usuario={} | Acción=Registró incidencia | Tipo={} | Ubicación={}",
+            usuarioLogueado.getCorreo(),
+            tipoIncidencia,
+            ubicacion
+        );
 
         // NOTIFICACIÓN: Solo el docente creador (para refrescar sus pestañas) y la bolsa global de técnicos reciben el nuevo ticket
         notificationService.broadcastSegmentado(
@@ -175,6 +185,13 @@ public class IncidenciaController {
         model.addAttribute("totalEnProceso", enProceso);
         model.addAttribute("totalResueltas", resueltas);
 
+        
+        
+        logger.info(
+            "AUDITORIA | Módulo=Panel Administrador | Usuario={} | Acción=Ingresó al Panel Administrador",
+            u.getCorreo()
+        );
+        
         return "panel-admin";
     }
 
@@ -187,6 +204,11 @@ public class IncidenciaController {
 
         List<Incidencia> todas = incidenciaService.obtenerTodas();
         byte[] excelBytes = excelReportService.generarReporte(todas);
+        
+        logger.info(
+            "AUDITORIA | Módulo=Reportes | Usuario={} | Acción=Exportó reporte Excel",
+            u.getCorreo()
+        );
 
         return ResponseEntity.ok()
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=Reporte_Incidencias.xlsx")
@@ -274,25 +296,12 @@ public class IncidenciaController {
 
             incidenciaService.guardar(incidencia);
             
-            Integer idDocente = incidencia.getUsuario().getIdUsuario();
-            String nombreTecnico = incidencia.getAsignadoA();
-            String mensajeBroadcast = "";
-            
-            if (nuevoEstado.equals("EN PROCESO")) {
-                // Se notifica de forma aislada al docente afectado y a los administradores. Ningún otro docente ni técnico escucha esto.
-                mensajeBroadcast = "PROCESO: El equipo de Soporte TI ha ACEPTADO tu incidencia de '" + incidencia.getTipoIncidencia() + "' en " + incidencia.getUbicacion() + " (Ticket #" + idIncidencia + "). Ya se encuentra en camino.";
-                notificationService.broadcastSegmentado(mensajeBroadcast, idDocente, nombreTecnico, false);
-                
-            } else if (nuevoEstado.equals("ATENDIDA")) {
-                // Escalamiento: Alerta directa al Admin y al docente implicado
-                mensajeBroadcast = "ESCALADO: ¡ATENCIÓN ADMINISTRADOR! El técnico " + tecnico.getNombres() + " " + tecnico.getApellidos() + " ha marcado como ATENDIDA la incidencia de '" + incidencia.getTipoIncidencia() + "' en " + incidencia.getUbicacion() + " (Ticket #" + idIncidencia + "). El problema ha escalado para su resolución final.";
-                notificationService.broadcastSegmentado(mensajeBroadcast, idDocente, nombreTecnico, false);
-                
-            } else if (nuevoEstado.equals("RESUELTA")) {
-                // Cierre directo por técnico
-                mensajeBroadcast = "RESUELTO: Tu incidencia de '" + incidencia.getTipoIncidencia() + "' en " + incidencia.getUbicacion() + " (Ticket #" + idIncidencia + ") ha sido RESUELTA por el técnico " + tecnico.getNombres() + ". El aula se encuentra operativa.";
-                notificationService.broadcastSegmentado(mensajeBroadcast, idDocente, nombreTecnico, false);
-            }
+            logger.info(
+                "AUDITORIA | Módulo=Gestión de Incidencias | Usuario={} | Acción=Cambió estado | Ticket={} | Estado={}",
+                tecnico.getCorreo(),
+                incidencia.getIdIncidencia(),
+                nuevoEstado
+            );
         }
         
         return "redirect:/incidencias/panel-tecnico";

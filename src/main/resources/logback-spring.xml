@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<configuration>
+
+    <!-- Carpeta donde se guardarán los logs -->
+    <property name="LOG_PATH" value="logs"/>
+
+    <!-- Formato de los mensajes -->
+    <property name="LOG_PATTERN"
+              value="%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"/>
+
+    <!-- Consola -->
+    <appender name="CONSOLE"
+              class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>${LOG_PATTERN}</pattern>
+        </encoder>
+    </appender>
+
+    <!-- Archivo -->
+    <appender name="FILE"
+              class="ch.qos.logback.core.rolling.RollingFileAppender">
+
+        <file>${LOG_PATH}/sgi.log</file>
+
+        <rollingPolicy
+                class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+
+            <fileNamePattern>
+                ${LOG_PATH}/sgi-%d{yyyy-MM-dd}.log
+            </fileNamePattern>
+
+            <maxHistory>30</maxHistory>
+
+        </rollingPolicy>
+
+        <encoder>
+            <pattern>${LOG_PATTERN}</pattern>
+        </encoder>
+
+    </appender>
+
+    <!-- Logs de Spring -->
+    <logger name="org.springframework" level="INFO"/>
+
+    <!-- Logs de Hibernate -->
+    <logger name="org.hibernate" level="WARN"/>
+
+    <!-- Logs de tu aplicación -->
+    <logger name="com.sgi" level="DEBUG"/>
+
+    <root level="INFO">
+        <appender-ref ref="CONSOLE"/>
+        <appender-ref ref="FILE"/>
+    </root>
+
+</configuration>

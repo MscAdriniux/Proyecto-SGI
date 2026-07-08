@@ -1,5 +1,8 @@
 package com.sgi.controller;
-
+import org.slf4j.Logger;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
+import org.slf4j.LoggerFactory;
 import com.sgi.model.Usuario;
 import com.sgi.service.UsuarioService;
 import jakarta.servlet.http.HttpSession;
@@ -17,6 +20,10 @@ import org.springframework.web.bind.annotation.RequestParam;
  */
 @Controller
 public class LoginController {
+    
+    // Registra eventos relacionados con la autenticación de usuarios.
+    private static final Logger logger =
+        LoggerFactory.getLogger(LoginController.class);
 
     /**
      * Constructor por defecto.
@@ -70,6 +77,11 @@ public class LoginController {
             // Guardamos al usuario en la sesión para que las demás pantallas lo reconozcan
             session.setAttribute("usuarioLogueado", usuarioAutenticado); 
             
+            logger.info(
+                "AUDITORIA | Módulo=Autenticación | Usuario={} | Acción=Inicio de sesión",
+                usuarioAutenticado.getCorreo()
+            );
+            
             // Obtenemos el rol
             String rol = usuarioAutenticado.getRol(); 
             // Salvavidas por si un usuario viejo no tiene rol en la BD
@@ -93,6 +105,11 @@ public class LoginController {
         } else {
             // Si llega aquí, significa que se equivocó de correo o contraseña
             model.addAttribute("error", "Correo o contraseña incorrectos");
+            // Registrar intento fallido de autenticación
+            logger.warn(
+                "AUDITORIA | Módulo=Autenticación | Usuario={} | Acción=Intento de inicio de sesión fallido",
+                correo
+            );
             return "login"; // Lo devuelve a la vista login.html con el mensaje de error
         }
     }
@@ -145,6 +162,13 @@ public class LoginController {
         
         // Guardar el usuario encriptado
         usuarioService.registrarUsuario(nuevoUsuario);
+
+        // Registrar creación de una nueva cuenta
+        logger.info(
+            "AUDITORIA | Módulo=Gestión de Usuarios | Usuario={} | Acción=Registro de usuario",
+            correo
+        );
+        
         
         return "redirect:/login";
     }
@@ -160,7 +184,33 @@ public class LoginController {
      */
     @GetMapping("/logout")
     public String cerrarSesion(HttpSession session) {
+
+        Usuario u=(Usuario)session.getAttribute("usuarioLogueado");
+
+        if(u!=null){
+
+            logger.info(
+                "AUDITORIA | Módulo=Autenticación | Usuario={} | Acción=Cierre de sesión",
+                u.getCorreo()
+            );
+
+        }
+
         session.invalidate();
+
         return "redirect:/login";
+
+    }
+
+    // ==========================================
+    // 4. RUTAS TEMPORALES DE PRUEBA (Para evitar el 404)
+    // ==========================================
+
+    @GetMapping("/admin/dashboard")
+    @ResponseBody 
+    public String panelAdmin(HttpSession session) {
+        Usuario u = (Usuario) session.getAttribute("usuarioLogueado");
+        if(u == null) return "Acceso denegado. <a href='/login'>Inicia sesión</a>";
+        return "<h1>¡Éxito total!</h1><p>Bienvenido Administrador <b>" + u.getNombres() + "</b>. Tu login funciona perfecto.</p><br><a href='/logout'>Cerrar Sesión</a>";
     }
 }
