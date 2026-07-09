@@ -1,7 +1,7 @@
 package com.sgi.service;
 
-import com.sgi.dao.CatalogoIncidenciaDAO;
 import com.sgi.model.CatalogoIncidencia;
+import com.sgi.repository.CatalogoIncidenciaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.List;
@@ -10,21 +10,9 @@ import java.util.List;
 public class CatalogoService {
 
     @Autowired
-    private CatalogoIncidenciaDAO catalogoDAO;
+    private CatalogoIncidenciaRepository repository;
 
     public List<CatalogoIncidencia> obtenerTodoElCatalogo() {
-        return catalogoDAO.obtenerTodo();
-    }
-
-    public CatalogoIncidencia guardar(CatalogoIncidencia catalogoIncidencia) {
-        return catalogoDAO.guardar(catalogoIncidencia);
-    }
-
-    public CatalogoIncidencia obtenerPorId(Long id) {
-        return catalogoDAO.obtenerPorId(id);
-    }
-
-    public void eliminar(Long id) {
-        catalogoDAO.eliminar(id);
+        return repository.findAll();
     }
 }

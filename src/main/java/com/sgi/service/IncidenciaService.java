@@ -1,10 +1,14 @@
 package com.sgi.service;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.sgi.model.Incidencia;
 import com.sgi.model.Usuario;
 import com.sgi.repository.IncidenciaRepository;
 import java.util.ArrayList;
 import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,23 +25,19 @@ public class IncidenciaService {
      */
     public IncidenciaService() {}
 
+    // Registra operaciones relacionadas con las incidencias
+    private static final Logger logger =
+            LoggerFactory.getLogger(IncidenciaService.class);
+
     @Autowired
     private IncidenciaRepository incidenciaRepository;
 
-    /**
-     * Obtiene una lista de todas las incidencias reportadas por un docente específico.
-     * @param usuario El usuario del cual se desean consultar los tickets.
-     * @return Lista de incidencias asociadas a ese usuario.
-     */
+    // Obtener las incidencias de un docente en específico
     public List<Incidencia> obtenerPorUsuario(Usuario usuario) {
         return incidenciaRepository.findByUsuario(usuario);
     }
-    
-    /**
-     * Guarda una nueva incidencia o actualiza una existente en la base de datos.
-     * Aplica reglas de negocio para asignación automática de prioridad basada en la categoría.
-     * @param incidencia El objeto incidencia con los datos a persistir.
-     */
+
+    // Guardar una incidencia
     public void guardar(Incidencia incidencia) {
         // Asignación de prioridad automática en el backend basada en la categoría
         if (incidencia.getCategoria() != null) {
@@ -69,23 +69,44 @@ public class IncidenciaService {
         return incidenciaRepository.findAll();
     }
 
-    /**
-     * Busca todas las incidencias que han sido asignadas a un técnico específico.
-     * @param asignadoA El nombre o identificador del técnico de TI.
-     * @return Lista de incidencias a cargo de dicho técnico.
-     */
-    public List<Incidencia> obtenerPorAsignadoA(String asignadoA) {
-        return incidenciaRepository.findByAsignadoA(asignadoA);
-    }
-
-    /**
-     * Busca una incidencia específica utilizando su clave primaria (ID).
-     * @param id El identificador único de la incidencia.
-     * @return El objeto Incidencia si existe, o null si no se encuentra.
-     */
+    // Buscar incidencia por ID
     public Incidencia obtenerPorId(Integer id) {
         return incidenciaRepository.findById(id).orElse(null);
     }
+
+    public Incidencia cambiarEstado(Long id, String estado) {
+
+        Incidencia incidencia = incidenciaRepository.findById(id.intValue())
+                .orElseThrow(() -> new RuntimeException("Incidencia no encontrada"));
+
+        // Registrar actualización del estado de la incidencia
+        logger.info(
+                "Cambio de estado en incidencia {} -> {}",
+                id,
+                estado
+        );
+
+        incidencia.setEstado(estado);
+
+        return incidenciaRepository.save(incidencia);
+    }
+
+    public Incidencia agregarComentario(Long id, String comentario) {
+
+        Incidencia incidencia = incidenciaRepository.findById(id.intValue())
+                .orElseThrow(() -> new RuntimeException("Incidencia no encontrada"));
+
+        // Registrar agregado de comentario técnico
+        logger.info(
+                "Comentario agregado a incidencia {}",
+                id
+        );
+
+        incidencia.setComentarioAdmin(comentario);
+
+        return incidenciaRepository.save(incidencia);
+    }
+
     
     /**
      * Filtra y obtiene todas las incidencias que se encuentren en un estado particular.
@@ -121,11 +142,35 @@ public class IncidenciaService {
      * @param tipoIncidencia El título o descripción del problema.
      * @return true si ya existe un reporte en curso, false si es seguro registrarlo.
      */
+    /**
+     * Verifica si existe una incidencia activa del mismo tipo en una ubicación específica.
+     * Ahora incluye el estado ATENDIDA como un bloqueo activo.
+     */
     public boolean existeActivaEnUbicacion(String ubicacion, String tipoIncidencia) {
         return incidenciaRepository.existsByUbicacionAndTipoIncidenciaAndEstadoIn(
             ubicacion, 
             tipoIncidencia, 
-            List.of("PENDIENTE", "EN PROCESO")
+            List.of("PENDIENTE", "EN PROCESO", "ATENDIDA")
         );
+    }
+
+    /**
+     * Método auxiliar para verificar si el bloqueo se debe específicamente a un ticket ATENDIDO.
+     */
+    public boolean esIncidenciaAtendida(String ubicacion, String tipoIncidencia) {
+        return incidenciaRepository.existsByUbicacionAndTipoIncidenciaAndEstadoIn(
+            ubicacion, 
+            tipoIncidencia, 
+            List.of("ATENDIDA")
+        );
+    }
+    
+  
+    /**
+     * Obtiene una lista filtrada de incidencias a partir de sus IDs.
+     * Utilizado por el Centro de Reportes para exportación selectiva.
+     */
+    public List<Incidencia> obtenerPorListaIds(List<Integer> ids) {
+        return incidenciaRepository.findAllById(ids);
     }
 }
