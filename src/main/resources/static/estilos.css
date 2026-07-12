@@ -311,17 +311,33 @@ h1, h2, h3, h4, h5, h6, p, span {
       border: 1px solid var(--border-card);
       border-radius: 12px; padding: 20px;
   }
-        .table-custom { 
-            color: var(--text-main);
-        }
-        .table-custom th { 
-            background-color: var(--bg-nav);
-            color: var(--text-main);
-            border-bottom: 2px solid var(--border-card);
-        }
-        .table-custom td {
-            border-color: var(--border-card);
-            vertical-align: middle; }
+            
+  .table-custom { 
+    color: var(--text-main) !important;
+    --bs-table-bg: transparent; /* Obliga a Bootstrap a ser transparente */
+    --bs-table-color: var(--text-main);
+}
+
+  .table-custom th { 
+    background-color: var(--bg-nav) !important;
+    color: var(--text-main) !important;
+    border-bottom: 2px solid var(--border-card) !important;
+}
+
+  .table-custom td {
+    background-color: transparent !important;
+    color: var(--text-main) !important;
+    border-color: var(--border-card) !important;
+    vertical-align: middle; 
+}
+
+
+   .table-custom tbody tr:hover td,
+   .table-custom tbody tr:hover th {
+    background-color: var(--bg-input) !important; 
+    color: var(--text-main) !important;
+}
+
 /* ========================================== 
    8. DISEÑO RESPONSIVO (AJUSTES PARA MÓVILES) 
    ========================================== */
