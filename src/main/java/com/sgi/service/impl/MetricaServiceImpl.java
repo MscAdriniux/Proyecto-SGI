@@ -2,6 +2,7 @@ package com.sgi.service.impl;
 
 import com.sgi.service.MetricaService;
 import com.sgi.repository.IncidenciaRepository;
+import java.sql.Timestamp; // <-- IMPORTACIÓN CLAVE: Para manejar la fecha nativa de MySQL
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -76,7 +77,15 @@ public class MetricaServiceImpl implements MetricaService {
             Map<String, Object> aula = new HashMap<>();
             aula.put("ubicacion", row[0]);
             aula.put("problema", row[1]);
-            aula.put("fechaEscalado", row[2]);
+            
+            // CORRECCIÓN: Convertimos el Timestamp de la consulta nativa a LocalDateTime
+            Object fechaObj = row[2];
+            if (fechaObj instanceof Timestamp) {
+                aula.put("fechaEscalado", ((Timestamp) fechaObj).toLocalDateTime());
+            } else {
+                aula.put("fechaEscalado", fechaObj);
+            }
+            
             bloqueadas.add(aula);
         }
         return bloqueadas;
