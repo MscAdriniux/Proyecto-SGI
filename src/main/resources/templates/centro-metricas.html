@@ -7,7 +7,6 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" th:href="@{/estilos.css}">
-    <!-- CDN de Chart.js para los gráficos dinámicos -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         .metric-card { background-color: var(--bg-card); border: 1px solid var(--border-card); border-radius: 12px; padding: 20px; }
@@ -16,159 +15,142 @@
 </head>
 <body class="dashboard-body">
 
-    <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg border-bottom px-4 py-3 bg-nav mb-4">
-        <div class="container-fluid">
-            <div>
-                <h4 class="mb-0 fw-bold">Sistema de Incidencias</h4>
-                <small class="text-muted">
-                    <span th:text="${usuarioLogueado.nombres} + ' ' + ${usuarioLogueado.apellidos}">Admin</span> • Panel de Analítica
-                </small>
-            </div>
-            <div class="d-flex align-items-center gap-3">
-                
-                   <button class="theme-toggle position-static m-0" id="themeToggleBtn">
-                    <i class="fa-regular fa-moon" id="themeIcon"></i>
-                </button>
-                <a href="/admin/panel-admin" class="btn btn-light border fw-bold px-3 py-2 rounded-3 text-dark">
-                    <i class="fa-solid fa-arrow-left me-2"></i> Volver al Panel
-                </a>
-            </div>
-        </div>
-    </nav>
+    <div class="admin-layout">
+        <div th:replace="~{sidebar-admin :: sidebar('metricas')}"></div>
 
-    <div class="container-fluid px-lg-5">
-        
-        <!-- NIVEL 1: KPIs OPERATIVOS (DATOS DE HOY) -->
-        <div class="row g-4 mb-4">
-            <div class="col-md-4">
-                <div class="metric-card shadow-sm d-flex align-items-center gap-3">
-                    <div class="icon-box bg-primary-subtle text-primary"><i class="fa-solid fa-plus fa-lg"></i></div>
+        <div class="admin-main-content">
+            <nav class="navbar navbar-expand-lg border-bottom px-4 py-3 bg-nav mb-4">
+                <div class="container-fluid">
                     <div>
-                        <h3 class="mb-0 fw-bold th-metric" th:text="${kpis.creadasHoy}">0</h3>
-                        <span class="text-muted small fw-bold">Reportadas Hoy</span>
+                        <h4 class="mb-0 fw-bold">Sistema de Incidencias</h4>
+                        <small class="text-muted">
+                            <span th:text="${usuarioLogueado.nombres} + ' ' + ${usuarioLogueado.apellidos}">Admin</span> • Panel de Analítica
+                        </small>
+                    </div>
+                    <div class="d-flex align-items-center gap-3">
+                        <button class="theme-toggle position-static m-0" id="themeToggleBtn">
+                            <i class="fa-regular fa-moon" id="themeIcon"></i>
+                        </button>
+                        <a href="/logout" class="btn btn-light border fw-bold px-3 py-2 rounded-3 text-dark btn-logout">
+                            <i class="fa-solid fa-arrow-right-from-bracket me-2"></i> Cerrar Sesión
+                        </a>
                     </div>
                 </div>
-            </div>
-            <div class="col-md-4">
-                <div class="metric-card shadow-sm d-flex align-items-center gap-3">
-                    <div class="icon-box bg-success-subtle text-success"><i class="fa-solid fa-check fa-lg"></i></div>
-                    <div>
-                        <h3 class="mb-0 fw-bold th-metric" th:text="${kpis.resueltasHoy}">0</h3>
-                        <span class="text-muted small fw-bold">Cerradas Hoy</span>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="metric-card shadow-sm d-flex align-items-center gap-3">
-                    <div class="icon-box bg-warning-subtle text-warning"><i class="fa-solid fa-percentage fa-lg"></i></div>
-                    <div>
-                        <h3 class="mb-0 fw-bold th-metric" th:text="${kpis.tasaResolucion} + '%'">0%</h3>
-                        <span class="text-muted small fw-bold">Efectividad Diaria</span>
-                    </div>
-                </div>
-            </div>
-        </div>
+            </nav>
 
-        <!-- SECCIÓN DE ALERTA: AULAS BLOQUEADAS (PROBLEMAS ESCALADOS) -->
-        <div class="row mb-4">
-            <div class="col-12">
-                <div class="card border-danger-subtle p-4" style="background-color: var(--bg-card); border: 1px solid var(--border-card);">
-                    <h5 class="fw-bold text-danger mb-3">
-                        <i class="fa-solid fa-ban me-2"></i>Aulas Bloqueadas
-                    </h5>
-                    
-                    <!-- Si hay aulas en estado ATENDIDA -->
-                    <div th:if="${not #lists.isEmpty(aulasBloqueadas)}" class="row g-3">
-                        <div th:each="aula : ${aulasBloqueadas}" class="col-md-6 col-lg-4">
-                            <div class="alert alert-danger mb-0 border-danger d-flex flex-column h-100 justify-content-between shadow-sm p-3">
-                                <div>
-                                    <strong class="d-block fs-5 mb-1"><i class="fa-solid fa-door-closed me-2"></i>Aula <span th:text="${aula.ubicacion}">A101</span></strong>
-                                    <span class="small d-block text-secondary mb-2">Escalado por Soporte TI debido a:</span>
-                                    <p class="mb-2 fw-bold italic small text-dark" th:text="${aula.problema}">Falla crítica en cableado de red estructural.</p>
-                                </div>
-                                <small class="text-muted d-block text-end border-top pt-2 mt-1" style="font-size: 0.75rem;">
-                                    <i class="fa-regular fa-clock me-1"></i>Desde: <span th:text="${#temporals.format(aula.fechaEscalado, 'dd/MM/yyyy HH:mm')}">Fecha</span>
-                                </small>
+            <div class="container-fluid px-4 py-4">
+                <div class="row g-4 mb-4">
+                    <div class="col-md-4">
+                        <div class="metric-card shadow-sm d-flex align-items-center gap-3">
+                            <div class="icon-box bg-primary-subtle text-primary"><i class="fa-solid fa-plus fa-lg"></i></div>
+                            <div>
+                                <h3 class="mb-0 fw-bold th-metric" th:text="${kpis.creadasHoy}">0</h3>
+                                <span class="text-muted small fw-bold">Reportadas Hoy</span>
                             </div>
                         </div>
                     </div>
-
-                    <!-- Si todo está operando perfectamente -->
-                    <div th:if="${#lists.isEmpty(aulasBloqueadas)}" class="alert alert-success d-flex align-items-center mb-0 shadow-sm">
-                        <i class="fa-solid fa-circle-check fs-4 me-3"></i>
-                        <div>
-                            <strong>Infraestructura al 100% libre de bloqueos.</strong>
-                            <span class="d-block small text-muted">No existen incidencias escaladas a problema mayor en este momento.</span>
+                    <div class="col-md-4">
+                        <div class="metric-card shadow-sm d-flex align-items-center gap-3">
+                            <div class="icon-box bg-success-subtle text-success"><i class="fa-solid fa-check fa-lg"></i></div>
+                            <div>
+                                <h3 class="mb-0 fw-bold th-metric" th:text="${kpis.resueltasHoy}">0</h3>
+                                <span class="text-muted small fw-bold">Cerradas Hoy</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="metric-card shadow-sm d-flex align-items-center gap-3">
+                            <div class="icon-box bg-warning-subtle text-warning"><i class="fa-solid fa-percentage fa-lg"></i></div>
+                            <div>
+                                <h3 class="mb-0 fw-bold th-metric" th:text="${kpis.tasaResolucion} + '%'">0%</h3>
+                                <span class="text-muted small fw-bold">Efectividad Diaria</span>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-        </div>
 
-        <!-- GRÁFICOS Y TOPS -->
-        <div class="row g-4 mb-5">
-            <!-- Gráfico de Rendimiento Técnico con Toggle asíncrono -->
-            <div class="col-lg-7">
-                <div class="chart-container shadow-sm">
-                    <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
-                        <h6 class="fw-bold mb-0 text-uppercase small text-muted">
-                            <i class="fa-solid fa-users-gear me-2"></i>Tickets Resueltos por Personal TI
-                        </h6>
-                        <div class="btn-group btn-group-sm" role="group">
-                            <button type="button" id="btnToggleHoy" class="btn btn-dark active" onclick="cargarGraficoTecnicos('hoy')">Hoy</button>
-                            <button type="button" id="btnToggleSemana" class="btn btn-light border" onclick="cargarGraficoTecnicos('semana')">Esta Semana</button>
+                <div class="row mb-4">
+                    <div class="col-12">
+                        <div class="card border-danger-subtle p-4" style="background-color: var(--bg-card); border: 1px solid var(--border-card);">
+                            <h5 class="fw-bold text-danger mb-3"><i class="fa-solid fa-ban me-2"></i>Aulas Bloqueadas</h5>
+                            
+                            <div th:if="${not #lists.isEmpty(aulasBloqueadas)}" class="row g-3">
+                                <div th:each="aula : ${aulasBloqueadas}" class="col-md-6 col-lg-4">
+                                    <div class="alert alert-danger mb-0 border-danger d-flex flex-column h-100 justify-content-between shadow-sm p-3">
+                                        <div>
+                                            <strong class="d-block fs-5 mb-1"><i class="fa-solid fa-door-closed me-2"></i>Aula <span th:text="${aula.ubicacion}">A101</span></strong>
+                                            <p class="mb-2 fw-bold italic small text-dark" th:text="${aula.problema}">Problema</p>
+                                        </div>
+                                        <small class="text-muted d-block text-end border-top pt-2 mt-1" style="font-size: 0.75rem;">
+                                            <i class="fa-regular fa-clock me-1"></i>Desde: <span th:text="${#temporals.format(aula.fechaEscalado, 'dd/MM/yyyy HH:mm')}">Fecha</span>
+                                        </small>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div th:if="${#lists.isEmpty(aulasBloqueadas)}" class="alert alert-success d-flex align-items-center mb-0 shadow-sm">
+                                <i class="fa-solid fa-circle-check fs-4 me-3"></i>
+                                <div><strong>Infraestructura al 100% libre de bloqueos.</strong></div>
+                            </div>
                         </div>
                     </div>
-                    <div style="height: 250px;"><canvas id="canvasTecnicos"></canvas></div>
                 </div>
-            </div>
 
-            <!-- Gráfico Circular por Categorías -->
-            <div class="col-lg-5">
-                <div class="chart-container shadow-sm">
-                    <h6 class="fw-bold mb-4 text-uppercase small text-muted">
-                        <i class="fa-solid fa-chart-pie me-2"></i>Distribución por Categorías
-                    </h6>
-                    <div style="height: 250px;"><canvas id="canvasCategorias"></canvas></div>
-                </div>
-            </div>
+                <div class="row g-4 mb-5">
+                    <div class="col-lg-7">
+                        <div class="chart-container shadow-sm">
+                            <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+                                <h6 class="fw-bold mb-0 text-uppercase small text-muted"><i class="fa-solid fa-users-gear me-2"></i>Tickets Resueltos por Personal TI</h6>
+                                <div class="btn-group btn-group-sm" role="group">
+                                    <button type="button" id="btnToggleHoy" class="btn btn-dark active" onclick="cargarGraficoTecnicos('hoy')">Hoy</button>
+                                    <button type="button" id="btnToggleSemana" class="btn btn-light border" onclick="cargarGraficoTecnicos('semana')">Esta Semana</button>
+                                </div>
+                            </div>
+                            <div style="height: 250px;"><canvas id="canvasTecnicos"></canvas></div>
+                        </div>
+                    </div>
 
-            <!-- Lista de Puntos Críticos -->
-            <div class="col-12">
-                <div class="card p-4" style="background-color: var(--bg-card); border: 1px solid var(--border-card);">
-                    <h6 class="fw-bold mb-3 text-uppercase small text-muted">
-                        <i class="fa-solid fa-triangle-exclamation me-2 text-warning"></i>Puntos Críticos del Campus (Ubicaciones Recurrentes)
-                    </h6>
-                    <div class="table-responsive">
-                        <table class="table table-custom align-middle mb-0">
-                            <thead>
-                                <tr>
-                                    <th style="width: 10%">Rango</th>
-                                    <th>Ubicación / Aula / Laboratorio</th>
-                                    <th style="width: 25%" class="text-center">Total Incidencias Históricas</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr th:each="entry, stat : ${topUbicaciones}">
-                                    <td class="fw-bold" th:text="'#' + ${stat.count}">#1</td>
-                                    <td class="fw-bold" th:text="${entry.key}">Aula 101</td>
-                                    <td class="text-center"><span class="badge bg-danger-subtle text-danger px-3 py-2 rounded-pill fw-bold" th:text="${entry.value}">0</span></td>
-                                </tr>
-                            </tbody>
-                        </table>
+                    <div class="col-lg-5">
+                        <div class="chart-container shadow-sm">
+                            <h6 class="fw-bold mb-4 text-uppercase small text-muted"><i class="fa-solid fa-chart-pie me-2"></i>Distribución por Categorías</h6>
+                            <div style="height: 250px;"><canvas id="canvasCategorias"></canvas></div>
+                        </div>
+                    </div>
+
+                    <div class="col-12">
+                        <div class="card p-4" style="background-color: var(--bg-card); border: 1px solid var(--border-card);">
+                            <h6 class="fw-bold mb-3 text-uppercase small text-muted"><i class="fa-solid fa-triangle-exclamation me-2 text-warning"></i>Puntos Críticos del Campus</h6>
+                            <div class="table-responsive">
+                                <table class="table table-custom align-middle mb-0">
+                                    <thead>
+                                        <tr>
+                                            <th style="width: 10%">Rango</th>
+                                            <th>Ubicación / Aula / Laboratorio</th>
+                                            <th style="width: 25%" class="text-center">Total Incidencias Históricas</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr th:each="entry, stat : ${topUbicaciones}">
+                                            <td class="fw-bold" th:text="'#' + ${stat.count}">#1</td>
+                                            <td class="fw-bold" th:text="${entry.key}">Aula 101</td>
+                                            <td class="text-center"><span class="badge bg-danger-subtle text-danger px-3 py-2 rounded-pill fw-bold" th:text="${entry.value}">0</span></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Pasar mapas de Thymeleaf a JavaScript de forma segura embebiéndolos en formato estructurado -->
     <script th:inline="javascript">
         /*<![CDATA[*/
         const datosCategoriasIniciales = /*[[${categorias}]]*/ {};
         /*]]>*/
     </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <script th:src="@{/script.js}"></script>
     <script th:src="@{/metricas.js}"></script>
 </body>
