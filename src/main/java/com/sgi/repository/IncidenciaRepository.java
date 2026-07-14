@@ -4,6 +4,7 @@ import com.sgi.model.Incidencia;
 import com.sgi.model.Usuario;
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -46,5 +47,44 @@ public interface IncidenciaRepository extends JpaRepository<Incidencia, Integer>
      * @return Una lista con las incidencias asignadas a dicho técnico.
      */
     List<Incidencia> findByAsignadoA(String asignadoA);
+
     
+    
+    // ==========================================
+    // CONSULTAS PARA EL CENTRO DE MÉTRICAS 
+    // ==========================================
+
+    // 1. KPIs Diarios
+    @Query(value = "SELECT COUNT(*) FROM incidencia WHERE DATE(fecha_creacion) = CURDATE()"
+            , nativeQuery = true)
+    long countCreadasHoy();
+
+    @Query(value = "SELECT COUNT(*) FROM incidencia WHERE DATE(fecha_cierre) ="
+            + " CURDATE() AND estado IN ('RESUELTA', 'ATENDIDA')", nativeQuery = true)
+    long countResueltasHoy();
+
+    // 2. Rendimiento de Técnicos (Toggle Hoy / Semana)
+    @Query(value = "SELECT asignado_a, COUNT(*) FROM incidencia WHERE DATE(fecha_cierre)"
+            + " = CURDATE() AND estado IN ('RESUELTA', 'ATENDIDA')"
+            + " AND asignado_a IS NOT NULL GROUP BY asignado_a", nativeQuery = true)
+    List<Object[]> countResueltasPorTecnicoHoy();
+
+    @Query(value = "SELECT asignado_a, COUNT(*) FROM incidencia WHERE YEARWEEK(fecha_cierre, 1)"
+            + " = YEARWEEK(CURDATE(), 1) AND estado IN ('RESUELTA', 'ATENDIDA')"
+            + " AND asignado_a IS NOT NULL GROUP BY asignado_a", nativeQuery = true)
+    List<Object[]> countResueltasPorTecnicoSemana();
+
+    // 3. Estratégico y Puntos Críticos
+    @Query(value = "SELECT ubicacion, COUNT(*) as total FROM"
+            + " incidencia GROUP BY ubicacion ORDER BY total DESC LIMIT 5", nativeQuery = true)
+    List<Object[]> findTop5UbicacionesProblematicas();
+
+    @Query(value = "SELECT categoria, COUNT(*) FROM incidencia GROUP BY categoria", nativeQuery = true)
+    List<Object[]> countIncidenciasPorCategoria();
+
+    // 4.  Aulas Bloqueadas (Problemas Escalados)
+    @Query(value = "SELECT ubicacion, tipo_incidencia, fecha_creacion FROM"
+            + " incidencia WHERE estado = 'ATENDIDA'", nativeQuery = true)
+    List<Object[]> findAulasBloqueadas();
 }
+    
