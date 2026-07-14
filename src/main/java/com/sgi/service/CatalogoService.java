@@ -1,18 +1,18 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Interface.java to edit this template
+ */
 package com.sgi.service;
 
 import com.sgi.model.CatalogoIncidencia;
-import com.sgi.repository.CatalogoIncidenciaRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 import java.util.List;
 
-@Service 
-public class CatalogoService {
+/**
+ *
+ * @author ad_ri
+ */
+public interface CatalogoService {
 
-    @Autowired
-    private CatalogoIncidenciaRepository repository;
-
-    public List<CatalogoIncidencia> obtenerTodoElCatalogo() {
-        return repository.findAll();
-    }
+    List<CatalogoIncidencia> obtenerTodoElCatalogo();
+    
 }

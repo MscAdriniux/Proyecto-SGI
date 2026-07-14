@@ -1,7 +1,6 @@
 package com.sgi.controller;
 import org.slf4j.Logger;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.*;
 import org.slf4j.LoggerFactory;
 import com.sgi.model.Usuario;
 import com.sgi.service.UsuarioService;

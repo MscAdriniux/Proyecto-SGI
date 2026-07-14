@@ -1,18 +1,17 @@
 package com.sgi.controller;
 
 import com.sgi.model.Aula;
-import org.apache.commons.io.FilenameUtils;
 import org.springframework.web.multipart.MultipartFile;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
 import com.sgi.model.Incidencia;
 import com.sgi.model.Usuario;
 import com.sgi.repository.AulaRepository;
+
+// Interfaces de Servicios Puros (Arquitectura Limpia)
 import com.sgi.service.IncidenciaService;
 import com.sgi.service.NotificationService;
-import com.sgi.service.ExcelReportService;
+import com.sgi.service.ReporteService;
+import com.sgi.service.FileStorageService; 
+
 import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
 import java.time.LocalDateTime;
@@ -24,22 +23,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-/**
- * Controlador principal para la gestión de incidencias.
- * Unifica los flujos de Docentes, Soporte TI y Administradores, integrando
- * notificaciones en tiempo real y exportación de reportes.
- */
+
 @Controller
 public class IncidenciaController {
-    private static final Logger logger =
-        LoggerFactory.getLogger(IncidenciaController.class);
+    private static final Logger logger = LoggerFactory.getLogger(IncidenciaController.class);
 
-    /**
-     * Constructor por defecto.
-     */
     public IncidenciaController() {}
     
     @Autowired
@@ -49,10 +39,13 @@ public class IncidenciaController {
     private NotificationService notificationService;
 
     @Autowired
-    private ExcelReportService excelReportService;
+    private ReporteService reporteservice;
 
     @Autowired
-    private AulaRepository aulaRepository; // <-- Inyectado correctamente en la parte superior
+    private AulaRepository aulaRepository;
+
+    @Autowired
+    private FileStorageService fileStorageService; // <-- Inyección de dependencias
 
     // ==========================================
     // 1. VISTAS DEL DOCENTE
@@ -85,7 +78,7 @@ public class IncidenciaController {
         return "panel-docente";
     }
     
- @GetMapping("/incidencias/nueva")
+    @GetMapping("/incidencias/nueva")
     public String mostrarFormularioIncidencia(HttpSession session, Model model) {
         Usuario usuarioLogueado = (Usuario) session.getAttribute("usuarioLogueado");
         if (usuarioLogueado == null) return "redirect:/login";
@@ -148,7 +141,7 @@ public class IncidenciaController {
             ubicacion
         );
 
-        // NOTIFICACIÓN: Solo el docente creador (para refrescar sus pestañas) y la bolsa global de técnicos reciben el nuevo ticket
+        // NOTIFICACIÓN
         notificationService.broadcastSegmentado(
             "NUEVO: Se ha reportado una nueva incidencia de '" + nueva.getTipoIncidencia() + "' en la ubicación " + nueva.getUbicacion() + " (Prioridad: " + nueva.getPrioridad() + "). Creado por: " + usuarioLogueado.getNombres() + " " + usuarioLogueado.getApellidos() + ".",
             usuarioLogueado.getIdUsuario(), 
@@ -170,7 +163,6 @@ public class IncidenciaController {
             return "redirect:/login";
         }
 
-      
         List<Incidencia> todas = incidenciaService.obtenerTodas().stream()
             .sorted(comparadorIncidencias)
             .toList();
@@ -184,8 +176,6 @@ public class IncidenciaController {
         model.addAttribute("totalPendientes", pendientes);
         model.addAttribute("totalEnProceso", enProceso);
         model.addAttribute("totalResueltas", resueltas);
-
-        
         
         logger.info(
             "AUDITORIA | Módulo=Panel Administrador | Usuario={} | Acción=Ingresó al Panel Administrador",
@@ -203,7 +193,7 @@ public class IncidenciaController {
         }
 
         List<Incidencia> todas = incidenciaService.obtenerTodas();
-        byte[] excelBytes = excelReportService.generarReporte(todas);
+        byte[] excelBytes = reporteservice.generarReporte(todas);
         
         logger.info(
             "AUDITORIA | Módulo=Reportes | Usuario={} | Acción=Exportó reporte Excel",
@@ -217,7 +207,7 @@ public class IncidenciaController {
     }
 
     // ==========================================
-    // 4. RUTAS DEL PANEL TÉCNICO
+    // 3. RUTAS DEL PANEL TÉCNICO
     // ==========================================
 
     @GetMapping("/incidencias/panel-tecnico")
@@ -243,7 +233,7 @@ public class IncidenciaController {
                 .toList();
 
         model.addAttribute("usuarioLogueado", usuarioLogueado);
-        model.addAttribute("incidencias", listaUnificada); // <-- Enviamos una sola lista master
+        model.addAttribute("incidencias", listaUnificada);
         model.addAttribute("totalPendientes", pendientes);
         model.addAttribute("totalEnProceso", enProceso);
         model.addAttribute("totalResueltas", resueltas);
@@ -274,23 +264,11 @@ public class IncidenciaController {
                 incidencia.setFechaCierre(LocalDateTime.now());
             }  
             
+            // ▼ AQUI SE IMPLEMENTÓ LA LIMPIEZA CON EL SERVICIO DE ARCHIVOS ▼
             if ((nuevoEstado.equals("RESUELTA") || nuevoEstado.equals("ATENDIDA")) && archivo != null && !archivo.isEmpty()) {
-                try {
-                    String extension = FilenameUtils.getExtension(archivo.getOriginalFilename());
-                    String nombreFoto = "evidencia_ticket_" + idIncidencia + "." + extension;
-                    
-                    Path rutaCarpeta = Paths.get("uploads/evidencias");
-                    if (!Files.exists(rutaCarpeta)) {
-                        Files.createDirectories(rutaCarpeta);
-                    }
-                    
-                    Path rutaCompleta = rutaCarpeta.resolve(nombreFoto);
-                    Files.copy(archivo.getInputStream(), rutaCompleta, StandardCopyOption.REPLACE_EXISTING);
-                    
+                String nombreFoto = fileStorageService.guardarEvidencia(archivo, idIncidencia);
+                if (nombreFoto != null) {
                     incidencia.setEvidenciaUrl(nombreFoto);
-                    
-                } catch (IOException | IllegalArgumentException e) { 
-                    System.out.println("Error fatal al subir la foto: " + e.getMessage());
                 }
             }
 
@@ -328,7 +306,6 @@ public class IncidenciaController {
             Integer idDocente = incidencia.getUsuario().getIdUsuario();
             String nombreTecnico = incidencia.getAsignadoA();
 
-            // REEMPLAZA LA LÍNEA DEL BROADCAST POR ESTA:
             notificationService.broadcastSegmentado(
                 "FINAL: El Administrador ha RESUELTO y cerrado definitivamente la incidencia escalada de '" + incidencia.getTipoIncidencia() + "' en " + incidencia.getUbicacion() + " (Ticket #" + incidencia.getIdIncidencia() + "). El aula queda liberada.",
                 idDocente,
@@ -340,7 +317,9 @@ public class IncidenciaController {
         return "redirect:/admin/panel-admin";
     }
     
-    // Comparador que ordena 1° por Prioridad (Alta a Baja) y 2° por Fecha (Más reciente primero)
+    // ==========================================
+    // LÓGICA DE ORDENAMIENTO DE PRIORIDADES
+    // ==========================================
     private java.util.Comparator<Incidencia> comparadorIncidencias = (i1, i2) -> {
         int prioridad1 = obtenerPesoPrioridad(i1.getPrioridad());
         int prioridad2 = obtenerPesoPrioridad(i2.getPrioridad());
@@ -360,27 +339,5 @@ public class IncidenciaController {
         if (prioridad.equalsIgnoreCase("ALTA")) return 1;
         if (prioridad.equalsIgnoreCase("MEDIA")) return 2;
         return 3;
-    }
-    
-    // ==========================================
-    // 5. API Y NOTIFICACIONES
-    // ==========================================
-
-    @GetMapping("/api/notificaciones/suscripcion")
-    public SseEmitter suscribirNotificaciones(HttpSession session) {
-        Usuario usuario = (Usuario) session.getAttribute("usuarioLogueado");
-        if (usuario == null) {
-            return null;
-        }
-        String nombreCompleto = usuario.getNombres() + " " + usuario.getApellidos();
-        return notificationService.subscribe(usuario.getIdUsuario(), usuario.getRol(), nombreCompleto);
-    }
-    
-    @GetMapping("/api/conteo-pendientes")
-    @ResponseBody
-    public long contarIncidenciasPendientes(HttpSession session) {
-        return incidenciaService.obtenerTodas().stream()
-                .filter(i -> i.getEstado().equalsIgnoreCase("PENDIENTE"))
-                .count();
     }
 }

@@ -1,5 +1,6 @@
 package com.sgi.service;
 
+import com.sgi.service.impl.UsuarioServiceImpl;
 import com.sgi.model.Usuario;
 import com.sgi.repository.UsuarioRepository;
 import org.junit.jupiter.api.Test;
@@ -19,7 +20,7 @@ public class UsuarioServiceTest {
     private UsuarioRepository usuarioRepository;
 
     @InjectMocks
-    private UsuarioService usuarioService;
+    private UsuarioServiceImpl usuarioService;
 
     private BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 

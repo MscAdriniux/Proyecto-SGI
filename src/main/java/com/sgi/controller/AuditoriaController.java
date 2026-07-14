@@ -1,6 +1,6 @@
 package com.sgi.controller;
 
-import com.sgi.service.AuditService;
+import com.sgi.service.AuditService; // <-- CAMBIO 1: Importamos la INTERFAZ, no el impl
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 public class AuditoriaController {
 
     @Autowired
-    private AuditService auditService;
+    private AuditService auditService; // <-- CAMBIO 2: Inyectamos la INTERFAZ
 
     @GetMapping("/admin/auditoria")
     public String mostrarAuditoria(Model model) {
@@ -36,5 +36,4 @@ public class AuditoriaController {
 
         return "auditoria";
     }
-
 }
