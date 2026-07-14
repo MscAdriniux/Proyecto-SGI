@@ -97,5 +97,23 @@ public class AuditService {
         return lista;
 
     }
+    public long contarInfo() {
+        return obtenerLogs().stream()
+                .filter(log -> "INFO".equals(log.getNivel()))
+                .count();
+    }
+
+    public long contarWarn() {
+        return obtenerLogs().stream()
+                .filter(log -> "WARN".equals(log.getNivel()))
+                .count();
+    }
+
+    public long contarError() {
+        return obtenerLogs().stream()
+                .filter(log -> "ERROR".equals(log.getNivel()))
+                .count();
+    }
+    
 
 }
