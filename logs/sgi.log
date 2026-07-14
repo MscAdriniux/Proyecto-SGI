@@ -453,3 +453,243 @@ Caused by: java.sql.SQLException: Access denied for user 'root'@'localhost' (usi
 2026-07-08 11:27:07 [http-nio-8080-exec-1] INFO  o.s.web.servlet.DispatcherServlet - Completed initialization in 2 ms
 2026-07-08 11:27:20 [http-nio-8080-exec-4] INFO  com.sgi.controller.LoginController - AUDITORIA | Módulo=Autenticación | Usuario=kriss.angela0@utp.edu.pe | Acción=Inicio de sesión
 2026-07-08 11:27:20 [http-nio-8080-exec-2] INFO  c.s.controller.IncidenciaController - AUDITORIA | Módulo=Panel Administrador | Usuario=kriss.angela0@utp.edu.pe | Acción=Ingresó al Panel Administrador
+2026-07-12 14:18:04 [main] INFO  com.sgi.SistemaGestionIncidencias - Starting SistemaGestionIncidencias using Java 25.0.1 with PID 1600 (C:\Users\ad_ri\Downloads\Proyecto_SGI\Proyecto-SGI-main\Proyecto-SGI-main\target\classes started by ad_ri in C:\Users\ad_ri\Downloads\Proyecto_SGI\Proyecto-SGI-main\Proyecto-SGI-main)
+2026-07-12 14:18:04 [main] DEBUG com.sgi.SistemaGestionIncidencias - Running with Spring Boot v3.2.5, Spring v6.1.6
+2026-07-12 14:18:04 [main] INFO  com.sgi.SistemaGestionIncidencias - No active profile set, falling back to 1 default profile: "default"
+2026-07-12 14:18:05 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-07-12 14:18:05 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 141 ms. Found 5 JPA repository interfaces.
+2026-07-12 14:18:07 [main] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port 8080 (http)
+2026-07-12 14:18:07 [main] INFO  o.a.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8080"]
+2026-07-12 14:18:07 [main] INFO  o.a.catalina.core.StandardService - Starting service [Tomcat]
+2026-07-12 14:18:07 [main] INFO  o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.20]
+2026-07-12 14:18:07 [main] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2026-07-12 14:18:07 [main] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 3165 ms
+2026-07-12 14:18:08 [main] INFO  o.s.o.j.p.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-07-12 14:18:08 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2026-07-12 14:18:09 [main] INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@166ce247
+2026-07-12 14:18:09 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2026-07-12 14:18:09 [main] WARN  org.hibernate.orm.deprecation - HHH90000025: MySQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2026-07-12 14:18:11 [main] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-07-12 14:18:12 [main] INFO  o.s.d.j.r.query.QueryEnhancerFactory - Hibernate is in classpath; If applicable, HQL parser will be used.
+2026-07-12 14:18:12 [main] WARN  o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2026-07-12 14:18:13 [main] INFO  o.a.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8080"]
+2026-07-12 14:18:13 [main] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port 8080 (http) with context path ''
+2026-07-12 14:18:13 [main] INFO  com.sgi.SistemaGestionIncidencias - Started SistemaGestionIncidencias in 10.393 seconds (process running for 11.033)
+2026-07-12 14:23:07 [main] INFO  com.sgi.SistemaGestionIncidencias - Starting SistemaGestionIncidencias using Java 25.0.1 with PID 840 (C:\Users\ad_ri\Downloads\Proyecto_SGI\Proyecto-SGI-main\Proyecto-SGI-main\target\classes started by ad_ri in C:\Users\ad_ri\Downloads\Proyecto_SGI\Proyecto-SGI-main\Proyecto-SGI-main)
+2026-07-12 14:23:07 [main] DEBUG com.sgi.SistemaGestionIncidencias - Running with Spring Boot v3.2.5, Spring v6.1.6
+2026-07-12 14:23:07 [main] INFO  com.sgi.SistemaGestionIncidencias - No active profile set, falling back to 1 default profile: "default"
+2026-07-12 14:23:08 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-07-12 14:23:08 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 120 ms. Found 5 JPA repository interfaces.
+2026-07-12 14:23:09 [main] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port 8080 (http)
+2026-07-12 14:23:09 [main] INFO  o.a.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8080"]
+2026-07-12 14:23:09 [main] INFO  o.a.catalina.core.StandardService - Starting service [Tomcat]
+2026-07-12 14:23:09 [main] INFO  o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.20]
+2026-07-12 14:23:09 [main] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2026-07-12 14:23:09 [main] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 2355 ms
+2026-07-12 14:23:10 [main] INFO  o.s.o.j.p.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-07-12 14:23:11 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2026-07-12 14:23:11 [main] INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@379f9555
+2026-07-12 14:23:11 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2026-07-12 14:23:11 [main] WARN  org.hibernate.orm.deprecation - HHH90000025: MySQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2026-07-12 14:23:14 [main] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-07-12 14:23:15 [main] INFO  o.s.d.j.r.query.QueryEnhancerFactory - Hibernate is in classpath; If applicable, HQL parser will be used.
+2026-07-12 14:23:15 [main] WARN  o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2026-07-12 14:23:16 [main] INFO  o.a.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8080"]
+2026-07-12 14:23:16 [main] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port 8080 (http) with context path ''
+2026-07-12 14:23:16 [main] INFO  com.sgi.SistemaGestionIncidencias - Started SistemaGestionIncidencias in 10.187 seconds (process running for 10.83)
+2026-07-12 14:23:19 [http-nio-8080-exec-2] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-07-12 14:23:19 [http-nio-8080-exec-2] INFO  o.s.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+2026-07-12 14:23:19 [http-nio-8080-exec-2] INFO  o.s.web.servlet.DispatcherServlet - Completed initialization in 0 ms
+2026-07-12 14:23:25 [http-nio-8080-exec-10] INFO  com.sgi.controller.LoginController - AUDITORIA | Módulo=Autenticación | Usuario=adrianadmin@sgi.com | Acción=Inicio de sesión
+2026-07-12 14:23:25 [http-nio-8080-exec-1] INFO  c.s.controller.IncidenciaController - AUDITORIA | Módulo=Panel Administrador | Usuario=adrianadmin@sgi.com | Acción=Ingresó al Panel Administrador
+2026-07-12 14:23:44 [http-nio-8080-exec-3] INFO  c.s.controller.IncidenciaController - AUDITORIA | Módulo=Panel Administrador | Usuario=adrianadmin@sgi.com | Acción=Ingresó al Panel Administrador
+2026-07-12 14:23:50 [http-nio-8080-exec-1] INFO  c.s.controller.IncidenciaController - AUDITORIA | Módulo=Panel Administrador | Usuario=adrianadmin@sgi.com | Acción=Ingresó al Panel Administrador
+2026-07-12 14:28:33 [main] INFO  com.sgi.SistemaGestionIncidencias - Starting SistemaGestionIncidencias using Java 25.0.1 with PID 3732 (C:\Users\ad_ri\Downloads\Proyecto_SGI\Proyecto-SGI-main\Proyecto-SGI-main\target\classes started by ad_ri in C:\Users\ad_ri\Downloads\Proyecto_SGI\Proyecto-SGI-main\Proyecto-SGI-main)
+2026-07-12 14:28:33 [main] DEBUG com.sgi.SistemaGestionIncidencias - Running with Spring Boot v3.2.5, Spring v6.1.6
+2026-07-12 14:28:33 [main] INFO  com.sgi.SistemaGestionIncidencias - No active profile set, falling back to 1 default profile: "default"
+2026-07-12 14:28:34 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-07-12 14:28:34 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 104 ms. Found 5 JPA repository interfaces.
+2026-07-12 14:28:35 [main] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port 8080 (http)
+2026-07-12 14:28:35 [main] INFO  o.a.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8080"]
+2026-07-12 14:28:35 [main] INFO  o.a.catalina.core.StandardService - Starting service [Tomcat]
+2026-07-12 14:28:35 [main] INFO  o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.20]
+2026-07-12 14:28:35 [main] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2026-07-12 14:28:35 [main] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 2335 ms
+2026-07-12 14:28:36 [main] INFO  o.s.o.j.p.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-07-12 14:28:36 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2026-07-12 14:28:37 [main] INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@395a573c
+2026-07-12 14:28:37 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2026-07-12 14:28:37 [main] WARN  org.hibernate.orm.deprecation - HHH90000025: MySQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2026-07-12 14:28:38 [main] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-07-12 14:28:39 [main] INFO  o.s.d.j.r.query.QueryEnhancerFactory - Hibernate is in classpath; If applicable, HQL parser will be used.
+2026-07-12 14:28:39 [main] WARN  o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2026-07-12 14:28:40 [main] INFO  o.a.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8080"]
+2026-07-12 14:28:40 [main] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port 8080 (http) with context path ''
+2026-07-12 14:28:40 [main] INFO  com.sgi.SistemaGestionIncidencias - Started SistemaGestionIncidencias in 7.905 seconds (process running for 8.548)
+2026-07-12 14:28:57 [http-nio-8080-exec-2] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-07-12 14:28:57 [http-nio-8080-exec-2] INFO  o.s.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+2026-07-12 14:28:57 [http-nio-8080-exec-2] INFO  o.s.web.servlet.DispatcherServlet - Completed initialization in 1 ms
+2026-07-12 14:29:00 [http-nio-8080-exec-5] INFO  com.sgi.controller.LoginController - AUDITORIA | Módulo=Autenticación | Usuario=adrianadmin@sgi.com | Acción=Inicio de sesión
+2026-07-12 14:29:00 [http-nio-8080-exec-6] INFO  c.s.controller.IncidenciaController - AUDITORIA | Módulo=Panel Administrador | Usuario=adrianadmin@sgi.com | Acción=Ingresó al Panel Administrador
+2026-07-12 14:52:41 [main] INFO  com.sgi.SistemaGestionIncidencias - Starting SistemaGestionIncidencias using Java 25.0.1 with PID 3688 (C:\Users\ad_ri\Downloads\Proyecto_SGI\Proyecto-SGI-main\Proyecto-SGI-main\target\classes started by ad_ri in C:\Users\ad_ri\Downloads\Proyecto_SGI\Proyecto-SGI-main\Proyecto-SGI-main)
+2026-07-12 14:52:41 [main] DEBUG com.sgi.SistemaGestionIncidencias - Running with Spring Boot v3.2.5, Spring v6.1.6
+2026-07-12 14:52:41 [main] INFO  com.sgi.SistemaGestionIncidencias - No active profile set, falling back to 1 default profile: "default"
+2026-07-12 14:52:42 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-07-12 14:52:42 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 132 ms. Found 5 JPA repository interfaces.
+2026-07-12 14:52:43 [main] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port 8080 (http)
+2026-07-12 14:52:43 [main] INFO  o.a.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8080"]
+2026-07-12 14:52:43 [main] INFO  o.a.catalina.core.StandardService - Starting service [Tomcat]
+2026-07-12 14:52:43 [main] INFO  o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.20]
+2026-07-12 14:52:43 [main] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2026-07-12 14:52:43 [main] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 2551 ms
+2026-07-12 14:52:44 [main] INFO  o.s.o.j.p.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-07-12 14:52:44 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2026-07-12 14:52:45 [main] INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@cdbe995
+2026-07-12 14:52:45 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2026-07-12 14:52:45 [main] WARN  org.hibernate.orm.deprecation - HHH90000025: MySQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2026-07-12 14:52:47 [main] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-07-12 14:52:47 [main] INFO  o.s.d.j.r.query.QueryEnhancerFactory - Hibernate is in classpath; If applicable, HQL parser will be used.
+2026-07-12 14:52:47 [main] WARN  o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2026-07-12 14:52:48 [main] INFO  o.a.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8080"]
+2026-07-12 14:52:48 [main] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port 8080 (http) with context path ''
+2026-07-12 14:52:48 [main] INFO  com.sgi.SistemaGestionIncidencias - Started SistemaGestionIncidencias in 8.202 seconds (process running for 8.837)
+2026-07-12 15:16:36 [http-nio-8080-exec-1] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-07-12 15:16:36 [http-nio-8080-exec-1] INFO  o.s.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+2026-07-12 15:16:36 [http-nio-8080-exec-1] INFO  o.s.web.servlet.DispatcherServlet - Completed initialization in 2 ms
+2026-07-12 15:16:38 [http-nio-8080-exec-5] INFO  com.sgi.controller.LoginController - AUDITORIA | Módulo=Autenticación | Usuario=adrianadmin@sgi.com | Acción=Inicio de sesión
+2026-07-12 15:16:38 [http-nio-8080-exec-6] INFO  c.s.controller.IncidenciaController - AUDITORIA | Módulo=Panel Administrador | Usuario=adrianadmin@sgi.com | Acción=Ingresó al Panel Administrador
+2026-07-12 15:24:13 [main] INFO  com.sgi.SistemaGestionIncidencias - Starting SistemaGestionIncidencias using Java 25.0.1 with PID 14812 (C:\Users\ad_ri\Downloads\Proyecto_SGI\Proyecto-SGI-main\Proyecto-SGI-main\target\classes started by ad_ri in C:\Users\ad_ri\Downloads\Proyecto_SGI\Proyecto-SGI-main\Proyecto-SGI-main)
+2026-07-12 15:24:13 [main] DEBUG com.sgi.SistemaGestionIncidencias - Running with Spring Boot v3.2.5, Spring v6.1.6
+2026-07-12 15:24:13 [main] INFO  com.sgi.SistemaGestionIncidencias - No active profile set, falling back to 1 default profile: "default"
+2026-07-12 15:24:15 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-07-12 15:24:15 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 160 ms. Found 5 JPA repository interfaces.
+2026-07-12 15:24:16 [main] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port 8080 (http)
+2026-07-12 15:24:16 [main] INFO  o.a.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8080"]
+2026-07-12 15:24:16 [main] INFO  o.a.catalina.core.StandardService - Starting service [Tomcat]
+2026-07-12 15:24:16 [main] INFO  o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.20]
+2026-07-12 15:24:16 [main] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2026-07-12 15:24:16 [main] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 2981 ms
+2026-07-12 15:24:18 [main] INFO  o.s.o.j.p.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-07-12 15:24:18 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2026-07-12 15:24:19 [main] INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@7e3ee128
+2026-07-12 15:24:19 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2026-07-12 15:24:19 [main] WARN  org.hibernate.orm.deprecation - HHH90000025: MySQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2026-07-12 15:24:21 [main] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-07-12 15:24:21 [main] INFO  o.s.d.j.r.query.QueryEnhancerFactory - Hibernate is in classpath; If applicable, HQL parser will be used.
+2026-07-12 15:24:22 [main] WARN  o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2026-07-12 15:24:22 [main] INFO  o.a.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8080"]
+2026-07-12 15:24:23 [main] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port 8080 (http) with context path ''
+2026-07-12 15:24:23 [main] INFO  com.sgi.SistemaGestionIncidencias - Started SistemaGestionIncidencias in 10.302 seconds (process running for 11.058)
+2026-07-12 15:24:23 [http-nio-8080-exec-1] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-07-12 15:24:23 [http-nio-8080-exec-1] INFO  o.s.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+2026-07-12 15:24:23 [http-nio-8080-exec-1] INFO  o.s.web.servlet.DispatcherServlet - Completed initialization in 2 ms
+2026-07-12 15:24:26 [http-nio-8080-exec-4] INFO  com.sgi.controller.LoginController - AUDITORIA | Módulo=Autenticación | Usuario=adrianadmin@sgi.com | Acción=Inicio de sesión
+2026-07-12 15:24:26 [http-nio-8080-exec-7] INFO  c.s.controller.IncidenciaController - AUDITORIA | Módulo=Panel Administrador | Usuario=adrianadmin@sgi.com | Acción=Ingresó al Panel Administrador
+2026-07-12 15:25:00 [http-nio-8080-exec-3] INFO  c.s.controller.IncidenciaController - AUDITORIA | Módulo=Panel Administrador | Usuario=adrianadmin@sgi.com | Acción=Ingresó al Panel Administrador
+2026-07-12 15:28:00 [main] INFO  com.sgi.SistemaGestionIncidencias - Starting SistemaGestionIncidencias using Java 25.0.1 with PID 9228 (C:\Users\ad_ri\Downloads\Proyecto_SGI\Proyecto-SGI-main\Proyecto-SGI-main\target\classes started by ad_ri in C:\Users\ad_ri\Downloads\Proyecto_SGI\Proyecto-SGI-main\Proyecto-SGI-main)
+2026-07-12 15:28:00 [main] DEBUG com.sgi.SistemaGestionIncidencias - Running with Spring Boot v3.2.5, Spring v6.1.6
+2026-07-12 15:28:00 [main] INFO  com.sgi.SistemaGestionIncidencias - No active profile set, falling back to 1 default profile: "default"
+2026-07-12 15:28:01 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-07-12 15:28:02 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 122 ms. Found 5 JPA repository interfaces.
+2026-07-12 15:28:03 [main] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port 8080 (http)
+2026-07-12 15:28:03 [main] INFO  o.a.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8080"]
+2026-07-12 15:28:03 [main] INFO  o.a.catalina.core.StandardService - Starting service [Tomcat]
+2026-07-12 15:28:03 [main] INFO  o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.20]
+2026-07-12 15:28:03 [main] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2026-07-12 15:28:03 [main] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 2416 ms
+2026-07-12 15:28:04 [main] INFO  o.s.o.j.p.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-07-12 15:28:04 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2026-07-12 15:28:04 [main] INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@53ba1175
+2026-07-12 15:28:04 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2026-07-12 15:28:05 [main] WARN  org.hibernate.orm.deprecation - HHH90000025: MySQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2026-07-12 15:28:06 [main] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-07-12 15:28:07 [main] INFO  o.s.d.j.r.query.QueryEnhancerFactory - Hibernate is in classpath; If applicable, HQL parser will be used.
+2026-07-12 15:28:07 [main] WARN  o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2026-07-12 15:28:07 [main] INFO  o.a.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8080"]
+2026-07-12 15:28:07 [main] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port 8080 (http) with context path ''
+2026-07-12 15:28:08 [main] INFO  com.sgi.SistemaGestionIncidencias - Started SistemaGestionIncidencias in 8.033 seconds (process running for 8.687)
+2026-07-12 15:28:49 [http-nio-8080-exec-1] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-07-12 15:28:49 [http-nio-8080-exec-1] INFO  o.s.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+2026-07-12 15:28:49 [http-nio-8080-exec-1] INFO  o.s.web.servlet.DispatcherServlet - Completed initialization in 1 ms
+2026-07-12 15:28:58 [http-nio-8080-exec-3] INFO  com.sgi.controller.LoginController - AUDITORIA | Módulo=Autenticación | Usuario=adrianadmin@sgi.com | Acción=Inicio de sesión
+2026-07-12 15:28:58 [http-nio-8080-exec-6] INFO  c.s.controller.IncidenciaController - AUDITORIA | Módulo=Panel Administrador | Usuario=adrianadmin@sgi.com | Acción=Ingresó al Panel Administrador
+2026-07-12 15:31:07 [main] INFO  com.sgi.SistemaGestionIncidencias - Starting SistemaGestionIncidencias using Java 25.0.1 with PID 19656 (C:\Users\ad_ri\Downloads\Proyecto_SGI\Proyecto-SGI-main\Proyecto-SGI-main\target\classes started by ad_ri in C:\Users\ad_ri\Downloads\Proyecto_SGI\Proyecto-SGI-main\Proyecto-SGI-main)
+2026-07-12 15:31:07 [main] DEBUG com.sgi.SistemaGestionIncidencias - Running with Spring Boot v3.2.5, Spring v6.1.6
+2026-07-12 15:31:07 [main] INFO  com.sgi.SistemaGestionIncidencias - No active profile set, falling back to 1 default profile: "default"
+2026-07-12 15:31:09 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-07-12 15:31:09 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 121 ms. Found 5 JPA repository interfaces.
+2026-07-12 15:31:10 [main] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port 8080 (http)
+2026-07-12 15:31:10 [main] INFO  o.a.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8080"]
+2026-07-12 15:31:10 [main] INFO  o.a.catalina.core.StandardService - Starting service [Tomcat]
+2026-07-12 15:31:10 [main] INFO  o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.20]
+2026-07-12 15:31:10 [main] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2026-07-12 15:31:10 [main] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 2609 ms
+2026-07-12 15:31:11 [main] INFO  o.s.o.j.p.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-07-12 15:31:11 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2026-07-12 15:31:12 [main] INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@3688baab
+2026-07-12 15:31:12 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2026-07-12 15:31:12 [main] WARN  org.hibernate.orm.deprecation - HHH90000025: MySQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2026-07-12 15:31:13 [main] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-07-12 15:31:14 [main] INFO  o.s.d.j.r.query.QueryEnhancerFactory - Hibernate is in classpath; If applicable, HQL parser will be used.
+2026-07-12 15:31:14 [main] WARN  o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2026-07-12 15:31:15 [main] INFO  o.a.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8080"]
+2026-07-12 15:31:15 [main] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port 8080 (http) with context path ''
+2026-07-12 15:31:15 [main] INFO  com.sgi.SistemaGestionIncidencias - Started SistemaGestionIncidencias in 8.307 seconds (process running for 9.076)
+2026-07-12 15:31:28 [http-nio-8080-exec-1] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-07-12 15:31:28 [http-nio-8080-exec-1] INFO  o.s.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+2026-07-12 15:31:28 [http-nio-8080-exec-1] INFO  o.s.web.servlet.DispatcherServlet - Completed initialization in 2 ms
+2026-07-12 15:31:30 [http-nio-8080-exec-3] INFO  com.sgi.controller.LoginController - AUDITORIA | Módulo=Autenticación | Usuario=adrianadmin@sgi.com | Acción=Inicio de sesión
+2026-07-12 15:31:30 [http-nio-8080-exec-4] INFO  c.s.controller.IncidenciaController - AUDITORIA | Módulo=Panel Administrador | Usuario=adrianadmin@sgi.com | Acción=Ingresó al Panel Administrador
+2026-07-12 15:31:35 [http-nio-8080-exec-7] INFO  c.s.controller.IncidenciaController - AUDITORIA | Módulo=Panel Administrador | Usuario=adrianadmin@sgi.com | Acción=Ingresó al Panel Administrador
+2026-07-12 15:32:56 [main] INFO  com.sgi.SistemaGestionIncidencias - Starting SistemaGestionIncidencias using Java 25.0.1 with PID 21016 (C:\Users\ad_ri\Downloads\Proyecto_SGI\Proyecto-SGI-main\Proyecto-SGI-main\target\classes started by ad_ri in C:\Users\ad_ri\Downloads\Proyecto_SGI\Proyecto-SGI-main\Proyecto-SGI-main)
+2026-07-12 15:32:56 [main] DEBUG com.sgi.SistemaGestionIncidencias - Running with Spring Boot v3.2.5, Spring v6.1.6
+2026-07-12 15:32:56 [main] INFO  com.sgi.SistemaGestionIncidencias - No active profile set, falling back to 1 default profile: "default"
+2026-07-12 15:32:57 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-07-12 15:32:57 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 120 ms. Found 5 JPA repository interfaces.
+2026-07-12 15:32:59 [main] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port 8080 (http)
+2026-07-12 15:32:59 [main] INFO  o.a.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8080"]
+2026-07-12 15:32:59 [main] INFO  o.a.catalina.core.StandardService - Starting service [Tomcat]
+2026-07-12 15:32:59 [main] INFO  o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.20]
+2026-07-12 15:32:59 [main] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2026-07-12 15:32:59 [main] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 2524 ms
+2026-07-12 15:33:00 [main] INFO  o.s.o.j.p.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-07-12 15:33:00 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2026-07-12 15:33:00 [main] INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@4fe2dd02
+2026-07-12 15:33:00 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2026-07-12 15:33:01 [main] WARN  org.hibernate.orm.deprecation - HHH90000025: MySQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2026-07-12 15:33:02 [main] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-07-12 15:33:03 [main] INFO  o.s.d.j.r.query.QueryEnhancerFactory - Hibernate is in classpath; If applicable, HQL parser will be used.
+2026-07-12 15:33:03 [main] WARN  o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2026-07-12 15:33:03 [main] INFO  o.a.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8080"]
+2026-07-12 15:33:03 [main] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port 8080 (http) with context path ''
+2026-07-12 15:33:03 [main] INFO  com.sgi.SistemaGestionIncidencias - Started SistemaGestionIncidencias in 8.325 seconds (process running for 8.971)
+2026-07-12 15:33:28 [http-nio-8080-exec-1] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-07-12 15:33:28 [http-nio-8080-exec-1] INFO  o.s.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+2026-07-12 15:33:28 [http-nio-8080-exec-1] INFO  o.s.web.servlet.DispatcherServlet - Completed initialization in 0 ms
+2026-07-12 15:40:21 [main] INFO  com.sgi.SistemaGestionIncidencias - Starting SistemaGestionIncidencias using Java 25.0.1 with PID 22112 (C:\Users\ad_ri\Downloads\Proyecto_SGI\Proyecto-SGI-main\Proyecto-SGI-main\target\classes started by ad_ri in C:\Users\ad_ri\Downloads\Proyecto_SGI\Proyecto-SGI-main\Proyecto-SGI-main)
+2026-07-12 15:40:21 [main] DEBUG com.sgi.SistemaGestionIncidencias - Running with Spring Boot v3.2.5, Spring v6.1.6
+2026-07-12 15:40:21 [main] INFO  com.sgi.SistemaGestionIncidencias - No active profile set, falling back to 1 default profile: "default"
+2026-07-12 15:40:23 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-07-12 15:40:23 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 121 ms. Found 5 JPA repository interfaces.
+2026-07-12 15:40:24 [main] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port 8080 (http)
+2026-07-12 15:40:24 [main] INFO  o.a.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8080"]
+2026-07-12 15:40:24 [main] INFO  o.a.catalina.core.StandardService - Starting service [Tomcat]
+2026-07-12 15:40:24 [main] INFO  o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.20]
+2026-07-12 15:40:24 [main] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2026-07-12 15:40:24 [main] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 2357 ms
+2026-07-12 15:40:25 [main] INFO  o.s.o.j.p.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-07-12 15:40:25 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2026-07-12 15:40:25 [main] INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@53ba1175
+2026-07-12 15:40:25 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2026-07-12 15:40:26 [main] WARN  org.hibernate.orm.deprecation - HHH90000025: MySQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2026-07-12 15:40:27 [main] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-07-12 15:40:28 [main] INFO  o.s.d.j.r.query.QueryEnhancerFactory - Hibernate is in classpath; If applicable, HQL parser will be used.
+2026-07-12 15:40:28 [main] WARN  o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2026-07-12 15:40:28 [main] INFO  o.a.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8080"]
+2026-07-12 15:40:28 [main] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port 8080 (http) with context path ''
+2026-07-12 15:40:28 [main] INFO  com.sgi.SistemaGestionIncidencias - Started SistemaGestionIncidencias in 7.91 seconds (process running for 8.547)
+2026-07-12 15:43:16 [http-nio-8080-exec-1] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-07-12 15:43:16 [http-nio-8080-exec-1] INFO  o.s.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+2026-07-12 15:43:16 [http-nio-8080-exec-1] INFO  o.s.web.servlet.DispatcherServlet - Completed initialization in 0 ms
+2026-07-12 15:43:18 [http-nio-8080-exec-2] INFO  com.sgi.controller.LoginController - AUDITORIA | Módulo=Autenticación | Usuario=adrianadmin@sgi.com | Acción=Inicio de sesión
+2026-07-12 15:43:18 [http-nio-8080-exec-3] INFO  c.s.controller.IncidenciaController - AUDITORIA | Módulo=Panel Administrador | Usuario=adrianadmin@sgi.com | Acción=Ingresó al Panel Administrador

@@ -1,192 +1,150 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
 <head>
-
     <meta charset="UTF-8">
-    <title>Auditoría del Sistema</title>
-
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Auditoría del Sistema - SGI</title>
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" th:href="@{/estilos.css}">
+    <style>
+        .metric-card { background-color: var(--bg-card); border: 1px solid var(--border-card); border-radius: 12px; padding: 20px; }
+    </style>
 </head>
 
-<body class="bg-light">
+<body class="dashboard-body">
 
-    <div class="container-fluid mt-4">
+    <!-- Navbar estándar del sistema -->
+    <nav class="navbar navbar-expand-lg border-bottom px-4 py-3 bg-nav mb-4">
+        <div class="container-fluid">
+            <div>
+                <h4 class="mb-0 fw-bold">Sistema de Incidencias</h4>
+                <small class="text-muted">
+                    <span th:text="${usuarioLogueado != null ? usuarioLogueado.nombres + ' ' + usuarioLogueado.apellidos : 'Administrador'}">Admin</span> • Auditoría del Sistema
+                </small>
+            </div>
+            
+            <div class="d-flex align-items-center gap-3">
+                <button class="theme-toggle position-static m-0" id="themeToggleBtn">
+                    <i class="fa-regular fa-moon" id="themeIcon"></i>
+                </button>
+                <a href="/admin/panel-admin" class="btn btn-light border fw-bold px-3 py-2 rounded-3 text-dark">
+                    <i class="fa-solid fa-arrow-left me-2"></i> Volver al Panel
+                </a>
+            </div>
+        </div>
+    </nav>
 
-    <div class="row mb-4">
+    <div class="container-fluid px-lg-5">
 
-        <div class="col-12">
+        <!-- Encabezado de la página -->
+        <div class="mb-4">
+            <h4 class="fw-bold mb-1">
+                <i class="fa-solid fa-shield-halved text-primary me-2"></i>Auditoría y Trazabilidad
+            </h4>
+            <p class="text-muted mb-0">Monitoreo de eventos y acciones registradas en el sistema mediante Logback.</p>
+        </div>
 
-            <div class="card shadow">
-
-                <div class="card-body">
-
-                    <h2 class="fw-bold mb-1">
-
-                        <i class="fa-solid fa-shield-halved text-primary"></i>
-
-                        Auditoría del Sistema
-
-                    </h2>
-
-                    <p class="text-muted mb-0">
-
-                        Monitoreo de eventos registrados mediante Logback.
-
-                    </p>
-
+        <!-- Tarjetas de Resumen (KPIs de Logs) -->
+        <div class="row g-4 mb-4">
+            <div class="col-md-3">
+                <div class="metric-card shadow-sm d-flex align-items-center gap-3">
+                    <div class="icon-box bg-info-subtle text-info">
+                        <i class="fa-solid fa-circle-info fa-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="mb-0 fw-bold" th:text="${info}">0</h3>
+                        <span class="text-muted small fw-bold">Nivel INFO</span>
+                    </div>
                 </div>
-
             </div>
-
+            
+            <div class="col-md-3">
+                <div class="metric-card shadow-sm d-flex align-items-center gap-3">
+                    <div class="icon-box bg-warning-subtle text-warning">
+                        <i class="fa-solid fa-triangle-exclamation fa-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="mb-0 fw-bold" th:text="${warn}">0</h3>
+                        <span class="text-muted small fw-bold">Nivel WARN</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-3">
+                <div class="metric-card shadow-sm d-flex align-items-center gap-3">
+                    <div class="icon-box bg-danger-subtle text-danger">
+                        <i class="fa-solid fa-circle-xmark fa-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="mb-0 fw-bold" th:text="${error}">0</h3>
+                        <span class="text-muted small fw-bold">Nivel ERROR</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-3">
+                <div class="metric-card shadow-sm d-flex align-items-center gap-3">
+                    <div class="icon-box bg-secondary-subtle text-secondary">
+                        <i class="fa-solid fa-list-ol fa-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="mb-0 fw-bold" th:text="${logs != null ? logs.size() : 0}">0</h3>
+                        <span class="text-muted small fw-bold">Total Registros</span>
+                    </div>
+                </div>
+            </div>
         </div>
 
-    </div>
-        
-        <div class="row mb-4">
-
-    <div class="col-md-3">
-
-        <div class="card border-0 shadow">
-
-            <div class="card-body text-center">
-
-                <h6 class="text-muted">
-
-                    INFO
-
-                </h6>
-
-                <h2 class="text-success">
-
-                    <span th:text="${info}">0</span>
-
-                </h2>
-
+        <!-- Tabla de Registros -->
+        <div class="card shadow-sm p-4 mb-5" style="background-color: var(--bg-card); border-color: var(--border-card);">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h5 class="fw-bold mb-0">Detalle de Eventos</h5>
             </div>
 
-        </div>
-
-    </div>
-
-    <div class="col-md-3">
-
-        <div class="card border-0 shadow">
-
-            <div class="card-body text-center">
-
-                <h6 class="text-muted">
-
-                    WARN
-
-                </h6>
-
-                <h2 class="text-warning">
-
-                    <span th:text="${warn}">0</span>
-
-                </h2>
-
+            <div class="table-responsive">
+                <table class="table table-custom table-hover align-middle mb-0">
+                    <thead>
+                        <tr>
+                            <th>Fecha</th>
+                            <th>Nivel</th>
+                            <th>Módulo</th>
+                            <th>Usuario</th>
+                            <th>Acción</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="log : ${logs}">
+                            <td class="text-muted small" th:text="${log.fecha}">2026-07-12 15:34:11</td>
+                            <td>
+                                <!-- Etiqueta dinámica según el nivel del log -->
+                                <span class="badge rounded-pill px-2 py-1"
+                                      th:classappend="${log.nivel == 'ERROR' ? 'bg-danger text-white' : (log.nivel == 'WARN' ? 'bg-warning text-dark' : 'bg-info text-dark')}"
+                                      th:text="${log.nivel}">INFO
+                                </span>
+                            </td>
+                            <td class="fw-bold" th:text="${log.modulo}">Módulo</td>
+                            <td th:text="${log.usuario}">Usuario</td>
+                            <td th:text="${log.accion}">Acción registrada en el sistema</td>
+                        </tr>
+                        
+                        <!-- Estado vacío en caso de no haber logs -->
+                        <tr th:if="${#lists.isEmpty(logs)}">
+                            <td colspan="5" class="text-center text-muted py-4">
+                                <i class="fa-regular fa-folder-open mb-2 fs-3 d-block"></i>
+                                No hay registros de auditoría disponibles en este momento.
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
-
-        </div>
-
-    </div>
-
-    <div class="col-md-3">
-
-        <div class="card border-0 shadow">
-
-            <div class="card-body text-center">
-
-                <h6 class="text-muted">
-
-                    ERROR
-
-                </h6>
-
-                <h2 class="text-danger">
-
-                    <span th:text="${error}">0</span>
-
-                </h2>
-
-            </div>
-
-        </div>
-
-    </div>
-
-    <div class="col-md-3">
-
-        <div class="card border-0 shadow">
-
-            <div class="card-body text-center">
-
-                <h6 class="text-muted">
-
-                    TOTAL
-
-                </h6>
-
-                <h2 class="text-primary">
-
-                    <span th:text="${logs.size()}"></span>
-
-                </h2>
-
-            </div>
-
         </div>
 
     </div>
 
-</div>
-        
-        
-        
-        
-        
-        
-
-
-    <table class="table table-bordered table-hover">
-
-        <thead class="table-dark">
-
-        <tr>
-
-            <th>Fecha</th>
-            <th>Nivel</th>
-            <th>Módulo</th>
-            <th>Usuario</th>
-            <th>Acción</th>
-
-        </tr>
-
-        </thead>
-
-        <tbody>
-
-        <tr th:each="log : ${logs}">
-
-            <td th:text="${log.fecha}"></td>
-
-            <td th:text="${log.nivel}"></td>
-
-            <td th:text="${log.modulo}"></td>
-
-            <td th:text="${log.usuario}"></td>
-
-            <td th:text="${log.accion}"></td>
-
-        </tr>
-
-        </tbody>
-
-    </table>
-
-</div>
-
+    <!-- Scripts de Bootstrap y Sistema -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script th:src="@{/script.js}"></script>
 </body>
 </html>
