@@ -49,6 +49,10 @@
                             <i class="fa-solid fa-screwdriver-wrench me-2"></i>Herramientas
                         </h6>
                         
+                     <a href="#" id="btnVerIncidencias" class="btn btn-dark fw-bold text-start py-2 px-3 rounded-3 mb-2 active" onclick="mostrarSeccion('incidencias'); return false;">
+                     <i class="fa-solid fa-list me-2"></i> Ver Incidencias
+                     </a>
+
                      <a href="/admin/herramientas/reportes" class="btn btn-dark fw-bold text-start py-2 px-3 rounded-3 mb-2">
                      <i class="fa-solid fa-chart-line me-2"></i> Centro de Reportes
                      </a>
@@ -57,8 +61,8 @@
                      <i class="fa-solid fa-chart-pie me-2"></i> Ver Métricas
                      </a>
 
-                     <a href="#" class="btn btn-dark fw-bold text-start py-2 px-3 rounded-3 mb-2" onclick="return false;" style="opacity: 0.8;">
-                     <i class="fa-solid fa-layer-group me-2"></i> CRUD Catálogo
+                     <a href="#" id="btnCrudCatalogo" class="btn btn-dark fw-bold text-start py-2 px-3 rounded-3" onclick="mostrarSeccion('catalogo')">
+                            <i class="fa-solid fa-layer-group me-2"></i> CRUD Catálogo
                      </a>
 
                      <a href="/admin/auditoria" class="btn btn-dark fw-bold text-start py-2 px-3 rounded-3 mb-2">
@@ -70,8 +74,8 @@
             </div>
 
             <div class="col-lg-9 col-xl-10">
-                
-                <div class="row mb-4 g-3">
+                <div id="seccion-incidencias">
+                    <div class="row mb-4 g-3">
                     <div class="col-md-4">
                         <div class="summary-card p-3 d-flex align-items-center gap-3">
                             <div class="icon-box bg-danger-subtle text-danger">
@@ -210,6 +214,36 @@
                     <ul class="pagination justify-content-center" id="paginacion-ul">
                     </ul>
                 </nav>
+                </div> <!-- Fin seccion-incidencias -->
+
+                <!-- Sección CRUD Catálogo -->
+                <div id="seccion-catalogo" style="display: none;">
+                    <div class="incidencias-container p-4 mt-4">
+                        <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+                            <h5 class="fw-bold mb-0">Catálogo de Incidencias Sugeridas</h5>
+                            <button class="btn btn-dark fw-bold px-3 py-2 rounded-3" onclick="abrirModalCatalogoNuevo()">
+                                <i class="fa-solid fa-plus me-2"></i> Agregar Nueva Incidencia
+                            </button>
+                        </div>
+                        
+                        <div class="table-responsive">
+                            <table class="table table-hover align-middle">
+                                <thead>
+                                    <tr style="border-bottom: 2px solid var(--border-card);">
+                                        <th style="background-color: transparent; color: var(--text-muted);">ID</th>
+                                        <th style="background-color: transparent; color: var(--text-muted);">Nombre / Tipo Incidencia</th>
+                                        <th style="background-color: transparent; color: var(--text-muted);">Categoría</th>
+                                        <th style="background-color: transparent; color: var(--text-muted);">Prioridad</th>
+                                        <th class="text-end" style="background-color: transparent; color: var(--text-muted);">Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tabla-catalogo-body">
+                                    <!-- Renderizado dinámicamente por panel-admin.js -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
 
             </div>
         </div>
@@ -240,7 +274,56 @@
         </div>
     </footer>
 
+    <!-- Modal CRUD Catálogo -->
+    <div class="modal fade" id="modalCatalogo" tabindex="-1" aria-labelledby="modalCatalogoLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content" style="background-color: var(--bg-card); color: var(--text-main); border: 1px solid var(--border-card);">
+                <div class="modal-header border-bottom" style="border-color: var(--border-card);">
+                    <h5 class="modal-title fw-bold" id="modalCatalogoLabel">Agregar Incidencia al Catálogo</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" style="filter: var(--theme-icon-filter);"></button>
+                </div>
+                <form id="formCatalogo" onsubmit="guardarCatalogoItem(event)">
+                    <div class="modal-body d-flex flex-column gap-3">
+                        <input type="hidden" id="catalogoId">
+                        
+                        <div>
+                            <label for="catalogoNombre" class="form-label fw-bold">Nombre de la Incidencia</label>
+                            <input type="text" id="catalogoNombre" class="form-control" style="background-color: var(--bg-input); border-color: var(--border-input); color: var(--text-main);" placeholder="Ej: Proyector no enciende" required>
+                        </div>
+                        
+                        <div>
+                            <label for="catalogoCategoria" class="form-label fw-bold">Categoría</label>
+                            <select id="catalogoCategoria" class="form-select" style="background-color: var(--bg-input); border-color: var(--border-input); color: var(--text-main);" required>
+                                <option value="" disabled selected>Seleccione una categoría</option>
+                                <option value="Hardware">Hardware</option>
+                                <option value="Software">Software</option>
+                                <option value="Redes">Redes</option>
+                                <option value="Infraestructura">Infraestructura</option>
+                                <option value="Otros">Otros</option>
+                            </select>
+                        </div>
+                        
+                        <div>
+                            <label for="catalogoPrioridad" class="form-label fw-bold">Prioridad</label>
+                            <select id="catalogoPrioridad" class="form-select" style="background-color: var(--bg-input); border-color: var(--border-input); color: var(--text-main);" required>
+                                <option value="" disabled selected>Seleccione una prioridad</option>
+                                <option value="ALTA">Alta</option>
+                                <option value="MEDIA">Media</option>
+                                <option value="BAJA">Baja</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="modal-footer border-top" style="border-color: var(--border-card);">
+                        <button type="button" class="btn btn-light border" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="submit" class="btn btn-dark text-white fw-bold px-3 rounded-3">Guardar Cambios</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <script th:src="@{/script.js}"></script>
+    <script th:src="@{/panel-admin.js}"></script>
 </body>
 </html>
