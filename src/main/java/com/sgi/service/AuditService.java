@@ -2,7 +2,7 @@ package com.sgi.service;
 
 import com.sgi.model.AuditLog;
 import org.springframework.stereotype.Service;
-
+import java.util.Comparator;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -91,6 +91,8 @@ public class AuditService {
             e.printStackTrace();
 
         }
+        // ordenar mas reciente, mas antiguo
+        lista.sort(Comparator.comparing(AuditLog::getFecha).reversed());
 
         return lista;
 
