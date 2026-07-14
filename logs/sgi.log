@@ -2552,3 +2552,6 @@ org.springframework.expression.spel.SpelEvaluationException: EL1004E: Method cal
 2026-07-14 18:46:09 [http-nio-8080-exec-1] INFO  com.sgi.controller.LoginController - AUDITORIA | Módulo=Autenticación | Usuario=admin1@sgi.com | Acción=Inicio de sesión
 2026-07-14 18:46:10 [http-nio-8080-exec-2] INFO  c.s.controller.IncidenciaController - AUDITORIA | Módulo=Panel Administrador | Usuario=admin1@sgi.com | Acción=Ingresó al Panel Administrador
 2026-07-14 18:46:48 [http-nio-8080-exec-5] INFO  com.sgi.controller.LoginController - AUDITORIA | Módulo=Autenticación | Usuario=admin1@sgi.com | Acción=Cierre de sesión
+2026-07-14 18:49:31 [http-nio-8080-exec-8] INFO  com.sgi.controller.LoginController - AUDITORIA | Módulo=Autenticación | Usuario=admin1@sgi.com | Acción=Inicio de sesión
+2026-07-14 18:49:31 [http-nio-8080-exec-9] INFO  c.s.controller.IncidenciaController - AUDITORIA | Módulo=Panel Administrador | Usuario=admin1@sgi.com | Acción=Ingresó al Panel Administrador
+2026-07-14 18:49:44 [http-nio-8080-exec-2] INFO  com.sgi.controller.LoginController - AUDITORIA | Módulo=Autenticación | Usuario=admin1@sgi.com | Acción=Cierre de sesión
