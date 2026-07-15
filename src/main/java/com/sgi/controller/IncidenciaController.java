@@ -13,6 +13,8 @@ import com.sgi.repository.AulaRepository;
 import com.sgi.service.IncidenciaService;
 import com.sgi.service.NotificationService;
 import com.sgi.service.ExcelReportService;
+import com.sgi.service.MetricaService;
+import com.sgi.service.AuditService;
 import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
 import java.time.LocalDateTime;
@@ -53,6 +55,12 @@ public class IncidenciaController {
 
     @Autowired
     private AulaRepository aulaRepository; // <-- Inyectado correctamente en la parte superior
+
+    @Autowired
+    private MetricaService metricaService;
+
+    @Autowired
+    private AuditService auditService;
 
     // ==========================================
     // 1. VISTAS DEL DOCENTE
@@ -142,7 +150,7 @@ public class IncidenciaController {
         incidenciaService.guardar(nueva); 
         
         logger.info(
-            "AUDITORIA | Módulo=Gestión de Incidencias | Usuario={} | Acción=Registró incidencia | Tipo={} | Ubicación={}",
+            "AUDITORIA | Módulo=Gestión de Incidencias | Usuario={} | Acción=Registró una nueva incidencia | Tipo={} | Ubicación={}",
             usuarioLogueado.getCorreo(),
             tipoIncidencia,
             ubicacion
@@ -185,8 +193,18 @@ public class IncidenciaController {
         model.addAttribute("totalEnProceso", enProceso);
         model.addAttribute("totalResueltas", resueltas);
 
-        
-        
+        // Datos para Métricas
+        model.addAttribute("kpis", metricaService.obtenerKpisDiarios());
+        model.addAttribute("topUbicaciones", metricaService.obtenerTopUbicaciones());
+        model.addAttribute("categorias", metricaService.obtenerDistribucionCategorias());
+        model.addAttribute("aulasBloqueadas", metricaService.obtenerAulasBloqueadas());
+
+        // Datos para Auditoría
+        model.addAttribute("logs", auditService.obtenerLogs());
+        model.addAttribute("info", auditService.contarInfo());
+        model.addAttribute("warn", auditService.contarWarn());
+        model.addAttribute("error", auditService.contarError());
+
         logger.info(
             "AUDITORIA | Módulo=Panel Administrador | Usuario={} | Acción=Ingresó al Panel Administrador",
             u.getCorreo()
@@ -295,18 +313,18 @@ public class IncidenciaController {
             }
 
             incidenciaService.guardar(incidencia);
-            
+
             logger.info(
-                "AUDITORIA | Módulo=Gestión de Incidencias | Usuario={} | Acción=Cambió estado | Ticket={} | Estado={}",
+                "AUDITORIA | Módulo=Gestión de Incidencias | Usuario={} | Acción=Cambió el estado de la incidencia {} a {}",
                 tecnico.getCorreo(),
                 incidencia.getIdIncidencia(),
                 nuevoEstado
             );
-        }
-        
-        return "redirect:/incidencias/panel-tecnico";
+
+            } // <-- ESTA LLAVE CIERRA if (incidencia != null)
+
+            return "redirect:/incidencias/panel-tecnico";
     }
-    
     // ==========================================
     // RUTA DE ESCALAMIENTO PARA EL ADMINISTRADOR
     // ==========================================
@@ -321,6 +339,11 @@ public class IncidenciaController {
         
         if (incidencia != null && incidencia.getEstado().equalsIgnoreCase("ATENDIDA")) {
             incidencia.setEstado("RESUELTA");
+            logger.info(
+            "AUDITORIA | Módulo=Gestión de Incidencias | Usuario={} | Acción=Resolvió definitivamente la incidencia {}",
+            admin.getCorreo(),
+            incidencia.getIdIncidencia()
+        );
             incidencia.setFechaCierre(LocalDateTime.now());
             incidencia.setComentarioAdmin("Cierre definitivo por el Administrador (Liberado de la bandeja de escalamiento).");
             incidenciaService.guardar(incidencia);
