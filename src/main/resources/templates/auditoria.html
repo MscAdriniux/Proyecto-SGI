@@ -35,10 +35,9 @@
 
             <small class="text-muted">
 
-                <span th:text="${usuarioLogueado.nombres + ' ' + usuarioLogueado.apellidos}">
-                </span>
+                <span th:text="${usuarioLogueado.nombres + ' ' + usuarioLogueado.apellidos}"></span>
 
-                Auditoría del Sistema
+                • Auditoría del Sistema
 
             </small>
 
@@ -262,7 +261,7 @@ Auditoría
     
     <div class="table-responsive">
 
-    <table class="table table-hover align-middle">
+    <table class="table table-custom table-hover align-middle">
 
         <thead>
 
@@ -282,7 +281,7 @@ Auditoría
 
         <tr th:each="log : ${logs}">
 
-            <td th:text="${log.fecha}"></td>
+            <td th:text="${log.fechaFormateada}"></td>
 
             <td>
 
