@@ -15,4 +15,16 @@ public class CatalogoService {
     public List<CatalogoIncidencia> obtenerTodoElCatalogo() {
         return repository.findAll();
     }
+
+    public CatalogoIncidencia obtenerPorId(Long id) {
+        return repository.findById(id).orElse(null);
+    }
+
+    public CatalogoIncidencia guardar(CatalogoIncidencia catalogoIncidencia) {
+        return repository.save(catalogoIncidencia);
+    }
+
+    public void eliminar(Long id) {
+        repository.deleteById(id);
+    }
 }

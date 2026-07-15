@@ -7,46 +7,75 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" th:href="@{/estilos.css}">
-    <script>
-    const tema = localStorage.getItem("tema_preferido");
-
-    if (tema === "dark") {
-        document.documentElement.setAttribute("data-theme","dark");
-    }
-    </script>
 </head>
 <body class="dashboard-body">
 
-    <div class="admin-layout">
-        <div th:replace="~{sidebar-admin :: sidebar('panel')}"></div>
+    <nav class="navbar navbar-expand-lg border-bottom px-4 py-3 bg-nav">
+        <div class="container-fluid">
+            <div>
+                <h4 class="mb-0 fw-bold">Sistema de Incidencias</h4>
+                <small class="text-muted">
+                    <span th:text="${usuarioLogueado.nombres} + ' ' + ${usuarioLogueado.apellidos}">Administrador</span> • Panel de Administrador
+                </small>
+            </div>
+            
+            <div class="d-flex align-items-center gap-3">
+                
+    
+                <button class="btn btn-light border position-relative p-2" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNotificaciones" aria-controls="offcanvasNotificaciones" style="background-color: var(--bg-card); color: var(--text-main);">
+                    <i class="fa-regular fa-bell fa-lg"></i>
+                    <span id="badgeNotificaciones" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="display: none; font-size: 0.65rem;">
+                        0
+                    </span>
+                </button>
 
-        <div class="admin-main-content">
-            <nav class="navbar navbar-expand-lg border-bottom px-4 py-3 bg-nav">
-                <div class="container-fluid">
-                    <div>
-                        <h4 class="mb-0 fw-bold">Sistema de Incidencias</h4>
-                        <small class="text-muted">
-                            <span th:text="${usuarioLogueado.nombres} + ' ' + ${usuarioLogueado.apellidos}">Administrador</span> • Panel Principal
-                        </small>
-                    </div>
-                    
-                    <div class="d-flex align-items-center gap-3">
-                        <button class="btn btn-light border position-relative p-2" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNotificaciones" style="background-color: var(--bg-card); color: var(--text-main);">
-                            <i class="fa-regular fa-bell fa-lg"></i>
-                            <span id="badgeNotificaciones" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="display: none; font-size: 0.65rem;">0</span>
-                        </button>
-                        <button class="theme-toggle position-static m-0" id="themeToggleBtn">
-                            <i class="fa-regular fa-moon" id="themeIcon"></i>
-                        </button>
-                        <a href="/logout" class="btn btn-light border fw-bold px-3 py-2 rounded-3 text-dark btn-logout">
-                            <i class="fa-solid fa-arrow-right-from-bracket me-2"></i> Cerrar Sesión
-                        </a>
+                <button class="theme-toggle position-static m-0" id="themeToggleBtn">
+                    <i class="fa-regular fa-moon" id="themeIcon"></i>
+                </button>
+                <a href="/logout" class="btn btn-light border fw-bold px-3 py-2 rounded-3 text-dark btn-logout">
+                    <i class="fa-solid fa-arrow-right-from-bracket me-2"></i> Cerrar Sesión
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container-fluid px-lg-5 mt-4">
+        <div class="row g-4">
+            
+            <div class="col-lg-3 col-xl-2 mb-4">
+                <div class="card shadow-sm" style="background-color: var(--bg-card); border-color: var(--border-card); position: sticky; top: 20px;">
+                    <div class="card-body p-3 d-flex flex-column gap-2">
+                        <h6 class="fw-bold mb-3 text-muted text-uppercase small" style="letter-spacing: 0.5px;">
+                            <i class="fa-solid fa-screwdriver-wrench me-2"></i>Herramientas
+                        </h6>
+                        
+                     <a href="#" id="btnVerIncidencias" class="btn btn-dark fw-bold text-start py-2 px-3 rounded-3 mb-2 active" onclick="mostrarSeccion('incidencias'); return false;">
+                     <i class="fa-solid fa-list me-2"></i> Ver Incidencias
+                     </a>
+
+                     <a href="/admin/herramientas/reportes" class="btn btn-dark fw-bold text-start py-2 px-3 rounded-3 mb-2">
+                     <i class="fa-solid fa-chart-line me-2"></i> Centro de Reportes
+                     </a>
+
+                     <a href="/admin/herramientas/metricas" class="btn btn-dark fw-bold text-start py-2 px-3 rounded-3 mb-2">
+                     <i class="fa-solid fa-chart-pie me-2"></i> Ver Métricas
+                     </a>
+
+                     <a href="#" id="btnCrudCatalogo" class="btn btn-dark fw-bold text-start py-2 px-3 rounded-3 mb-2" onclick="mostrarSeccion('catalogo'); return false;" style="opacity: 0.8;">
+                     <i class="fa-solid fa-layer-group me-2"></i> CRUD Catálogo
+                     </a>
+
+                     <a href="/admin/auditoria" class="btn btn-dark fw-bold text-start py-2 px-3 rounded-3 mb-2">
+                     <i class="fa-solid fa-shield-halved me-2"></i> Auditoría
+                     </a>
+                        
                     </div>
                 </div>
-            </nav>
+            </div>
 
-            <div class="container-fluid px-4 py-4">
-                <div class="row mb-4 g-3">
+            <div class="col-lg-9 col-xl-10">
+                <div id="seccion-incidencias">
+                    <div class="row mb-4 g-3">
                     <div class="col-md-4">
                         <div class="summary-card p-3 d-flex align-items-center gap-3">
                             <div class="icon-box bg-danger-subtle text-danger">
@@ -102,16 +131,19 @@
                     </div>
 
                     <div th:if="${not #lists.isEmpty(incidencias)}">
+                        
                         <div th:each="incidencia : ${incidencias}" class="p-4 border rounded-3 mb-3 incidencia-item-card" 
                              th:data-estado="${incidencia.estado}"
                              style="background-color: var(--bg-card); border-color: var(--border-card) !important;">
                             
                             <div class="d-flex align-items-center flex-wrap gap-2 mb-3">
-                                <h5 class="fw-bold mb-0 me-2 incidencia-titulo" th:text="${incidencia.tipoIncidencia} + ' en ' + ${incidencia.ubicacion}">Proyector</h5>
+                                <h5 class="fw-bold mb-0 me-2 incidencia-titulo" th:text="${incidencia.tipoIncidencia} + ' en ' + ${incidencia.ubicacion}">Proyector no enciende</h5>
+                                
                                 <span class="badge rounded-pill px-3 py-2 border" 
                                     th:classappend="${incidencia.prioridad == 'ALTA' ? 'bg-danger-subtle text-danger border-danger-subtle' : (incidencia.prioridad == 'MEDIA' ? 'bg-warning-subtle text-warning border-warning-subtle' : 'bg-success-subtle text-success border-success-subtle')}"
                                     th:text="${incidencia.prioridad}">
                                 </span>
+
                                 <span class="badge rounded-pill px-3 py-2 border" 
                                     th:classappend="${incidencia.estado == 'PENDIENTE' ? 'bg-secondary-subtle text-secondary border-secondary-subtle' : (incidencia.estado == 'EN PROCESO' ? 'bg-primary-subtle text-primary border-primary-subtle' : (incidencia.estado == 'ATENDIDA' ? 'bg-warning-subtle text-warning border-warning-subtle' : 'bg-success-subtle text-success border-success-subtle'))}" 
                                     th:text="${incidencia.estado}">
@@ -119,26 +151,49 @@
                             </div>
 
                             <div class="d-flex flex-wrap gap-4 text-muted small mt-2">
-                                <div><i class="fa-regular fa-user me-2"></i>Docente: <strong th:text="${incidencia.usuario.nombres} + ' ' + ${incidencia.usuario.apellidos}" style="color: var(--text-main);">Docente</strong></div>
-                                <div><i class="fa-solid fa-location-dot me-2"></i>Ubicación: <strong th:text="${incidencia.ubicacion}" style="color: var(--text-main);">Ubicación</strong></div>
-                                <div><i class="fa-solid fa-circle-exclamation me-2"></i>Categoría: <strong th:text="${incidencia.categoria}" style="color: var(--text-main);">Categoría</strong></div>
-                                <div><i class="fa-regular fa-calendar me-2"></i>Creado: <strong th:text="${#temporals.format(incidencia.fechaCreacion, 'dd/MM/yyyy HH:mm')}" style="color: var(--text-main);">Fecha</strong></div>
+                                <div>
+                                    <i class="fa-regular fa-user me-2"></i>
+                                    Docente: <strong th:text="${incidencia.usuario.nombres} + ' ' + ${incidencia.usuario.apellidos}" style="color: var(--text-main);">Docente</strong>
+                                </div>
+                                <div>
+                                    <i class="fa-solid fa-location-dot me-2"></i>
+                                    Ubicación: <strong th:text="${incidencia.ubicacion}" style="color: var(--text-main);">Ubicación</strong>
+                                </div>
+                                <div>
+                                    <i class="fa-solid fa-circle-exclamation me-2"></i>
+                                    Categoría: <strong th:text="${incidencia.categoria}" style="color: var(--text-main);">Categoría</strong>
+                                </div>
+                                <div>
+                                    <i class="fa-regular fa-calendar me-2"></i>
+                                    Creado: <strong th:text="${#temporals.format(incidencia.fechaCreacion, 'dd/MM/yyyy HH:mm')}" style="color: var(--text-main);">Fecha</strong>
+                                </div>
                             </div>
                             
-                            <hr class="my-3" th:if="${incidencia.asignadoA != null}" style="border-color: var(--border-card);">
+                          <hr class="my-3" th:if="${incidencia.asignadoA != null}" style="border-color: var(--border-card);">
 
-                            <div class="row g-2 text-muted small" th:if="${incidencia.asignadoA != null}">
-                                <div class="col-md-6"><i class="fa-solid fa-user-gear me-2"></i> Técnico Asignado: <strong th:text="${incidencia.asignadoA}" style="color: var(--text-main);">Soporte TI</strong></div>
-                                <div class="col-md-6" th:if="${incidencia.fechaCierre != null}"><i class="fa-regular fa-calendar-check me-2"></i> Fecha Resolución: <strong th:text="${#temporals.format(incidencia.fechaCierre, 'dd/MM/yyyy HH:mm')}" style="color: var(--text-main);">Fecha</strong></div>
-                            </div>
+                           <div class="row g-2 text-muted small" th:if="${incidencia.asignadoA != null}">
+                               <div class="col-md-6">
+                                  <i class="fa-solid fa-user-gear me-2"></i> Técnico Asignado: 
+                                 <strong th:text="${incidencia.asignadoA}" style="color: var(--text-main);">Soporte TI</strong>
+                             </div>
+                             <div class="col-md-6" th:if="${incidencia.fechaCierre != null}">
+                                  <i class="fa-regular fa-calendar-check me-2"></i> Fecha Resolución: 
+                                  <strong th:text="${#temporals.format(incidencia.fechaCierre, 'dd/MM/yyyy HH:mm')}" style="color: var(--text-main);">Fecha</strong>
+                             </div>
+                          </div>
                             <div class="mt-3 d-flex gap-2 flex-wrap align-items-center">
                                 <div th:if="${incidencia.evidenciaUrl != null}">
-                                    <a th:href="@{'/uploads/evidencias/' + ${incidencia.evidenciaUrl}}" target="_blank" class="btn btn-sm btn-outline-primary border"><i class="fa-solid fa-paperclip me-1"></i> Ver Evidencia</a>
+                                    <a th:href="@{'/uploads/evidencias/' + ${incidencia.evidenciaUrl}}" target="_blank" class="btn btn-sm btn-outline-primary border">
+                                        <i class="fa-solid fa-paperclip me-1"></i> Ver Evidencia/Reporte
+                                    </a>
                                 </div>
+                                
                                 <div th:if="${incidencia.estado == 'ATENDIDA'}">
                                     <form action="/admin/resolver-incidencia" method="post" class="m-0">
                                         <input type="hidden" name="idIncidencia" th:value="${incidencia.idIncidencia}">
-                                        <button type="submit" class="btn btn-sm btn-success text-white fw-bold px-3 rounded-3 shadow-sm"><i class="fa-solid fa-square-check me-1"></i> Incidencia Resuelta (Liberar)</button>
+                                        <button type="submit" class="btn btn-sm btn-success text-white fw-bold px-3 rounded-3 shadow-sm">
+                                            <i class="fa-solid fa-square-check me-1"></i> Incidencia Resuelta (Liberar)
+                                        </button>
                                     </form>
                                 </div>
                             </div>
@@ -146,39 +201,129 @@
                     </div>
 
                     <div th:if="${#lists.isEmpty(incidencias)}" class="empty-state text-center py-5">
-                        <div class="mb-3"><i class="fa-regular fa-folder-open text-muted" style="font-size: 3rem;"></i></div>
+                        <div class="mb-3">
+                            <i class="fa-regular fa-folder-open text-muted" style="font-size: 3rem;"></i>
+                        </div>
                         <h5 class="fw-bold">No hay incidencias registradas</h5>
+                        <p class="text-muted">No se ha reportado ninguna incidencia en el sistema todavía.</p>
                     </div>
+
                 </div>
 
                 <nav aria-label="Navegación de incidencias" id="paginacion-container" class="mt-4 mb-2" style="display: none;">
-                    <ul class="pagination justify-content-center" id="paginacion-ul"></ul>
+                    <ul class="pagination justify-content-center" id="paginacion-ul">
+                    </ul>
                 </nav>
-            </div>
-            
-            <footer class="py-4 mt-5 border-top text-center text-muted small shadow-sm" style="background-color: var(--bg-nav); width: 100%;">
-                <div class="container">
-                    <span class="fw-bold d-block mb-1"><i class="fa-solid fa-shield-halved me-1"></i> Sistema de Gestión de Incidentes (SGI)</span>
-                    <span>&copy; 2026 Todos los derechos reservados.</span>
+                </div> <!-- Fin seccion-incidencias -->
+
+                <!-- Sección CRUD Catálogo -->
+                <div id="seccion-catalogo" style="display: none;">
+                    <div class="incidencias-container p-4 mt-4">
+                        <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+                            <h5 class="fw-bold mb-0">Catálogo de Incidencias Sugeridas</h5>
+                            <button class="btn btn-dark fw-bold px-3 py-2 rounded-3" onclick="abrirModalCatalogoNuevo()">
+                                <i class="fa-solid fa-plus me-2"></i> Agregar Nueva Incidencia
+                            </button>
+                        </div>
+                        
+                        <div class="table-responsive">
+                            <table class="table table-hover align-middle">
+                                <thead>
+                                    <tr style="border-bottom: 2px solid var(--border-card);">
+                                        <th style="background-color: transparent; color: var(--text-muted);">ID</th>
+                                        <th style="background-color: transparent; color: var(--text-muted);">Nombre / Tipo Incidencia</th>
+                                        <th style="background-color: transparent; color: var(--text-muted);">Categoría</th>
+                                        <th style="background-color: transparent; color: var(--text-muted);">Prioridad</th>
+                                        <th class="text-end" style="background-color: transparent; color: var(--text-muted);">Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tabla-catalogo-body">
+                                    <!-- Renderizado dinámicamente por panel-admin.js -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
                 </div>
-            </footer>
+
+            </div>
         </div>
     </div>
-
-    <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasNotificaciones" style="background-color: var(--bg-body); color: var(--text-main);">
+    
+    <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasNotificaciones" aria-labelledby="offcanvasNotificacionesLabel" style="background-color: var(--bg-body); color: var(--text-main);">
         <div class="offcanvas-header border-bottom" style="border-color: var(--border-card) !important;">
-            <h5 class="offcanvas-title fw-bold"><i class="fa-solid fa-bell text-warning me-2"></i>Notificaciones</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="offcanvas"></button>
+            <h5 class="offcanvas-title fw-bold" id="offcanvasNotificacionesLabel">
+                <i class="fa-solid fa-bell text-warning me-2"></i>Notificaciones
+            </h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close" style="filter: var(--theme-icon-filter);"></button>
         </div>
         <div class="offcanvas-body p-3" id="contenedorNotificaciones">
+            
             <div class="text-center text-muted mt-5" id="mensajeSinNotificaciones">
                 <i class="fa-regular fa-bell-slash mb-3" style="font-size: 3rem; opacity: 0.5;"></i>
                 <p class="fw-bold">No tienes notificaciones nuevas</p>
+                <small>Las incidencias aparecerán aquí en tiempo real.</small>
+            </div>
+
+        </div>
+    </div>
+
+    <footer class="py-4 mt-5 border-top text-center text-muted small shadow-sm" style="background-color: var(--bg-nav); width: 100%;">
+        <div class="container">
+            <span class="fw-bold d-block mb-1"><i class="fa-solid fa-shield-halved me-1"></i> Sistema de Gestión de Incidentes (SGI)</span>
+            <span>&copy; 2026 Todos los derechos reservados.</span>
+        </div>
+    </footer>
+
+    <!-- Modal CRUD Catálogo -->
+    <div class="modal fade" id="modalCatalogo" tabindex="-1" aria-labelledby="modalCatalogoLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content" style="background-color: var(--bg-card); color: var(--text-main); border: 1px solid var(--border-card);">
+                <div class="modal-header border-bottom" style="border-color: var(--border-card);">
+                    <h5 class="modal-title fw-bold" id="modalCatalogoLabel">Agregar Incidencia al Catálogo</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" style="filter: var(--theme-icon-filter);"></button>
+                </div>
+                <form id="formCatalogo" onsubmit="guardarCatalogoItem(event)">
+                    <div class="modal-body d-flex flex-column gap-3">
+                        <input type="hidden" id="catalogoId">
+                        
+                        <div>
+                            <label for="catalogoNombre" class="form-label fw-bold">Nombre de la Incidencia</label>
+                            <input type="text" id="catalogoNombre" class="form-control" style="background-color: var(--bg-input); border-color: var(--border-input); color: var(--text-main);" placeholder="Ej: Proyector no enciende" required>
+                        </div>
+                        
+                        <div>
+                            <label for="catalogoCategoria" class="form-label fw-bold">Categoría</label>
+                            <select id="catalogoCategoria" class="form-select" style="background-color: var(--bg-input); border-color: var(--border-input); color: var(--text-main);" required>
+                                <option value="" disabled selected>Seleccione una categoría</option>
+                                <option value="Hardware">Hardware</option>
+                                <option value="Software">Software</option>
+                                <option value="Redes">Redes</option>
+                                <option value="Infraestructura">Infraestructura</option>
+                                <option value="Otros">Otros</option>
+                            </select>
+                        </div>
+                        
+                        <div>
+                            <label for="catalogoPrioridad" class="form-label fw-bold">Prioridad</label>
+                            <select id="catalogoPrioridad" class="form-select" style="background-color: var(--bg-input); border-color: var(--border-input); color: var(--text-main);" required>
+                                <option value="" disabled selected>Seleccione una prioridad</option>
+                                <option value="ALTA">Alta</option>
+                                <option value="MEDIA">Media</option>
+                                <option value="BAJA">Baja</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="modal-footer border-top" style="border-color: var(--border-card);">
+                        <button type="button" class="btn btn-light border" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="submit" class="btn btn-dark text-white fw-bold px-3 rounded-3">Guardar Cambios</button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <script th:src="@{/script.js}"></script>
+    <script th:src="@{/panel-admin.js}"></script>
 </body>
 </html>
