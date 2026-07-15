@@ -1,3 +1,4 @@
+alert("REPORTES.JS CARGADO");
 document.addEventListener("DOMContentLoaded", function() {
     const busquedaGlobal = document.getElementById("busquedaGlobal");
     const filtroEstado = document.getElementById("filtroEstado");
@@ -60,18 +61,26 @@ document.addEventListener("DOMContentLoaded", function() {
     };
 
     window.descargarReporteFiltrado = function() {
+        console.log("Entró a descargarReporteFiltrado");
+
         const idsVisibles = [];
+
         filas.forEach(fila => {
             if (fila.style.display !== "none") {
                 idsVisibles.push(fila.getAttribute("data-id"));
             }
         });
 
+        console.log("IDs visibles:", idsVisibles);
+        console.log("Cantidad:", idsVisibles.length);
+
         if (idsVisibles.length === 0) {
-            alert("No hay incidencias que coincidan con los filtros para exportar.");
+            console.log("No hay IDs, redirigiendo...");
+            window.location.href = "/admin/reporte/excel-selectivo";
             return;
         }
 
+        console.log("Exportando...");
         window.location.href = "/admin/reporte/excel-selectivo?ids=" + idsVisibles.join(",");
     };
 });
