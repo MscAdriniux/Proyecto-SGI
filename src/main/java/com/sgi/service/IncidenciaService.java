@@ -76,5 +76,14 @@ public interface IncidenciaService {
      * @return Lista completa de todas las incidencias del sistema.
      */
     List<Incidencia> obtenerTodas();
-    
+
+    /**
+     * Ordena una lista de incidencias aplicando la regla de negocio de prioridad:
+     * primero ALTA, luego MEDIA, luego BAJA/sin definir; y dentro de un mismo
+     * nivel de prioridad, la incidencia más reciente aparece primero.
+     * @param incidencias La lista de incidencias a ordenar (no se modifica la original).
+     * @return Una nueva lista ordenada según prioridad y fecha de creación.
+     */
+    List<Incidencia> obtenerOrdenadasPorPrioridad(List<Incidencia> incidencias);
+
 }

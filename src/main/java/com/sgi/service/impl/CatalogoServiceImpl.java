@@ -17,4 +17,15 @@ public class CatalogoServiceImpl implements CatalogoService {
     public List<CatalogoIncidencia> obtenerTodoElCatalogo() {
         return repository.findAll();
     }
+
+    @Override
+    public CatalogoIncidencia guardar(CatalogoIncidencia item) {
+        // save() de Spring Data JPA hace INSERT si el id es null, o UPDATE si ya existe
+        return repository.save(item);
+    }
+
+    @Override
+    public void eliminar(Long id) {
+        repository.deleteById(id);
+    }
 }

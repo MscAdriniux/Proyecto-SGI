@@ -185,4 +185,35 @@ public class IncidenciaServiceImpl implements IncidenciaService {
     public List<Incidencia> obtenerPorListaIds(List<Integer> ids) {
         return incidenciaRepository.findAllById(ids);
     }
+
+    // ==========================================
+    // LÓGICA DE ORDENAMIENTO DE PRIORIDADES
+    // (Antes vivía duplicada en cada controlador; ahora centralizada aquí)
+    // ==========================================
+    @Override
+    public List<Incidencia> obtenerOrdenadasPorPrioridad(List<Incidencia> incidencias) {
+        return incidencias.stream()
+                .sorted(comparadorIncidencias)
+                .toList();
+    }
+
+    private final java.util.Comparator<Incidencia> comparadorIncidencias = (i1, i2) -> {
+        int prioridad1 = obtenerPesoPrioridad(i1.getPrioridad());
+        int prioridad2 = obtenerPesoPrioridad(i2.getPrioridad());
+
+        if (prioridad1 != prioridad2) {
+            return Integer.compare(prioridad1, prioridad2);
+        }
+        if (i1.getFechaCreacion() != null && i2.getFechaCreacion() != null) {
+            return i2.getFechaCreacion().compareTo(i1.getFechaCreacion());
+        }
+        return 0;
+    };
+
+    private int obtenerPesoPrioridad(String prioridad) {
+        if (prioridad == null) return 3;
+        if (prioridad.equalsIgnoreCase("ALTA")) return 1;
+        if (prioridad.equalsIgnoreCase("MEDIA")) return 2;
+        return 3;
+    }
 }
