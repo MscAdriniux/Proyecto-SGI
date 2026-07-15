@@ -94,6 +94,8 @@ public class AuditServiceImpl implements AuditService {
 
         }
 
+        java.util.Collections.reverse(lista);
+
         return lista;
 
     }

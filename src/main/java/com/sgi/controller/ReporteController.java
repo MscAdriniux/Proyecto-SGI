@@ -34,7 +34,10 @@ public class ReporteController {
         }
 
         model.addAttribute("usuarioLogueado", u);
-        model.addAttribute("incidencias", incidenciaService.obtenerTodas());
+
+        List<Incidencia> incidencias = new java.util.ArrayList<>(incidenciaService.obtenerTodas());
+        incidencias.sort((a, b) -> b.getFechaCreacion().compareTo(a.getFechaCreacion()));
+        model.addAttribute("incidencias", incidencias);
         return "centro-reportes";
     }
 

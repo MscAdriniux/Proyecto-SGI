@@ -300,10 +300,28 @@ h1, h2, h3, h4, h5, h6, p, span {
     border-color: var(--text-main) !important;
 }
 
-[data-theme="dark"] .alert {
+[data-theme="dark"] .alert-danger {
     background-color: #2d1a1c !important; 
     color: #ffcccc !important;         
     border-color: #58151c !important;  
+}
+
+[data-theme="dark"] .alert-success {
+    background-color: #16261c !important;
+    color: #b8f5cf !important;
+    border-color: #1e4630 !important;
+}
+
+[data-theme="dark"] .alert-warning {
+    background-color: #2d2410 !important;
+    color: #ffe9a8 !important;
+    border-color: #5c4813 !important;
+}
+
+[data-theme="dark"] .alert-info {
+    background-color: #102a2d !important;
+    color: #a8e9f5 !important;
+    border-color: #134e57 !important;
 }
 
   .filter-box {
@@ -441,6 +459,50 @@ h1, h2, h3, h4, h5, h6, p, span {
     flex-grow: 1;
     min-width: 0;
     background-color: var(--bg-body);
+}
+
+/* ==========================================
+   9. PANEL DE MÉTRICAS (CENTRO DE ANALÍTICA)
+   ========================================== */
+
+/* Tarjetas de KPI (Reportadas Hoy, Cerradas Hoy, Efectividad Diaria) */
+.metric-card {
+    background-color: var(--bg-card) !important;
+    border: 1px solid var(--border-card) !important;
+    border-radius: 12px;
+    padding: 1.5rem;
+    transition: all 0.3s ease;
+}
+
+/* Contenedores tipo "card" reutilizados en métricas (Aulas Bloqueadas, Puntos Críticos) */
+.card-panel {
+    background-color: var(--bg-card) !important;
+    border: 1px solid var(--border-card) !important;
+    border-radius: 12px;
+    transition: all 0.3s ease;
+}
+
+/* Texto dentro de esas tarjetas que debe seguir el tema activo */
+.card-custom-text,
+.text-dynamic,
+.th-metric {
+    color: var(--text-main) !important;
+}
+
+/* Contenedores de los gráficos (barras y dona) */
+.chart-container {
+    background-color: var(--bg-card) !important;
+    border: 1px solid var(--border-card) !important;
+    border-radius: 12px;
+    padding: 1.5rem;
+    height: 100%;
+    transition: all 0.3s ease;
+}
+
+.chart-box {
+    position: relative;
+    width: 100%;
+    height: 280px;
 }
 
 @media (max-width: 991.98px) {

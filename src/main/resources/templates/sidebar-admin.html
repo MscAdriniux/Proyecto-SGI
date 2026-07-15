@@ -17,6 +17,10 @@
             <i class="fa-solid fa-chart-pie"></i> Ver Métricas
         </a>
 
+        <a href="/admin/herramientas/catalogo" class="btn text-start py-2.5 px-3 rounded-3 w-100 d-flex align-items-center gap-2"
+           th:classappend="${activeTab == 'catalogo' ? 'btn-dark active' : 'btn-light border'}">
+           <i class="fa-solid fa-layer-group"></i> CRUD Catálogo
+        </a>
         <a href="/admin/auditoria" class="btn text-start py-2.5 px-3 rounded-3 w-100 d-flex align-items-center gap-2"
            th:classappend="${activeTab == 'auditoria' ? 'btn-dark active' : 'btn-light border'}">
             <i class="fa-solid fa-shield-halved"></i> Auditoría

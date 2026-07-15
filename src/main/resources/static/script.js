@@ -36,6 +36,9 @@ document.addEventListener("DOMContentLoaded", function() {
                 themeIcon.classList.add('fa-sun');
                 localStorage.setItem('tema_preferido', 'dark');
             }
+            // Avisamos a otros scripts (ej. metricas.js) de que el tema cambió,
+            // para que puedan repintar gráficos u otros elementos con canvas.
+            document.dispatchEvent(new CustomEvent('temaCambiado'));
         });
     }
 

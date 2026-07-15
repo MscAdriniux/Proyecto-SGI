@@ -4,10 +4,19 @@ document.addEventListener("DOMContentLoaded", function() {
     const filtroPrioridad = document.getElementById("filtroPrioridad");
     const filtroFechaDesde = document.getElementById("filtroFechaDesde");
     const filtroFechaHasta = document.getElementById("filtroFechaHasta");
-    
-    const filas = document.querySelectorAll(".fila-incidencia");
+
+    const filas = Array.from(document.querySelectorAll(".fila-incidencia"));
     const contadorFilas = document.getElementById("contadorFilas");
     const contadorExcel = document.getElementById("contadorExcel");
+
+    // El paginador solo pagina entre las filas que actualmente cumplen el filtro
+    // (marcadas con data-coincide="1"), dejando siempre ocultas las que no coinciden.
+    const paginadorReportes = crearPaginador({
+        obtenerItems: () => filas.filter(f => f.dataset.coincide === "1"),
+        contenedorNavId: "paginacion-reportes-container",
+        ulId: "paginacion-reportes-ul",
+        itemsPorPagina: 10
+    });
 
     function aplicarFiltros() {
         const texto = busquedaGlobal.value.toLowerCase().trim();
@@ -22,26 +31,30 @@ document.addEventListener("DOMContentLoaded", function() {
             const contenidoFila = fila.innerText.toLowerCase();
             const filaEstado = fila.getAttribute("data-estado").toUpperCase();
             const filaPrioridad = fila.getAttribute("data-prioridad").toUpperCase();
-            const filaFecha = fila.getAttribute("data-fecha"); 
+            const filaFecha = fila.getAttribute("data-fecha");
 
             const cumpleTexto = texto === "" || contenidoFila.includes(texto);
             const cumpleEstado = estado === "" || filaEstado === estado;
             const cumplePrioridad = prioridad === "" || filaPrioridad === prioridad;
-            
+
             let cumpleFecha = true;
             if (desde !== "" && filaFecha < desde) cumpleFecha = false;
             if (hasta !== "" && filaFecha > hasta) cumpleFecha = false;
 
             if (cumpleTexto && cumpleEstado && cumplePrioridad && cumpleFecha) {
-                fila.style.display = "";
+                fila.dataset.coincide = "1";
                 visibles++;
             } else {
+                fila.dataset.coincide = "0";
                 fila.style.display = "none";
             }
         });
 
         if (contadorFilas) contadorFilas.textContent = visibles;
         if (contadorExcel) contadorExcel.textContent = visibles;
+
+        // Volvemos a la página 1 cada vez que cambian los filtros
+        paginadorReportes.reset();
     }
 
     if (busquedaGlobal) busquedaGlobal.addEventListener("input", aplicarFiltros);
@@ -59,19 +72,20 @@ document.addEventListener("DOMContentLoaded", function() {
         aplicarFiltros();
     };
 
+    // Exporta TODAS las filas que coinciden con el filtro, sin importar en qué página estén
     window.descargarReporteFiltrado = function() {
-        const idsVisibles = [];
-        filas.forEach(fila => {
-            if (fila.style.display !== "none") {
-                idsVisibles.push(fila.getAttribute("data-id"));
-            }
-        });
+        const idsCoincidentes = filas
+            .filter(f => f.dataset.coincide === "1")
+            .map(f => f.getAttribute("data-id"));
 
-        if (idsVisibles.length === 0) {
+        if (idsCoincidentes.length === 0) {
             alert("No hay incidencias que coincidan con los filtros para exportar.");
             return;
         }
 
-        window.location.href = "/admin/reporte/excel-selectivo?ids=" + idsVisibles.join(",");
+        window.location.href = "/admin/reporte/excel-selectivo?ids=" + idsCoincidentes.join(",");
     };
+
+    // Estado inicial: todas coinciden, primera página
+    aplicarFiltros();
 });
