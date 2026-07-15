@@ -43,10 +43,7 @@ public class ReporteController {
             u.getCorreo()
         );
 
-        model.addAttribute("usuarioLogueado", u);
-        model.addAttribute("incidencias", incidenciaService.obtenerTodas());
-
-        return "centro-reportes";
+        return "redirect:/admin/panel-admin?seccion=reportes";
     }
 
     @GetMapping("/admin/reporte/excel-selectivo")

@@ -32,14 +32,7 @@ public class MetricaController {
             u.getCorreo()
         );
 
-        // Cargamos los datos iniciales para las tarjetas y listas fijas
-        model.addAttribute("usuarioLogueado", u);
-        model.addAttribute("kpis", metricaService.obtenerKpisDiarios());
-        model.addAttribute("topUbicaciones", metricaService.obtenerTopUbicaciones());
-        model.addAttribute("categorias", metricaService.obtenerDistribucionCategorias());
-        model.addAttribute("aulasBloqueadas", metricaService.obtenerAulasBloqueadas());
-
-        return "centro-metricas";
+        return "redirect:/admin/panel-admin?seccion=metricas";
     }
 
     // Endpoint REST asíncrono para el toggle del gráfico de técnicos (Retorna JSON)
