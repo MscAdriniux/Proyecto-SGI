@@ -1,5 +1,5 @@
 package com.sgi.model;
-
+import java.time.format.DateTimeFormatter;
 import java.time.LocalDateTime;
 
 public class AuditLog {
@@ -32,6 +32,18 @@ public class AuditLog {
 
     public LocalDateTime getFecha() {
         return fecha;
+    }
+    
+    public String getFechaFormateada() {
+
+        if (fecha == null) {
+            return "";
+        }
+
+        return fecha.format(
+                DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss")
+        );
+
     }
 
     public void setFecha(LocalDateTime fecha) {
