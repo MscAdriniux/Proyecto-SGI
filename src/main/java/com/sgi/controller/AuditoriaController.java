@@ -18,21 +18,11 @@ public class AuditoriaController {
 
         Usuario u = (Usuario) session.getAttribute("usuarioLogueado");
 
-        if (u == null) {
+        if (u == null || !u.getRol().equalsIgnoreCase("administrador")) {
             return "redirect:/login";
         }
 
-        model.addAttribute("usuarioLogueado", u);
-
-        model.addAttribute("logs", auditService.obtenerLogs());
-
-        model.addAttribute("info", auditService.contarInfo());
-
-        model.addAttribute("warn", auditService.contarWarn());
-
-        model.addAttribute("error", auditService.contarError());
-
-        return "auditoria";
+        return "redirect:/admin/panel-admin?seccion=auditoria";
     }
 
 }

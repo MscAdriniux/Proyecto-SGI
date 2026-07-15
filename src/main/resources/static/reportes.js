@@ -1,4 +1,3 @@
-alert("REPORTES.JS CARGADO");
 document.addEventListener("DOMContentLoaded", function() {
     const busquedaGlobal = document.getElementById("busquedaGlobal");
     const filtroEstado = document.getElementById("filtroEstado");

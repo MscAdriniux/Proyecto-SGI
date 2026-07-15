@@ -53,38 +53,55 @@ function aplicarFiltros() {
    ========================================== */
 
 function mostrarSeccion(seccion) {
-    const secIncidencias = document.getElementById('seccion-incidencias');
-    const secCatalogo = document.getElementById('seccion-catalogo');
-    const btnVerIncidencias = document.getElementById('btnVerIncidencias');
-    const btnCrudCatalogo = document.getElementById('btnCrudCatalogo');
+    const secciones = ['incidencias', 'catalogo', 'reportes', 'metricas', 'auditoria'];
+    
+    secciones.forEach(sec => {
+        const elem = document.getElementById(`seccion-${sec}`);
+        if (elem) {
+            if (sec === seccion) {
+                elem.style.setProperty('display', 'block', 'important');
+            } else {
+                elem.style.setProperty('display', 'none', 'important');
+            }
+        }
+    });
 
-    if (seccion === 'incidencias') {
-        if (secIncidencias) secIncidencias.style.display = 'block';
-        if (secCatalogo) secCatalogo.style.display = 'none';
+    const botones = {
+        incidencias: document.getElementById('btnVerIncidencias'),
+        catalogo: document.getElementById('btnCrudCatalogo'),
+        reportes: document.getElementById('btnCentroReportes'),
+        metricas: document.getElementById('btnVerMetricas'),
+        auditoria: document.getElementById('btnAuditoria')
+    };
 
-        if (btnVerIncidencias) {
-            btnVerIncidencias.classList.add('active');
-            btnVerIncidencias.style.removeProperty('opacity');
+    Object.keys(botones).forEach(key => {
+        const btn = botones[key];
+        if (btn) {
+            if (key === seccion) {
+                btn.classList.remove('btn-light', 'border');
+                btn.classList.add('btn-dark', 'active');
+                btn.style.removeProperty('opacity');
+            } else {
+                btn.classList.remove('btn-dark', 'active');
+                btn.classList.add('btn-light', 'border');
+                btn.style.opacity = '0.8';
+            }
         }
-        if (btnCrudCatalogo) {
-            btnCrudCatalogo.classList.remove('active');
-            btnCrudCatalogo.style.opacity = '0.8';
-        }
-    } else if (seccion === 'catalogo') {
-        if (secIncidencias) secIncidencias.style.display = 'none';
-        if (secCatalogo) secCatalogo.style.display = 'block';
+    });
 
-        if (btnCrudCatalogo) {
-            btnCrudCatalogo.classList.add('active');
-            btnCrudCatalogo.style.removeProperty('opacity');
-        }
-        if (btnVerIncidencias) {
-            btnVerIncidencias.classList.remove('active');
-            btnVerIncidencias.style.opacity = '0.8';
-        }
+    if (seccion === 'catalogo') {
         cargarCatalogoItems();
     }
 }
+
+// Cargar sección específica desde parámetros de la URL si se especifica
+document.addEventListener("DOMContentLoaded", function() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const seccion = urlParams.get('seccion');
+    if (seccion) {
+        mostrarSeccion(seccion);
+    }
+});
 
 // Cargar catálogo de incidencias desde la API
 function cargarCatalogoItems() {
