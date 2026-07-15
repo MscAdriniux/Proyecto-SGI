@@ -1,139 +1,27 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Interface.java to edit this template
+ */
 package com.sgi.service;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.sgi.model.Incidencia;
 import com.sgi.model.Usuario;
-import com.sgi.repository.IncidenciaRepository;
-import java.util.ArrayList;
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 /**
- * Servicio encargado de manejar la lógica de negocio de las incidencias.
- * Actúa como un intermediario seguro entre los controladores (vistas) y 
- * el repositorio (base de datos).
+ *
+ * @author ad_ri
  */
-@Service
-public class IncidenciaService {
-    
-    /**
-     * Constructor por defecto.
-     */
-    public IncidenciaService() {}
+public interface IncidenciaService {
 
-    // Registra operaciones relacionadas con las incidencias
-    private static final Logger logger =
-            LoggerFactory.getLogger(IncidenciaService.class);
+    Incidencia agregarComentario(Long id, String comentario);
 
-    @Autowired
-    private IncidenciaRepository incidenciaRepository;
-
-    // Obtener las incidencias de un docente en específico
-    public List<Incidencia> obtenerPorUsuario(Usuario usuario) {
-        return incidenciaRepository.findByUsuario(usuario);
-    }
-
-    // Guardar una incidencia
-    public void guardar(Incidencia incidencia) {
-        // Asignación de prioridad automática en el backend basada en la categoría
-        if (incidencia.getCategoria() != null) {
-            String cat = incidencia.getCategoria().toLowerCase();
-            if (cat.contains("hardware") || cat.contains("red")) {
-                incidencia.setPrioridad("ALTA");
-            } else if (cat.contains("software") || cat.contains("equipamiento")) {
-                incidencia.setPrioridad("MEDIA");
-            } else {
-                incidencia.setPrioridad("BAJA");
-            }
-        } else if (incidencia.getPrioridad() == null) {
-            incidencia.setPrioridad("BAJA");
-        }
-        
-        incidenciaRepository.save(incidencia);
-    }
-
-    // =============================
-    // MÉTODOS PARA EL PANEL DE TI Y ADMIN
-    // =============================
+    Incidencia cambiarEstado(Long id, String estado);
 
     /**
-     * Recupera absolutamente todos los tickets de la base de datos, sin filtros.
-     * Utilizado principalmente para el dashboard de Administradores.
-     * @return Lista completa de todas las incidencias del sistema.
+     * Método auxiliar para verificar si el bloqueo se debe específicamente a un ticket ATENDIDO.
      */
-    public List<Incidencia> obtenerTodas() {
-        return incidenciaRepository.findAll();
-    }
-
-    // Buscar incidencia por ID
-    public Incidencia obtenerPorId(Integer id) {
-        return incidenciaRepository.findById(id).orElse(null);
-    }
-
-    public Incidencia cambiarEstado(Long id, String estado) {
-
-        Incidencia incidencia = incidenciaRepository.findById(id.intValue())
-                .orElseThrow(() -> new RuntimeException("Incidencia no encontrada"));
-
-        // Registrar actualización del estado de la incidencia
-        logger.info(
-                "Cambio de estado en incidencia {} -> {}",
-                id,
-                estado
-        );
-
-        incidencia.setEstado(estado);
-
-        return incidenciaRepository.save(incidencia);
-    }
-
-    public Incidencia agregarComentario(Long id, String comentario) {
-
-        Incidencia incidencia = incidenciaRepository.findById(id.intValue())
-                .orElseThrow(() -> new RuntimeException("Incidencia no encontrada"));
-
-        // Registrar agregado de comentario técnico
-        logger.info(
-                "Comentario agregado a incidencia {}",
-                id
-        );
-
-        incidencia.setComentarioAdmin(comentario);
-
-        return incidenciaRepository.save(incidencia);
-    }
-
-    
-    /**
-     * Filtra y obtiene todas las incidencias que se encuentren en un estado particular.
-     * @param estado El estado a buscar (ej. "PENDIENTE", "RESUELTA").
-     * @return Lista de incidencias que coincidan con el estado solicitado.
-     */
-    public List<Incidencia> obtenerPorEstado(String estado) {
-        return incidenciaRepository.findByEstado(estado);
-    }
-
-    /**
-     * Obtiene las incidencias correspondientes al panel de un técnico.
-     * Incluye las incidencias "PENDIENTES" (disponibles para tomar) y 
-     * las que ya le han sido asignadas.
-     * @param nombreTecnico Nombre completo del técnico.
-     * @return Lista combinada de incidencias para el técnico.
-     */
-    public List<Incidencia> obtenerIncidenciasParaTecnico(String nombreTecnico) {
-        // Envolvemos en ArrayList para poder mutar la lista con .addAll()
-        List<Incidencia> misIncidencias = new ArrayList<>(incidenciaRepository.findByAsignadoA(nombreTecnico));
-        
-        List<Incidencia> pendientes = incidenciaRepository.findByEstado("PENDIENTE");
-        
-        misIncidencias.addAll(pendientes);
-        
-        return misIncidencias;
-    }
+    boolean esIncidenciaAtendida(String ubicacion, String tipoIncidencia);
 
     /**
      * Verifica si existe una incidencia activa del mismo tipo en una ubicación específica.
@@ -146,31 +34,56 @@ public class IncidenciaService {
      * Verifica si existe una incidencia activa del mismo tipo en una ubicación específica.
      * Ahora incluye el estado ATENDIDA como un bloqueo activo.
      */
-    public boolean existeActivaEnUbicacion(String ubicacion, String tipoIncidencia) {
-        return incidenciaRepository.existsByUbicacionAndTipoIncidenciaAndEstadoIn(
-            ubicacion, 
-            tipoIncidencia, 
-            List.of("PENDIENTE", "EN PROCESO", "ATENDIDA")
-        );
-    }
+    boolean existeActivaEnUbicacion(String ubicacion, String tipoIncidencia);
+
+    // Guardar una incidencia
+    void guardar(Incidencia incidencia);
 
     /**
-     * Método auxiliar para verificar si el bloqueo se debe específicamente a un ticket ATENDIDO.
+     * Obtiene las incidencias correspondientes al panel de un técnico.
+     * Incluye las incidencias "PENDIENTES" (disponibles para tomar) y
+     * las que ya le han sido asignadas.
+     * @param nombreTecnico Nombre completo del técnico.
+     * @return Lista combinada de incidencias para el técnico.
      */
-    public boolean esIncidenciaAtendida(String ubicacion, String tipoIncidencia) {
-        return incidenciaRepository.existsByUbicacionAndTipoIncidenciaAndEstadoIn(
-            ubicacion, 
-            tipoIncidencia, 
-            List.of("ATENDIDA")
-        );
-    }
-    
-  
+    List<Incidencia> obtenerIncidenciasParaTecnico(String nombreTecnico);
+
+    /**
+     * Filtra y obtiene todas las incidencias que se encuentren en un estado particular.
+     * @param estado El estado a buscar (ej. "PENDIENTE", "RESUELTA").
+     * @return Lista de incidencias que coincidan con el estado solicitado.
+     */
+    List<Incidencia> obtenerPorEstado(String estado);
+
+    // Buscar incidencia por ID
+    Incidencia obtenerPorId(Integer id);
+
     /**
      * Obtiene una lista filtrada de incidencias a partir de sus IDs.
      * Utilizado por el Centro de Reportes para exportación selectiva.
      */
-    public List<Incidencia> obtenerPorListaIds(List<Integer> ids) {
-        return incidenciaRepository.findAllById(ids);
-    }
+    List<Incidencia> obtenerPorListaIds(List<Integer> ids);
+
+    // Obtener las incidencias de un docente en específico
+    List<Incidencia> obtenerPorUsuario(Usuario usuario);
+
+    // =============================
+    // MÉTODOS PARA EL PANEL DE TI Y ADMIN
+    // =============================
+    /**
+     * Recupera absolutamente todos los tickets de la base de datos, sin filtros.
+     * Utilizado principalmente para el dashboard de Administradores.
+     * @return Lista completa de todas las incidencias del sistema.
+     */
+    List<Incidencia> obtenerTodas();
+
+    /**
+     * Ordena una lista de incidencias aplicando la regla de negocio de prioridad:
+     * primero ALTA, luego MEDIA, luego BAJA/sin definir; y dentro de un mismo
+     * nivel de prioridad, la incidencia más reciente aparece primero.
+     * @param incidencias La lista de incidencias a ordenar (no se modifica la original).
+     * @return Una nueva lista ordenada según prioridad y fecha de creación.
+     */
+    List<Incidencia> obtenerOrdenadasPorPrioridad(List<Incidencia> incidencias);
+
 }

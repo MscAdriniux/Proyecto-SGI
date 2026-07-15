@@ -29,22 +29,23 @@ public class ReporteController {
     @Autowired
     private ReporteService reporteService;
 
-    @GetMapping("/admin/herramientas/reportes")
-    public String verCentroReportes(HttpSession session, Model model) {
+@GetMapping("/admin/herramientas/reportes")
+public String verCentroReportes(HttpSession session, Model model) {
 
-        Usuario u = (Usuario) session.getAttribute("usuarioLogueado");
+    Usuario u = (Usuario) session.getAttribute("usuarioLogueado");
 
-        if (u == null || !u.getRol().equalsIgnoreCase("administrador")) {
-            return "redirect:/login";
-        }
-
-        logger.info(
-            "AUDITORIA | Módulo=Centro de Reportes | Usuario={} | Acción=Ingresó al Centro de Reportes",
-            u.getCorreo()
-        );
-
-        return "redirect:/admin/panel-admin?seccion=reportes";
+    if (u == null || !u.getRol().equalsIgnoreCase("administrador")) {
+        return "redirect:/login";
     }
+ 
+    logger.info(
+        "AUDITORIA | Módulo=Centro de Reportes | Usuario={} | Acción=Ingresó al Centro de Reportes",
+        u.getCorreo()
+    );
+
+   
+    return "redirect:/admin/panel-admin?seccion=reportes";
+}
 
     @GetMapping("/admin/reporte/excel-selectivo")
     public ResponseEntity<byte[]> descargarExcelSelectivo(

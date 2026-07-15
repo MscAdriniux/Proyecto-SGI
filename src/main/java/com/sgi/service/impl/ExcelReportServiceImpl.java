@@ -1,6 +1,7 @@
-package com.sgi.service;
+package com.sgi.service.impl;
 
 import com.sgi.model.Incidencia;
+import com.sgi.service.ReporteService;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.stereotype.Service;
@@ -10,7 +11,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Service
-public class ExcelReportService implements ReporteService {
+public class ExcelReportServiceImpl implements ReporteService {
 
     private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
 

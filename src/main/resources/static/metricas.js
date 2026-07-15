@@ -1,6 +1,8 @@
 let chartTecnicosInstancia = null;
 let chartCategoriasInstancia = null;
 
+let ultimoPeriodoTecnicos = 'hoy';
+
 document.addEventListener("DOMContentLoaded", function() {
     // 1. Inicializar el Gráfico Circular Estático (Categorías)
     inicializarGraficoCategorias();
@@ -9,8 +11,17 @@ document.addEventListener("DOMContentLoaded", function() {
     cargarGraficoTecnicos('hoy');
 });
 
+// Cuando el usuario cambia de tema (claro/oscuro), volvemos a dibujar
+// ambos gráficos para que sus textos y colores se actualicen al instante.
+document.addEventListener("temaCambiado", function() {
+    inicializarGraficoCategorias();
+    cargarGraficoTecnicos(ultimoPeriodoTecnicos);
+});
+
 // Función que consume la API REST de Spring Boot usando Fetch
 function cargarGraficoTecnicos(periodo) {
+    ultimoPeriodoTecnicos = periodo;
+
     // Intercambio estético de botones activos del toggle
     const btnHoy = document.getElementById("btnToggleHoy");
     const btnSemana = document.getElementById("btnToggleSemana");

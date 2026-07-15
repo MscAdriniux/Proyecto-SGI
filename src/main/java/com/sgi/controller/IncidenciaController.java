@@ -12,7 +12,7 @@ import com.sgi.model.Usuario;
 import com.sgi.repository.AulaRepository;
 import com.sgi.service.IncidenciaService;
 import com.sgi.service.NotificationService;
-import com.sgi.service.ExcelReportService;
+import com.sgi.service.impl.ExcelReportServiceImpl;
 import com.sgi.service.MetricaService;
 import com.sgi.service.AuditService;
 import jakarta.servlet.http.HttpSession;
@@ -51,10 +51,10 @@ public class IncidenciaController {
     private NotificationService notificationService;
 
     @Autowired
-    private ExcelReportService excelReportService;
+    private ExcelReportServiceImpl excelReportService;
 
     @Autowired
-    private AulaRepository aulaRepository; // <-- Inyectado correctamente en la parte superior
+    private AulaRepository aulaRepository; 
 
     @Autowired
     private MetricaService metricaService;

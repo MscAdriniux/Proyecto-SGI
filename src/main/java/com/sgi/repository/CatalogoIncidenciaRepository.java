@@ -6,5 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface CatalogoIncidenciaRepository extends JpaRepository<CatalogoIncidencia, Long> {
-    // No necesitas escribir nada aquí adentro, JpaRepository ya sabe hacer el SELECT *
+  
 }
