@@ -37,3 +37,169 @@
 2026-07-15 05:55:25 [http-nio-8080-exec-5] INFO  c.sgi.controller.MetricaController - AUDITORIA | Módulo=Centro de Métricas | Usuario=admin@sgi.com | Acción=Ingresó al Centro de Métricas
 2026-07-15 05:55:28 [http-nio-8080-exec-8] INFO  c.sgi.controller.ReporteController - AUDITORIA | Módulo=Centro de Reportes | Usuario=admin@sgi.com | Acción=Ingresó al Centro de Reportes
 2026-07-15 05:55:32 [http-nio-8080-exec-3] INFO  c.s.controller.IncidenciaController - AUDITORIA | Módulo=Panel Administrador | Usuario=admin@sgi.com | Acción=Ingresó al Panel Administrador
+2026-07-15 06:21:53 [main] INFO  com.sgi.SistemaGestionIncidencias - Starting SistemaGestionIncidencias using Java 25.0.1 with PID 18604 (C:\Users\Usuario\Desktop\Proyecto-SGI\target\classes started by Usuario in C:\Users\Usuario\Desktop\Proyecto-SGI)
+2026-07-15 06:21:53 [main] DEBUG com.sgi.SistemaGestionIncidencias - Running with Spring Boot v3.2.5, Spring v6.1.6
+2026-07-15 06:21:53 [main] INFO  com.sgi.SistemaGestionIncidencias - No active profile set, falling back to 1 default profile: "default"
+2026-07-15 06:21:55 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-07-15 06:21:55 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 161 ms. Found 5 JPA repository interfaces.
+2026-07-15 06:21:57 [main] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port 8080 (http)
+2026-07-15 06:21:57 [main] INFO  o.a.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8080"]
+2026-07-15 06:21:57 [main] INFO  o.a.catalina.core.StandardService - Starting service [Tomcat]
+2026-07-15 06:21:57 [main] INFO  o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.20]
+2026-07-15 06:21:57 [main] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2026-07-15 06:21:57 [main] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 3742 ms
+2026-07-15 06:21:58 [main] INFO  o.s.o.j.p.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-07-15 06:21:58 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2026-07-15 06:21:59 [main] INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@bfe47a8
+2026-07-15 06:21:59 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2026-07-15 06:21:59 [main] WARN  org.hibernate.orm.deprecation - HHH90000025: MySQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2026-07-15 06:22:02 [main] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-07-15 06:22:02 [main] INFO  o.s.d.j.r.query.QueryEnhancerFactory - Hibernate is in classpath; If applicable, HQL parser will be used.
+2026-07-15 06:22:03 [main] WARN  o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2026-07-15 06:22:04 [main] INFO  o.a.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8080"]
+2026-07-15 06:22:04 [main] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port 8080 (http) with context path ''
+2026-07-15 06:22:04 [main] INFO  com.sgi.SistemaGestionIncidencias - Started SistemaGestionIncidencias in 12.271 seconds (process running for 13.159)
+2026-07-15 06:23:12 [http-nio-8080-exec-1] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-07-15 06:23:12 [http-nio-8080-exec-1] INFO  o.s.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+2026-07-15 06:23:12 [http-nio-8080-exec-1] INFO  o.s.web.servlet.DispatcherServlet - Completed initialization in 2 ms
+2026-07-15 06:23:15 [http-nio-8080-exec-3] INFO  com.sgi.controller.LoginController - AUDITORIA | Módulo=Autenticación | Usuario=admin@sgi.com | Acción=Inicio de sesión
+2026-07-15 06:23:15 [http-nio-8080-exec-4] INFO  c.s.controller.IncidenciaController - AUDITORIA | Módulo=Panel Administrador | Usuario=admin@sgi.com | Acción=Ingresó al Panel Administrador
+2026-07-15 06:23:22 [http-nio-8080-exec-7] INFO  c.s.controller.IncidenciaController - AUDITORIA | Módulo=Panel Administrador | Usuario=admin@sgi.com | Acción=Ingresó al Panel Administrador
+2026-07-15 06:23:26 [http-nio-8080-exec-10] INFO  c.sgi.controller.MetricaController - AUDITORIA | Módulo=Centro de Métricas | Usuario=admin@sgi.com | Acción=Ingresó al Centro de Métricas
+2026-07-15 06:23:30 [http-nio-8080-exec-2] INFO  c.s.controller.IncidenciaController - AUDITORIA | Módulo=Panel Administrador | Usuario=admin@sgi.com | Acción=Ingresó al Panel Administrador
+2026-07-15 06:23:31 [http-nio-8080-exec-4] INFO  c.sgi.controller.MetricaController - AUDITORIA | Módulo=Centro de Métricas | Usuario=admin@sgi.com | Acción=Ingresó al Centro de Métricas
+2026-07-15 06:23:32 [http-nio-8080-exec-6] INFO  c.s.controller.IncidenciaController - AUDITORIA | Módulo=Panel Administrador | Usuario=admin@sgi.com | Acción=Ingresó al Panel Administrador
+2026-07-15 06:23:33 [http-nio-8080-exec-8] INFO  c.sgi.controller.ReporteController - AUDITORIA | Módulo=Centro de Reportes | Usuario=admin@sgi.com | Acción=Ingresó al Centro de Reportes
+2026-07-15 06:23:40 [http-nio-8080-exec-10] INFO  c.s.controller.IncidenciaController - AUDITORIA | Módulo=Panel Administrador | Usuario=admin@sgi.com | Acción=Ingresó al Panel Administrador
+2026-07-15 06:24:18 [http-nio-8080-exec-2] INFO  com.sgi.controller.LoginController - AUDITORIA | Módulo=Autenticación | Usuario=admin@sgi.com | Acción=Cierre de sesión
+2026-07-15 06:36:18 [main] INFO  com.sgi.SistemaGestionIncidencias - Starting SistemaGestionIncidencias using Java 21.0.11 with PID 20972 (C:\Users\Usuario\Desktop\Proyecto-SGI\target\classes started by Usuario in C:\Users\Usuario\Desktop\Proyecto-SGI)
+2026-07-15 06:36:18 [main] DEBUG com.sgi.SistemaGestionIncidencias - Running with Spring Boot v3.2.5, Spring v6.1.6
+2026-07-15 06:36:18 [main] INFO  com.sgi.SistemaGestionIncidencias - No active profile set, falling back to 1 default profile: "default"
+2026-07-15 06:36:21 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-07-15 06:36:22 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 217 ms. Found 5 JPA repository interfaces.
+2026-07-15 06:36:25 [main] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port 8080 (http)
+2026-07-15 06:36:25 [main] INFO  o.a.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8080"]
+2026-07-15 06:36:25 [main] INFO  o.a.catalina.core.StandardService - Starting service [Tomcat]
+2026-07-15 06:36:25 [main] INFO  o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.20]
+2026-07-15 06:36:25 [main] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2026-07-15 06:36:25 [main] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 6559 ms
+2026-07-15 06:36:27 [main] INFO  o.s.o.j.p.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-07-15 06:36:27 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2026-07-15 06:36:28 [main] INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@32f308c6
+2026-07-15 06:36:28 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2026-07-15 06:36:29 [main] WARN  org.hibernate.orm.deprecation - HHH90000025: MySQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2026-07-15 06:36:32 [main] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-07-15 06:36:33 [main] INFO  o.s.d.j.r.query.QueryEnhancerFactory - Hibernate is in classpath; If applicable, HQL parser will be used.
+2026-07-15 06:36:35 [main] WARN  o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2026-07-15 06:36:36 [main] INFO  o.a.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8080"]
+2026-07-15 06:36:36 [main] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port 8080 (http) with context path ''
+2026-07-15 06:36:36 [main] INFO  com.sgi.SistemaGestionIncidencias - Started SistemaGestionIncidencias in 19.125 seconds (process running for 22.622)
+2026-07-15 06:36:44 [http-nio-8080-exec-1] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-07-15 06:36:44 [http-nio-8080-exec-1] INFO  o.s.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+2026-07-15 06:36:44 [http-nio-8080-exec-1] INFO  o.s.web.servlet.DispatcherServlet - Completed initialization in 3 ms
+2026-07-15 06:36:49 [http-nio-8080-exec-5] INFO  com.sgi.controller.LoginController - AUDITORIA | Módulo=Autenticación | Usuario=admin@sgi.com | Acción=Inicio de sesión
+2026-07-15 06:36:49 [http-nio-8080-exec-6] INFO  c.s.controller.IncidenciaController - AUDITORIA | Módulo=Panel Administrador | Usuario=admin@sgi.com | Acción=Ingresó al Panel Administrador
+2026-07-15 06:38:39 [http-nio-8080-exec-5] INFO  com.sgi.controller.LoginController - AUDITORIA | Módulo=Autenticación | Usuario=admin@sgi.com | Acción=Cierre de sesión
+2026-07-15 06:38:40 [http-nio-8080-exec-7] INFO  com.sgi.controller.LoginController - AUDITORIA | Módulo=Autenticación | Usuario=admin@sgi.com | Acción=Inicio de sesión
+2026-07-15 06:38:41 [http-nio-8080-exec-9] INFO  c.s.controller.IncidenciaController - AUDITORIA | Módulo=Panel Administrador | Usuario=admin@sgi.com | Acción=Ingresó al Panel Administrador
+2026-07-15 06:38:48 [http-nio-8080-exec-3] INFO  com.sgi.controller.LoginController - AUDITORIA | Módulo=Autenticación | Usuario=admin@sgi.com | Acción=Cierre de sesión
+2026-07-15 06:40:14 [http-nio-8080-exec-6] INFO  com.sgi.controller.LoginController - AUDITORIA | Módulo=Autenticación | Usuario=admin@sgi.com | Acción=Inicio de sesión
+2026-07-15 06:40:14 [http-nio-8080-exec-7] INFO  c.s.controller.IncidenciaController - AUDITORIA | Módulo=Panel Administrador | Usuario=admin@sgi.com | Acción=Ingresó al Panel Administrador
+2026-07-15 06:40:19 [http-nio-8080-exec-2] INFO  com.sgi.controller.LoginController - AUDITORIA | Módulo=Autenticación | Usuario=admin@sgi.com | Acción=Cierre de sesión
+2026-07-15 06:41:50 [http-nio-8080-exec-8] WARN  com.sgi.controller.LoginController - AUDITORIA | Módulo=Autenticación | Usuario=admin@sgi.com | Acción=Intento de inicio de sesión fallido
+2026-07-15 06:42:53 [http-nio-8080-exec-5] INFO  com.sgi.controller.LoginController - AUDITORIA | Módulo=Gestión de Usuarios | Usuario=temp_admin@utp.edu.pe | Acción=Registro de usuario
+2026-07-15 06:43:24 [http-nio-8080-exec-7] INFO  com.sgi.controller.LoginController - AUDITORIA | Módulo=Autenticación | Usuario=temp_admin@utp.edu.pe | Acción=Inicio de sesión
+2026-07-15 06:43:25 [http-nio-8080-exec-9] INFO  c.s.controller.IncidenciaController - AUDITORIA | Módulo=Panel Administrador | Usuario=temp_admin@utp.edu.pe | Acción=Ingresó al Panel Administrador
+2026-07-15 06:45:14 [http-nio-8080-exec-7] INFO  com.sgi.controller.LoginController - AUDITORIA | Módulo=Autenticación | Usuario=admin@sgi.com | Acción=Inicio de sesión
+2026-07-15 06:45:14 [http-nio-8080-exec-9] INFO  c.s.controller.IncidenciaController - AUDITORIA | Módulo=Panel Administrador | Usuario=admin@sgi.com | Acción=Ingresó al Panel Administrador
+2026-07-15 06:46:28 [http-nio-8080-exec-3] INFO  com.sgi.controller.LoginController - AUDITORIA | Módulo=Autenticación | Usuario=admin1@sgi.com | Acción=Inicio de sesión
+2026-07-15 06:46:28 [http-nio-8080-exec-10] INFO  c.s.controller.IncidenciaController - AUDITORIA | Módulo=Panel Administrador | Usuario=admin1@sgi.com | Acción=Ingresó al Panel Administrador
+2026-07-15 06:46:46 [http-nio-8080-exec-1] INFO  com.sgi.controller.LoginController - AUDITORIA | Módulo=Autenticación | Usuario=temp_admin@utp.edu.pe | Acción=Cierre de sesión
+2026-07-15 06:46:54 [http-nio-8080-exec-3] WARN  com.sgi.controller.LoginController - AUDITORIA | Módulo=Autenticación | Usuario=admin@utp.edu.pe | Acción=Intento de inicio de sesión fallido
+2026-07-15 06:47:01 [http-nio-8080-exec-2] INFO  com.sgi.controller.LoginController - AUDITORIA | Módulo=Autenticación | Usuario=admin1@sgi.com | Acción=Inicio de sesión
+2026-07-15 06:47:01 [http-nio-8080-exec-4] INFO  c.s.controller.IncidenciaController - AUDITORIA | Módulo=Panel Administrador | Usuario=admin1@sgi.com | Acción=Ingresó al Panel Administrador
+2026-07-15 06:49:52 [main] INFO  com.sgi.SistemaGestionIncidencias - Starting SistemaGestionIncidencias using Java 25.0.1 with PID 22772 (C:\Users\Usuario\Desktop\Proyecto-SGI\target\classes started by Usuario in C:\Users\Usuario\Desktop\Proyecto-SGI)
+2026-07-15 06:49:52 [main] DEBUG com.sgi.SistemaGestionIncidencias - Running with Spring Boot v3.2.5, Spring v6.1.6
+2026-07-15 06:49:52 [main] INFO  com.sgi.SistemaGestionIncidencias - No active profile set, falling back to 1 default profile: "default"
+2026-07-15 06:49:54 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-07-15 06:49:54 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 162 ms. Found 5 JPA repository interfaces.
+2026-07-15 06:49:55 [main] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port 8080 (http)
+2026-07-15 06:49:55 [main] INFO  o.a.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8080"]
+2026-07-15 06:49:55 [main] INFO  o.a.catalina.core.StandardService - Starting service [Tomcat]
+2026-07-15 06:49:55 [main] INFO  o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.20]
+2026-07-15 06:49:55 [main] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2026-07-15 06:49:55 [main] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 3308 ms
+2026-07-15 06:49:56 [main] INFO  o.s.o.j.p.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-07-15 06:49:56 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2026-07-15 06:49:57 [main] INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@74eec640
+2026-07-15 06:49:57 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2026-07-15 06:49:58 [main] WARN  org.hibernate.orm.deprecation - HHH90000025: MySQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2026-07-15 06:50:00 [main] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-07-15 06:50:01 [main] INFO  o.s.d.j.r.query.QueryEnhancerFactory - Hibernate is in classpath; If applicable, HQL parser will be used.
+2026-07-15 06:50:01 [main] WARN  o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2026-07-15 06:50:02 [main] INFO  o.a.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8080"]
+2026-07-15 06:50:02 [main] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port 8080 (http) with context path ''
+2026-07-15 06:50:02 [main] INFO  com.sgi.SistemaGestionIncidencias - Started SistemaGestionIncidencias in 10.866 seconds (process running for 11.581)
+2026-07-15 06:50:02 [http-nio-8080-exec-1] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-07-15 06:50:02 [http-nio-8080-exec-1] INFO  o.s.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+2026-07-15 06:50:02 [http-nio-8080-exec-1] INFO  o.s.web.servlet.DispatcherServlet - Completed initialization in 2 ms
+2026-07-15 06:51:04 [http-nio-8080-exec-9] INFO  com.sgi.controller.LoginController - AUDITORIA | Módulo=Autenticación | Usuario=admin1@sgi.com | Acción=Inicio de sesión
+2026-07-15 06:51:04 [http-nio-8080-exec-10] INFO  c.s.controller.IncidenciaController - AUDITORIA | Módulo=Panel Administrador | Usuario=admin1@sgi.com | Acción=Ingresó al Panel Administrador
+2026-07-15 06:51:25 [http-nio-8080-exec-7] INFO  com.sgi.controller.LoginController - AUDITORIA | Módulo=Autenticación | Usuario=admin1@sgi.com | Acción=Inicio de sesión
+2026-07-15 06:51:25 [http-nio-8080-exec-9] INFO  c.s.controller.IncidenciaController - AUDITORIA | Módulo=Panel Administrador | Usuario=admin1@sgi.com | Acción=Ingresó al Panel Administrador
+2026-07-15 06:51:32 [http-nio-8080-exec-4] INFO  com.sgi.controller.LoginController - AUDITORIA | Módulo=Autenticación | Usuario=admin1@sgi.com | Acción=Cierre de sesión
+2026-07-15 06:51:40 [http-nio-8080-exec-5] INFO  com.sgi.controller.LoginController - AUDITORIA | Módulo=Autenticación | Usuario=admin1@sgi.com | Acción=Cierre de sesión
+2026-07-15 06:51:59 [http-nio-8080-exec-2] INFO  com.sgi.controller.LoginController - AUDITORIA | Módulo=Autenticación | Usuario=admin1@sgi.com | Acción=Inicio de sesión
+2026-07-15 06:51:59 [http-nio-8080-exec-3] INFO  c.s.controller.IncidenciaController - AUDITORIA | Módulo=Panel Administrador | Usuario=admin1@sgi.com | Acción=Ingresó al Panel Administrador
+2026-07-15 06:52:11 [http-nio-8080-exec-1] INFO  com.sgi.controller.LoginController - AUDITORIA | Módulo=Autenticación | Usuario=admin1@sgi.com | Acción=Cierre de sesión
+2026-07-15 06:52:20 [http-nio-8080-exec-5] INFO  com.sgi.controller.LoginController - AUDITORIA | Módulo=Autenticación | Usuario=admin@sgi.com | Acción=Inicio de sesión
+2026-07-15 06:52:20 [http-nio-8080-exec-8] INFO  c.s.controller.IncidenciaController - AUDITORIA | Módulo=Panel Administrador | Usuario=admin@sgi.com | Acción=Ingresó al Panel Administrador
+2026-07-15 06:52:27 [http-nio-8080-exec-2] INFO  com.sgi.controller.LoginController - AUDITORIA | Módulo=Autenticación | Usuario=admin@sgi.com | Acción=Cierre de sesión
+2026-07-15 06:52:54 [http-nio-8080-exec-10] INFO  com.sgi.controller.LoginController - AUDITORIA | Módulo=Autenticación | Usuario=admin@sgi.com | Acción=Inicio de sesión
+2026-07-15 06:52:54 [http-nio-8080-exec-9] INFO  c.s.controller.IncidenciaController - AUDITORIA | Módulo=Panel Administrador | Usuario=admin@sgi.com | Acción=Ingresó al Panel Administrador
+2026-07-15 06:53:06 [http-nio-8080-exec-9] INFO  com.sgi.controller.LoginController - AUDITORIA | Módulo=Autenticación | Usuario=admin@sgi.com | Acción=Inicio de sesión
+2026-07-15 06:53:06 [http-nio-8080-exec-3] INFO  c.s.controller.IncidenciaController - AUDITORIA | Módulo=Panel Administrador | Usuario=admin@sgi.com | Acción=Ingresó al Panel Administrador
+2026-07-15 06:56:21 [http-nio-8080-exec-3] INFO  com.sgi.controller.LoginController - AUDITORIA | Módulo=Autenticación | Usuario=admin@sgi.com | Acción=Cierre de sesión
+2026-07-15 06:57:46 [http-nio-8080-exec-4] INFO  com.sgi.controller.LoginController - AUDITORIA | Módulo=Autenticación | Usuario=admin@sgi.com | Acción=Inicio de sesión
+2026-07-15 06:57:46 [http-nio-8080-exec-6] INFO  c.s.controller.IncidenciaController - AUDITORIA | Módulo=Panel Administrador | Usuario=admin@sgi.com | Acción=Ingresó al Panel Administrador
+2026-07-15 07:13:56 [http-nio-8080-exec-2] INFO  c.sgi.controller.ReporteController - AUDITORIA | Módulo=Centro de Reportes | Usuario=admin@sgi.com | Acción=Exportó reporte Excel
+2026-07-15 08:47:00 [http-nio-8080-exec-8] WARN  o.s.w.s.m.s.DefaultHandlerExceptionResolver - Ignoring exception, response committed already: org.springframework.web.context.request.async.AsyncRequestTimeoutException
+2026-07-15 08:47:00 [http-nio-8080-exec-8] WARN  o.s.w.s.m.s.DefaultHandlerExceptionResolver - Resolved [org.springframework.web.context.request.async.AsyncRequestTimeoutException]
+2026-07-15 08:47:00 [http-nio-8080-exec-3] WARN  o.s.w.s.m.s.DefaultHandlerExceptionResolver - Ignoring exception, response committed already: org.springframework.web.context.request.async.AsyncRequestTimeoutException
+2026-07-15 08:47:00 [http-nio-8080-exec-3] WARN  o.s.w.s.m.s.DefaultHandlerExceptionResolver - Resolved [org.springframework.web.context.request.async.AsyncRequestTimeoutException]
+2026-07-15 08:47:00 [http-nio-8080-exec-7] WARN  o.s.w.s.m.s.DefaultHandlerExceptionResolver - Ignoring exception, response committed already: org.springframework.web.context.request.async.AsyncRequestTimeoutException
+2026-07-15 08:47:00 [http-nio-8080-exec-7] WARN  o.s.w.s.m.s.DefaultHandlerExceptionResolver - Resolved [org.springframework.web.context.request.async.AsyncRequestTimeoutException]
+2026-07-15 08:47:00 [http-nio-8080-exec-1] WARN  o.s.w.s.m.s.DefaultHandlerExceptionResolver - Ignoring exception, response committed already: org.springframework.web.context.request.async.AsyncRequestTimeoutException
+2026-07-15 08:47:00 [http-nio-8080-exec-1] WARN  o.s.w.s.m.s.DefaultHandlerExceptionResolver - Resolved [org.springframework.web.context.request.async.AsyncRequestTimeoutException]
+2026-07-15 08:47:00 [http-nio-8080-exec-9] WARN  o.s.w.s.m.s.DefaultHandlerExceptionResolver - Ignoring exception, response committed already: org.springframework.web.context.request.async.AsyncRequestTimeoutException
+2026-07-15 08:47:00 [http-nio-8080-exec-9] WARN  o.s.w.s.m.s.DefaultHandlerExceptionResolver - Resolved [org.springframework.web.context.request.async.AsyncRequestTimeoutException]
+2026-07-15 08:47:00 [http-nio-8080-exec-5] WARN  o.s.w.s.m.s.DefaultHandlerExceptionResolver - Ignoring exception, response committed already: org.springframework.web.context.request.async.AsyncRequestTimeoutException
+2026-07-15 08:47:00 [http-nio-8080-exec-5] WARN  o.s.w.s.m.s.DefaultHandlerExceptionResolver - Resolved [org.springframework.web.context.request.async.AsyncRequestTimeoutException]
+2026-07-15 08:47:00 [http-nio-8080-exec-10] WARN  o.s.w.s.m.s.DefaultHandlerExceptionResolver - Ignoring exception, response committed already: org.springframework.web.context.request.async.AsyncRequestTimeoutException
+2026-07-15 08:47:00 [http-nio-8080-exec-10] WARN  o.s.w.s.m.s.DefaultHandlerExceptionResolver - Resolved [org.springframework.web.context.request.async.AsyncRequestTimeoutException]
+2026-07-15 08:47:05 [HikariPool-1 housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=1h32m7s371ms11µs).
+2026-07-15 10:35:00 [main] INFO  com.sgi.SistemaGestionIncidencias - Starting SistemaGestionIncidencias using Java 25.0.1 with PID 22336 (C:\Users\Usuario\Desktop\Proyecto-SGI\target\classes started by Usuario in C:\Users\Usuario\Desktop\Proyecto-SGI)
+2026-07-15 10:35:00 [main] DEBUG com.sgi.SistemaGestionIncidencias - Running with Spring Boot v3.2.5, Spring v6.1.6
+2026-07-15 10:35:00 [main] INFO  com.sgi.SistemaGestionIncidencias - No active profile set, falling back to 1 default profile: "default"
+2026-07-15 10:35:02 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-07-15 10:35:02 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 162 ms. Found 5 JPA repository interfaces.
+2026-07-15 10:35:03 [main] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port 8080 (http)
+2026-07-15 10:35:03 [main] INFO  o.a.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8080"]
+2026-07-15 10:35:03 [main] INFO  o.a.catalina.core.StandardService - Starting service [Tomcat]
+2026-07-15 10:35:03 [main] INFO  o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.20]
+2026-07-15 10:35:04 [main] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2026-07-15 10:35:04 [main] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 3428 ms
+2026-07-15 10:35:05 [main] INFO  o.s.o.j.p.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-07-15 10:35:05 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2026-07-15 10:35:06 [main] INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@283d3628
+2026-07-15 10:35:06 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2026-07-15 10:35:06 [main] WARN  org.hibernate.orm.deprecation - HHH90000025: MySQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2026-07-15 10:35:08 [main] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-07-15 10:35:09 [main] INFO  o.s.d.j.r.query.QueryEnhancerFactory - Hibernate is in classpath; If applicable, HQL parser will be used.
+2026-07-15 10:35:09 [main] WARN  o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2026-07-15 10:35:10 [main] INFO  o.a.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8080"]
+2026-07-15 10:35:10 [main] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port 8080 (http) with context path ''
+2026-07-15 10:35:10 [main] INFO  com.sgi.SistemaGestionIncidencias - Started SistemaGestionIncidencias in 11.254 seconds (process running for 12.118)
+2026-07-15 10:35:43 [http-nio-8080-exec-1] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-07-15 10:35:43 [http-nio-8080-exec-1] INFO  o.s.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+2026-07-15 10:35:43 [http-nio-8080-exec-1] INFO  o.s.web.servlet.DispatcherServlet - Completed initialization in 2 ms
