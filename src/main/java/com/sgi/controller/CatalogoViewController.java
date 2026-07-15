@@ -20,7 +20,7 @@ public class CatalogoViewController {
     @Autowired
     private CatalogoService catalogoService;
 
-    @GetMapping("/admin/herramientas/catalogo")
+    @GetMapping("/admin/catalogo")
     public String verCrudCatalogo(HttpSession session, Model model) {
         Usuario u = (Usuario) session.getAttribute("usuarioLogueado");
         if (u == null || !u.getRol().equalsIgnoreCase("administrador")) {

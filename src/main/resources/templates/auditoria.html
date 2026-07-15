@@ -3,95 +3,88 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Auditoría - SGI</title>
-
+    <title>Auditoría del Sistema - SGI</title>
+    
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" th:href="@{/estilos.css}">
-    
-    <script>
-        const tema = localStorage.getItem("tema_preferido");
-        if (tema === "dark") {
-            document.documentElement.setAttribute("data-theme", "dark");
-        }
-    </script>
 </head>
-
 <body class="dashboard-body">
 
     <div class="admin-layout">
-        <!-- Sidebar -->
+        <!-- Sidebar del sistema -->
         <div th:replace="~{sidebar-admin :: sidebar('auditoria')}"></div>
 
         <div class="admin-main-content">
-            <!-- Navbar -->
-            <nav class="navbar navbar-expand-lg border-bottom px-4 py-3 bg-nav">
+            <!-- Navbar estándar -->
+            <nav class="navbar navbar-expand-lg border-bottom px-4 py-3 bg-nav mb-4">
                 <div class="container-fluid">
                     <div>
                         <h4 class="mb-0 fw-bold">Sistema de Incidencias</h4>
-                        <small class="text-muted">
-                            <span th:text="${usuarioLogueado.nombres + ' ' + usuarioLogueado.apellidos}"></span>
-                            • Auditoría del Sistema
-                        </small>
+                        <small class="text-muted">Gestión de Auditoría Global</small>
                     </div>
                     <div class="d-flex align-items-center gap-3">
                         <button class="theme-toggle position-static m-0" id="themeToggleBtn">
                             <i class="fa-regular fa-moon" id="themeIcon"></i>
                         </button>
-                        <a href="/admin/panel-admin" class="btn btn-light border fw-bold px-3 py-2 rounded-3 text-dark">
-                            <i class="fa-solid fa-arrow-left me-2"></i> Volver al Panel
+                        <a href="/logout" class="btn btn-light border fw-bold px-3 py-2 rounded-3 text-dark btn-logout">
+                            <i class="fa-solid fa-arrow-right-from-bracket me-2"></i> Cerrar Sesión
                         </a>
                     </div>
                 </div>
             </nav>
 
             <div class="container-fluid px-4 py-4">
-                <!-- Tarjetas de Resumen -->
-                <div class="row g-3 mb-4">
-                    <div class="col-md-3">
-                        <div class="summary-card p-3 d-flex align-items-center gap-3">
-                            <div class="icon-box bg-success-subtle text-success"><i class="fa-solid fa-circle-info fa-lg"></i></div>
-                            <div>
-                                <h3 class="mb-0 fw-bold" th:text="${info}">0</h3>
-                                <span class="text-muted">Eventos INFO</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-3">
-                        <div class="summary-card p-3 d-flex align-items-center gap-3">
-                            <div class="icon-box bg-warning-subtle text-warning"><i class="fa-solid fa-triangle-exclamation fa-lg"></i></div>
-                            <div>
-                                <h3 class="mb-0 fw-bold" th:text="${warn}">0</h3>
-                                <span class="text-muted">Advertencias</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-3">
-                        <div class="summary-card p-3 d-flex align-items-center gap-3">
-                            <div class="icon-box bg-danger-subtle text-danger"><i class="fa-solid fa-circle-xmark fa-lg"></i></div>
-                            <div>
-                                <h3 class="mb-0 fw-bold" th:text="${error}">0</h3>
-                                <span class="text-muted">Errores</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-3">
-                        <div class="summary-card p-3 d-flex align-items-center gap-3">
-                            <div class="icon-box bg-primary-subtle text-primary"><i class="fa-solid fa-list fa-lg"></i></div>
-                            <div>
-                                <h3 class="mb-0 fw-bold" th:text="${logs != null ? logs.size() : 0}">0</h3>
-                                <span class="text-muted">Total de Eventos</span>
+                <!-- Título -->
+                <div class="row mb-4">
+                    <div class="col-12">
+                        <div class="card shadow border-0" style="background-color: var(--bg-card); border-color: var(--border-card);">
+                            <div class="card-body">
+                                <h2 class="fw-bold mb-1"><i class="fa-solid fa-shield-halved text-primary"></i> Auditoría del Sistema</h2>
+                                <p class="text-muted mb-0">Monitoreo de eventos registrados mediante Logback.</p>
                             </div>
                         </div>
                     </div>
                 </div>
-
+                    
+                <!-- Tarjetas de Resumen -->
+                <div class="row mb-4 g-3">
+                    <div class="col-md-3">
+                        <div class="card border-0 shadow-sm" style="background-color: var(--bg-card); border: 1px solid var(--border-card);">
+                            <div class="card-body text-center">
+                                <h6 class="text-muted">INFO</h6>
+                                <h2 class="text-success"><span th:text="${info}">0</span></h2>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card border-0 shadow-sm" style="background-color: var(--bg-card); border: 1px solid var(--border-card);">
+                            <div class="card-body text-center">
+                                <h6 class="text-muted">WARN</h6>
+                                <h2 class="text-warning"><span th:text="${warn}">0</span></h2>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card border-0 shadow-sm" style="background-color: var(--bg-card); border: 1px solid var(--border-card);">
+                            <div class="card-body text-center">
+                                <h6 class="text-muted">ERROR</h6>
+                                <h2 class="text-danger"><span th:text="${error}">0</span></h2>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card border-0 shadow-sm" style="background-color: var(--bg-card); border: 1px solid var(--border-card);">
+                            <div class="card-body text-center">
+                                <h6 class="text-muted">TOTAL</h6>
+                                <h2 class="text-primary"><span th:text="${logs != null ? logs.size() : 0}">0</span></h2>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                    
                 <!-- Tabla de Auditoría -->
                 <div class="card shadow-sm p-4" style="background-color: var(--bg-card); border-color: var(--border-card);">
-                    <div class="d-flex justify-content-between align-items-center mb-4">
-                        <h5 class="fw-bold mb-0">Historial de Auditoría</h5>
-                    </div>
-
                     <div class="table-responsive">
                         <table class="table table-custom table-hover align-middle mb-0">
                             <thead>
@@ -103,7 +96,7 @@
                                     <th>Acción</th>
                                 </tr>
                             </thead>
-                            <tbody id="tabla-auditoria-body">
+                            <tbody>
                                 <tr th:each="log : ${logs}" class="fila-auditoria">
                                     <td th:text="${#temporals.format(log.fecha, 'dd/MM/yyyy HH:mm:ss')}"></td>
                                     <td>
@@ -119,23 +112,14 @@
                         </table>
                     </div>
 
-                    <!-- Paginador Auditoría -->
                     <nav aria-label="Navegación de auditoría" id="paginacion-auditoria-container" class="mt-4 mb-0" style="display: none;">
                         <ul class="pagination justify-content-center" id="paginacion-auditoria-ul"></ul>
                     </nav>
                 </div>
             </div>
-
-            <footer class="py-4 mt-auto border-top text-center text-muted small shadow-sm" style="background-color: var(--bg-nav);">
-                <div class="container">
-                    <span class="fw-bold d-block mb-1"><i class="fa-solid fa-shield-halved me-1"></i> Sistema de Gestión de Incidentes (SGI)</span>
-                    <span>&copy; 2026 Todos los derechos reservados.</span>
-                </div>
-            </footer>
         </div>
     </div>
 
-    <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script th:src="@{/script.js}"></script>
     <script th:src="@{/paginador.js}"></script>
