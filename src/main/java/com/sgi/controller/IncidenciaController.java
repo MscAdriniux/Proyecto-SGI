@@ -288,9 +288,9 @@ public class IncidenciaController {
                 incidencia.setAsignadoA(tecnico.getNombres() + " " + tecnico.getApellidos());
             }
             
-            if (nuevoEstado.equals("RESUELTA") || nuevoEstado.equals("ATENDIDA")) {
+            if (nuevoEstado.equals("RESUELTA")) {
                 incidencia.setFechaCierre(LocalDateTime.now());
-            }  
+            } 
             
             if ((nuevoEstado.equals("RESUELTA") || nuevoEstado.equals("ATENDIDA")) && archivo != null && !archivo.isEmpty()) {
                 try {
@@ -313,13 +313,43 @@ public class IncidenciaController {
             }
 
             incidenciaService.guardar(incidencia);
+                if (nuevoEstado.equals("ATENDIDA")) {
 
-            logger.info(
-                "AUDITORIA | Módulo=Gestión de Incidencias | Usuario={} | Acción=Cambió el estado de la incidencia {} a {}",
-                tecnico.getCorreo(),
-                incidencia.getIdIncidencia(),
-                nuevoEstado
-            );
+                    logger.info(
+                        "AUDITORIA | Módulo=Gestión de Incidencias | Usuario={} | Acción=Escaló la incidencia {} al Administrador",
+                        tecnico.getCorreo(),
+                        incidencia.getIdIncidencia()
+                    );
+                    
+                    notificationService.broadcastSegmentado(
+                        "ESCALADA: La incidencia #" +
+                        incidencia.getIdIncidencia() +
+                        " (" + incidencia.getTipoIncidencia() + ") en " +
+                        incidencia.getUbicacion() +
+                        " fue escalada al Administrador para su resolución definitiva.",
+                        incidencia.getUsuario().getIdUsuario(),
+                        incidencia.getAsignadoA(),
+                        false
+                    );
+
+                } else if (nuevoEstado.equals("RESUELTA")) {
+
+                    logger.info(
+                        "AUDITORIA | Módulo=Gestión de Incidencias | Usuario={} | Acción=Resolvió la incidencia {}",
+                        tecnico.getCorreo(),
+                        incidencia.getIdIncidencia()
+                    );
+
+                } else {
+
+                    logger.info(
+                        "AUDITORIA | Módulo=Gestión de Incidencias | Usuario={} | Acción=Cambió el estado de la incidencia {} a {}",
+                        tecnico.getCorreo(),
+                        incidencia.getIdIncidencia(),
+                        nuevoEstado
+                    );
+
+                }
 
             } // <-- ESTA LLAVE CIERRA if (incidencia != null)
 
