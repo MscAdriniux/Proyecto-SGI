@@ -2,7 +2,7 @@ package com.sgi.service;
 
 import com.sgi.model.AuditLog;
 import org.springframework.stereotype.Service;
-
+import java.util.Comparator;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -91,9 +91,29 @@ public class AuditService {
             e.printStackTrace();
 
         }
+        // ordenar mas reciente, mas antiguo
+        lista.sort(Comparator.comparing(AuditLog::getFecha).reversed());
 
         return lista;
 
     }
+    public long contarInfo() {
+        return obtenerLogs().stream()
+                .filter(log -> "INFO".equals(log.getNivel()))
+                .count();
+    }
+
+    public long contarWarn() {
+        return obtenerLogs().stream()
+                .filter(log -> "WARN".equals(log.getNivel()))
+                .count();
+    }
+
+    public long contarError() {
+        return obtenerLogs().stream()
+                .filter(log -> "ERROR".equals(log.getNivel()))
+                .count();
+    }
+    
 
 }

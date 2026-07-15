@@ -7,126 +7,129 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" th:href="@{/estilos.css}">
-   
+    <script>
+    const tema = localStorage.getItem("tema_preferido");
+
+    if (tema === "dark") {
+        document.documentElement.setAttribute("data-theme","dark");
+    }
+    </script>
 </head>
 <body class="dashboard-body">
 
-    <nav class="navbar navbar-expand-lg border-bottom px-4 py-3 bg-nav mb-4">
-        <div class="container-fluid">
-            <div>
-                <h4 class="mb-0 fw-bold">Sistema de Incidencias</h4>
-                <small class="text-muted">
-                    <span th:text="${usuarioLogueado.nombres} + ' ' + ${usuarioLogueado.apellidos}">Admin</span> • Centro de Reportes
-                </small>
-            </div>
-            <div class="d-flex align-items-center gap-3">
-                <button class="theme-toggle position-static m-0" id="themeToggleBtn">
-                    <i class="fa-regular fa-moon" id="themeIcon"></i>
-                </button>
-                <a href="/admin/panel-admin" class="btn btn-light border fw-bold px-3 py-2 rounded-3 text-dark">
-                    <i class="fa-solid fa-arrow-left me-2"></i> Volver al Panel
-                </a>
-            </div>
-        </div>
-    </nav>
+    <div class="admin-layout">
+        <div th:replace="~{sidebar-admin :: sidebar('reportes')}"></div>
 
-    <div class="container-fluid px-lg-5">
-        <div class="filter-box shadow-sm mb-4">
-            <h5 class="fw-bold mb-3"><i class="fa-solid fa-filter me-2 text-primary"></i>Filtros de Exportación</h5>
-            <div class="row g-3">
-                <div class="col-md-4">
-                    <label class="form-label small fw-bold">Búsqueda General</label>
-                    <div class="input-group">
-                        <span class="input-group-text bg-transparent"><i class="fa-solid fa-magnifying-glass"></i></span>
-                        <input type="text" id="busquedaGlobal" class="form-control" placeholder="Nombre, aula, categoría, técnico...">
+        <div class="admin-main-content">
+            <nav class="navbar navbar-expand-lg border-bottom px-4 py-3 bg-nav mb-4">
+                <div class="container-fluid">
+                    <div>
+                        <h4 class="mb-0 fw-bold">Sistema de Incidencias</h4>
+                        <small class="text-muted">
+                            <span th:text="${usuarioLogueado.nombres} + ' ' + ${usuarioLogueado.apellidos}">Admin</span> • Centro de Reportes
+                        </small>
+                    </div>
+                    <div class="d-flex align-items-center gap-3">
+                        <button class="theme-toggle position-static m-0" id="themeToggleBtn">
+                            <i class="fa-regular fa-moon" id="themeIcon"></i>
+                        </button>
+                        <a href="/logout" class="btn btn-light border fw-bold px-3 py-2 rounded-3 text-dark btn-logout">
+                            <i class="fa-solid fa-arrow-right-from-bracket me-2"></i> Cerrar Sesión
+                        </a>
                     </div>
                 </div>
-                <div class="col-md-2">
-                    <label class="form-label small fw-bold">Estado</label>
-                    <select id="filtroEstado" class="form-select">
-                        <option value="">Todos los estados</option>
-                        <option value="PENDIENTE">Pendiente</option>
-                        <option value="EN PROCESO">En Proceso</option>
-                        <option value="RESUELTA">Resuelta</option>
-                        <option value="ATENDIDA">Atendida</option>
-                    </select>
-                </div>
-                <div class="col-md-2">
-                    <label class="form-label small fw-bold">Prioridad</label>
-                    <select id="filtroPrioridad" class="form-select">
-                        <option value="">Todas las prioridades</option>
-                        <option value="ALTA">Alta</option>
-                        <option value="MEDIA">Media</option>
-                        <option value="BAJA">Baja</option>
-                    </select>
-                </div>
-                <div class="col-md-2">
-                    <label class="form-label small fw-bold">Desde</label>
-                    <input type="date" id="filtroFechaDesde" class="form-select">
-                </div>
-                <div class="col-md-2">
-                    <label class="form-label small fw-bold">Hasta</label>
-                    <input type="date" id="filtroFechaHasta" class="form-select">
-                </div>
-            </div>
-            <div class="d-flex justify-content-end mt-3 gap-2">
-                <button type="button" class="btn btn-outline-secondary btn-sm" onclick="limpiarFiltros()">
-                    <i class="fa-solid fa-rotate-right me-1"></i> Limpiar Filtros
-                </button>
-            </div>
-        </div>
+            </nav>
 
-        <div class="card shadow-sm p-4 mb-4" style="background-color: var(--bg-card); border-color: var(--border-card);">
-            <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
-                <h5 class="fw-bold mb-0">Incidencias Coincidentes (<span id="contadorFilas" th:text="${#lists.size(incidencias)}">0</span>)</h5>
-                
-                <button type="button" class="btn btn-success fw-bold px-4 py-2 text-white" onclick="descargarReporteFiltrado()" style="color: #ffffff !important;">
-                <i class="fa-solid fa-file-excel me-2 text-white"></i> Descargar Excel (<span id="contadorExcel" class="text-white" th:text="${#lists.size(incidencias)}" style="color: #ffffff !important;">0</span>)
-                </button> 
-            </div>
+            <div class="container-fluid px-4 py-4">
+                <div class="filter-box shadow-sm mb-4">
+                    <h5 class="fw-bold mb-3"><i class="fa-solid fa-filter me-2 text-primary"></i>Filtros de Exportación</h5>
+                    <div class="row g-3">
+                        <div class="col-md-4">
+                            <label class="form-label small fw-bold">Búsqueda General</label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-transparent"><i class="fa-solid fa-magnifying-glass"></i></span>
+                                <input type="text" id="busquedaGlobal" class="form-control" placeholder="Buscar...">
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <label class="form-label small fw-bold">Estado</label>
+                            <select id="filtroEstado" class="form-select">
+                                <option value="">Todos</option>
+                                <option value="PENDIENTE">Pendiente</option>
+                                <option value="EN PROCESO">En Proceso</option>
+                                <option value="RESUELTA">Resuelta</option>
+                                <option value="ATENDIDA">Atendida</option>
+                            </select>
+                        </div>
+                        <div class="col-md-2">
+                            <label class="form-label small fw-bold">Prioridad</label>
+                            <select id="filtroPrioridad" class="form-select">
+                                <option value="">Todas</option>
+                                <option value="ALTA">Alta</option>
+                                <option value="MEDIA">Media</option>
+                                <option value="BAJA">Baja</option>
+                            </select>
+                        </div>
+                        <div class="col-md-2">
+                            <label class="form-label small fw-bold">Desde</label>
+                            <input type="date" id="filtroFechaDesde" class="form-select">
+                        </div>
+                        <div class="col-md-2">
+                            <label class="form-label small fw-bold">Hasta</label>
+                            <input type="date" id="filtroFechaHasta" class="form-select">
+                        </div>
+                    </div>
+                    <div class="d-flex justify-content-end mt-3 gap-2">
+                        <button type="button" class="btn btn-outline-secondary btn-sm" onclick="limpiarFiltros()"><i class="fa-solid fa-rotate-right me-1"></i> Limpiar</button>
+                    </div>
+                </div>
 
-            <div class="table-responsive">
-                <table class="table table-custom table-hover align-middle mb-0">
-                    <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>Incidencia</th>
-                            <th>Categoría</th>
-                            <th>Prioridad</th>
-                            <th>Ubicación</th>
-                            <th>Docente</th>
-                            <th>Estado</th>
-                            <th>Fecha Registro</th>
-                            <th>Técnico</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr th:each="inc : ${incidencias}" class="fila-incidencia"
-                            th:data-estado="${inc.estado}"
-                            th:data-prioridad="${inc.prioridad}"
-                            th:data-fecha="${#temporals.format(inc.fechaCreacion, 'yyyy-MM-dd')}"
-                            th:data-id="${inc.idIncidencia}">
-                            
-                            <td class="fw-bold" th:text="${inc.idIncidencia}">#</td>
-                            <td th:text="${inc.tipoIncidencia}">Proyector</td>
-                            <td th:text="${inc.categoria}">Hardware</td>
-                            <td>
-                                <span class="badge rounded-pill px-2 py-1"
-                                      th:classappend="${inc.prioridad == 'ALTA' ? 'bg-danger text-white' : (inc.prioridad == 'MEDIA' ? 'bg-warning text-dark' : 'bg-success text-white')}"
-                                      th:text="${inc.prioridad}">ALTA</span>
-                            </td>
-                            <td th:text="${inc.ubicacion}">AS101</td>
-                            <td th:text="${inc.usuario != null ? inc.usuario.nombres + ' ' + inc.usuario.apellidos : 'N/A'}">Docente</td>
-                            <td class="fw-bold" th:text="${inc.estado}">PENDIENTE</td>
-                            <td th:text="${#temporals.format(inc.fechaCreacion, 'dd/MM/yyyy HH:mm')}">01/01/2026</td>
-                            <td th:text="${inc.asignadoA != null ? inc.asignadoA : 'Sin Asignar'}">Técnico</td>
-                        </tr>
-                    </tbody>
-                </table>
+                <div class="card shadow-sm p-4 mb-4" style="background-color: var(--bg-card); border-color: var(--border-card);">
+                    <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
+                        <h5 class="fw-bold mb-0">Incidencias Coincidentes (<span id="contadorFilas" th:text="${#lists.size(incidencias)}">0</span>)</h5>
+                        <button type="button" class="btn btn-success fw-bold px-4 py-2 text-white" onclick="descargarReporteFiltrado()" style="color: #ffffff !important;">
+                            <i class="fa-solid fa-file-excel me-2 text-white"></i> Descargar Excel (<span id="contadorExcel" class="text-white" th:text="${#lists.size(incidencias)}" style="color: #ffffff !important;">0</span>)
+                        </button> 
+                    </div>
+
+                    <div class="table-responsive">
+                        <table class="table table-custom table-hover align-middle mb-0">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Incidencia</th>
+                                    <th>Categoría</th>
+                                    <th>Prioridad</th>
+                                    <th>Ubicación</th>
+                                    <th>Docente</th>
+                                    <th>Estado</th>
+                                    <th>Fecha Registro</th>
+                                    <th>Técnico</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr th:each="inc : ${incidencias}" class="fila-incidencia"
+                                    th:data-estado="${inc.estado}" th:data-prioridad="${inc.prioridad}"
+                                    th:data-fecha="${#temporals.format(inc.fechaCreacion, 'yyyy-MM-dd')}" th:data-id="${inc.idIncidencia}">
+                                    <td class="fw-bold" th:text="${inc.idIncidencia}">#</td>
+                                    <td th:text="${inc.tipoIncidencia}">Proyector</td>
+                                    <td th:text="${inc.categoria}">Hardware</td>
+                                    <td><span class="badge rounded-pill px-2 py-1" th:classappend="${inc.prioridad == 'ALTA' ? 'bg-danger text-white' : (inc.prioridad == 'MEDIA' ? 'bg-warning text-dark' : 'bg-success text-white')}" th:text="${inc.prioridad}">ALTA</span></td>
+                                    <td th:text="${inc.ubicacion}">AS101</td>
+                                    <td th:text="${inc.usuario != null ? inc.usuario.nombres + ' ' + inc.usuario.apellidos : 'N/A'}">Docente</td>
+                                    <td class="fw-bold" th:text="${inc.estado}">PENDIENTE</td>
+                                    <td th:text="${#temporals.format(inc.fechaCreacion, 'dd/MM/yyyy HH:mm')}">01/01/2026</td>
+                                    <td th:text="${inc.asignadoA != null ? inc.asignadoA : 'Sin Asignar'}">Técnico</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <script th:src="@{/script.js}"></script>
     <script th:src="@{/reportes.js}"></script>
 </body>

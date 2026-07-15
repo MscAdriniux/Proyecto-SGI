@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+    <div th:fragment="sidebar(activeTab)" class="admin-sidebar">
+        <a href="/admin/panel-admin" class="btn text-start py-2.5 px-3 rounded-3 w-100 d-flex align-items-center gap-2"
+           th:classappend="${activeTab == 'panel' ? 'btn-dark active' : 'btn-light border'}">
+            <i class="fa-solid fa-layer-group"></i> Panel Principal
+        </a>
+
+        <a href="/admin/herramientas/reportes" class="btn text-start py-2.5 px-3 rounded-3 w-100 d-flex align-items-center gap-2"
+           th:classappend="${activeTab == 'reportes' ? 'btn-dark active' : 'btn-light border'}">
+            <i class="fa-solid fa-chart-line"></i> Centro de Reportes
+        </a>
+
+        <a href="/admin/herramientas/metricas" class="btn text-start py-2.5 px-3 rounded-3 w-100 d-flex align-items-center gap-2"
+           th:classappend="${activeTab == 'metricas' ? 'btn-dark active' : 'btn-light border'}">
+            <i class="fa-solid fa-chart-pie"></i> Ver Métricas
+        </a>
+
+        <a href="/admin/auditoria" class="btn text-start py-2.5 px-3 rounded-3 w-100 d-flex align-items-center gap-2"
+           th:classappend="${activeTab == 'auditoria' ? 'btn-dark active' : 'btn-light border'}">
+            <i class="fa-solid fa-shield-halved"></i> Auditoría
+        </a>
+    </div>
+</body>
+</html>

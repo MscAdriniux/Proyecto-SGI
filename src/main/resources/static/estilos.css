@@ -338,6 +338,38 @@ h1, h2, h3, h4, h5, h6, p, span {
     color: var(--text-main) !important;
 }
 
+.table-custom{
+
+    --bs-table-bg: transparent !important;
+
+    --bs-table-color: var(--text-main);
+
+    --bs-table-border-color: var(--border-card);
+
+}
+
+.table-custom thead th{
+
+    background: var(--bg-nav) !important;
+
+    color: var(--text-main) !important;
+
+}
+
+.table-custom tbody td{
+
+    background: transparent !important;
+
+    color: var(--text-main) !important;
+
+}
+
+.table-custom tbody tr:hover td{
+
+    background: var(--bg-input) !important;
+
+}
+
 /* ========================================== 
    8. DISEÑO RESPONSIVO (AJUSTES PARA MÓVILES) 
    ========================================== */
@@ -412,5 +444,46 @@ h1, h2, h3, h4, h5, h6, p, span {
 @media (max-width: 400px) {
     .btn-logout span {
         display: none; /* Oculta el texto "Cerrar Sesión", deja solo el ícono */
+    }
+}
+
+.admin-layout {
+    display: flex;
+    min-height: 100vh;
+    width: 100%;
+}
+
+.admin-sidebar {
+    position: fixed; /* Hace que el menú se quede estático en la pantalla */
+    top: 0;
+    left: 0;
+    width: 260px;
+    height: 100vh;
+    background-color: var(--bg-card);
+    border-right: 1px solid var(--border-card);
+    padding: 30px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    z-index: 1000;
+}
+
+.admin-main-content {
+    margin-left: 260px; /* Desplaza el contenido para que no lo tape el menú fijo */
+    flex-grow: 1;
+    min-width: 0;
+    background-color: var(--bg-body);
+}
+
+@media (max-width: 991.98px) {
+    .admin-sidebar {
+        position: static;
+        width: 100%;
+        height: auto;
+        border-right: none;
+        border-bottom: 1px solid var(--border-card);
+    }
+    .admin-main-content {
+        margin-left: 0;
     }
 }

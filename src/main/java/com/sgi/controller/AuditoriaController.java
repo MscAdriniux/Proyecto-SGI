@@ -1,5 +1,6 @@
 package com.sgi.controller;
-
+import jakarta.servlet.http.HttpSession;
+import com.sgi.model.Usuario;
 import com.sgi.service.AuditService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -13,26 +14,23 @@ public class AuditoriaController {
     private AuditService auditService;
 
     @GetMapping("/admin/auditoria")
-    public String mostrarAuditoria(Model model) {
+    public String mostrarAuditoria(HttpSession session, Model model) {
 
-        var logs = auditService.obtenerLogs();
+        Usuario u = (Usuario) session.getAttribute("usuarioLogueado");
 
-        long info = logs.stream()
-                .filter(log -> "INFO".equalsIgnoreCase(log.getNivel()))
-                .count();
+        if (u == null) {
+            return "redirect:/login";
+        }
 
-        long warn = logs.stream()
-                .filter(log -> "WARN".equalsIgnoreCase(log.getNivel()))
-                .count();
+        model.addAttribute("usuarioLogueado", u);
 
-        long error = logs.stream()
-                .filter(log -> "ERROR".equalsIgnoreCase(log.getNivel()))
-                .count();
+        model.addAttribute("logs", auditService.obtenerLogs());
 
-        model.addAttribute("logs", logs);
-        model.addAttribute("info", info);
-        model.addAttribute("warn", warn);
-        model.addAttribute("error", error);
+        model.addAttribute("info", auditService.contarInfo());
+
+        model.addAttribute("warn", auditService.contarWarn());
+
+        model.addAttribute("error", auditService.contarError());
 
         return "auditoria";
     }

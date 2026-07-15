@@ -142,7 +142,7 @@ public class IncidenciaController {
         incidenciaService.guardar(nueva); 
         
         logger.info(
-            "AUDITORIA | Módulo=Gestión de Incidencias | Usuario={} | Acción=Registró incidencia | Tipo={} | Ubicación={}",
+            "AUDITORIA | Módulo=Gestión de Incidencias | Usuario={} | Acción=Registró una nueva incidencia | Tipo={} | Ubicación={}",
             usuarioLogueado.getCorreo(),
             tipoIncidencia,
             ubicacion
@@ -295,18 +295,18 @@ public class IncidenciaController {
             }
 
             incidenciaService.guardar(incidencia);
-            
+
             logger.info(
-                "AUDITORIA | Módulo=Gestión de Incidencias | Usuario={} | Acción=Cambió estado | Ticket={} | Estado={}",
+                "AUDITORIA | Módulo=Gestión de Incidencias | Usuario={} | Acción=Cambió el estado de la incidencia {} a {}",
                 tecnico.getCorreo(),
                 incidencia.getIdIncidencia(),
                 nuevoEstado
             );
-        }
-        
-        return "redirect:/incidencias/panel-tecnico";
+
+            } // <-- ESTA LLAVE CIERRA if (incidencia != null)
+
+            return "redirect:/incidencias/panel-tecnico";
     }
-    
     // ==========================================
     // RUTA DE ESCALAMIENTO PARA EL ADMINISTRADOR
     // ==========================================
@@ -321,6 +321,11 @@ public class IncidenciaController {
         
         if (incidencia != null && incidencia.getEstado().equalsIgnoreCase("ATENDIDA")) {
             incidencia.setEstado("RESUELTA");
+            logger.info(
+            "AUDITORIA | Módulo=Gestión de Incidencias | Usuario={} | Acción=Resolvió definitivamente la incidencia {}",
+            admin.getCorreo(),
+            incidencia.getIdIncidencia()
+        );
             incidencia.setFechaCierre(LocalDateTime.now());
             incidencia.setComentarioAdmin("Cierre definitivo por el Administrador (Liberado de la bandeja de escalamiento).");
             incidenciaService.guardar(incidencia);
