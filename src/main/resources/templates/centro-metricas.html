@@ -12,6 +12,13 @@
         .metric-card { background-color: var(--bg-card); border: 1px solid var(--border-card); border-radius: 12px; padding: 20px; }
         .chart-container { background-color: var(--bg-card); border: 1px solid var(--border-card); border-radius: 12px; padding: 20px; position: relative; min-height: 300px; }
     </style>
+    <script>
+    const tema = localStorage.getItem("tema_preferido");
+
+    if (tema === "dark") {
+        document.documentElement.setAttribute("data-theme","dark");
+    }
+    </script>
 </head>
 <body class="dashboard-body">
 
