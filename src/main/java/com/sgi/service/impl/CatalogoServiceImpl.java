@@ -1,26 +1,30 @@
 package com.sgi.service.impl;
 
-import com.sgi.service.CatalogoService;
 import com.sgi.model.CatalogoIncidencia;
-import com.sgi.repository.CatalogoIncidenciaRepository;
+import com.sgi.repository.CatalogoIncidenciaRepository; 
+import com.sgi.service.CatalogoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.List;
 
-@Service 
+@Service
 public class CatalogoServiceImpl implements CatalogoService {
 
     @Autowired
-    private CatalogoIncidenciaRepository repository;
-
+    private CatalogoIncidenciaRepository repository; 
+    
     @Override
     public List<CatalogoIncidencia> obtenerTodoElCatalogo() {
         return repository.findAll();
     }
 
     @Override
+    public CatalogoIncidencia obtenerPorId(Long id) {
+        return repository.findById(id).orElse(null);
+    }
+
+    @Override
     public CatalogoIncidencia guardar(CatalogoIncidencia item) {
-        // save() de Spring Data JPA hace INSERT si el id es null, o UPDATE si ya existe
         return repository.save(item);
     }
 

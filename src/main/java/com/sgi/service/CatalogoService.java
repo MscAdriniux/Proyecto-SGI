@@ -11,22 +11,9 @@ import java.util.List;
  *
  * @author ad_ri
  */
-public interface CatalogoService {
-
+public interface CatalogoService { 
     List<CatalogoIncidencia> obtenerTodoElCatalogo();
-
-    /**
-     * Crea o actualiza un ítem del catálogo de incidencias.
-     * Si el ítem no trae ID, se crea uno nuevo; si ya tiene ID, se actualiza el existente.
-     * @param item El ítem a guardar.
-     * @return El ítem ya persistido (con su ID asignado si era nuevo).
-     */
+    CatalogoIncidencia obtenerPorId(Long id);
     CatalogoIncidencia guardar(CatalogoIncidencia item);
-
-    /**
-     * Elimina un ítem del catálogo de incidencias por su ID.
-     * @param id El identificador del ítem a eliminar.
-     */
     void eliminar(Long id);
-
 }

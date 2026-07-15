@@ -1,7 +1,6 @@
 /* ==========================================
-   LÓGICA EXCLUSIVA DEL PANEL DE ADMINISTRADOR
+   LÓGICA DE FILTROS DEL PANEL DE ADMINISTRADOR
    ========================================== */
-
 let estadoFiltro = 'TODAS';
 const inputBuscador = document.getElementById('buscadorAdmin');
 
@@ -9,7 +8,6 @@ function filtrarIncidencias(estado) {
     estadoFiltro = estado;
     aplicarFiltros();
     
-    // Actualizar clase activa en botones
     const buttons = document.querySelectorAll('#filterGroupAdmin .btn');
     buttons.forEach(btn => {
         const btnTexto = btn.innerText.trim().toUpperCase();
@@ -47,3 +45,49 @@ function aplicarFiltros() {
         }
     });
 }
+
+/* ==========================================
+   LÓGICA DE NAVEGACIÓN (Panel Central)
+   ========================================== */
+function mostrarSeccion(seccion) {
+    const secciones = ['incidencias', 'catalogo', 'reportes', 'metricas', 'auditoria'];
+    
+    secciones.forEach(sec => {
+        const elem = document.getElementById(`seccion-${sec}`);
+        if (elem) {
+            elem.style.setProperty('display', (sec === seccion) ? 'block' : 'none', 'important');
+        }
+    });
+
+    const botones = {
+        incidencias: document.getElementById('btnVerIncidencias'),
+        catalogo: document.getElementById('btnCrudCatalogo'),
+        reportes: document.getElementById('btnCentroReportes'),
+        metricas: document.getElementById('btnVerMetricas'),
+        auditoria: document.getElementById('btnAuditoria')
+    };
+
+    Object.keys(botones).forEach(key => {
+        const btn = botones[key];
+        if (btn) {
+            if (key === seccion) {
+                btn.classList.remove('btn-light', 'border');
+                btn.classList.add('btn-dark', 'active');
+                btn.style.removeProperty('opacity');
+            } else {
+                btn.classList.remove('btn-dark', 'active');
+                btn.classList.add('btn-light', 'border');
+                btn.style.opacity = '0.8';
+            }
+        }
+    });
+}
+
+// Cargar sección específica desde parámetros de la URL al iniciar
+document.addEventListener("DOMContentLoaded", function() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const seccion = urlParams.get('seccion');
+    if (seccion) {
+        mostrarSeccion(seccion);
+    }
+});

@@ -2,27 +2,46 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <body>
     <div th:fragment="sidebar(activeTab)" class="admin-sidebar">
-        <a href="/admin/panel-admin" class="btn text-start py-2.5 px-3 rounded-3 w-100 d-flex align-items-center gap-2"
-           th:classappend="${activeTab == 'panel' ? 'btn-dark active' : 'btn-light border'}">
-            <i class="fa-solid fa-layer-group"></i> Panel Principal
+        <h6 class="fw-bold mb-3 text-muted text-uppercase small px-2" style="letter-spacing: 0.5px;">
+            <i class="fa-solid fa-screwdriver-wrench me-2"></i>Herramientas
+        </h6>
+
+        <a href="/admin/panel-admin?seccion=incidencias" id="btnVerIncidencias" class="btn text-start py-2.5 px-3 rounded-3 w-100 d-flex align-items-center gap-2"
+           th:classappend="${activeTab == 'panel' ? 'btn-dark active' : 'btn-light border'}"
+           onclick="if(window.mostrarSeccion) { mostrarSeccion('incidencias'); return false; }">
+            <i class="fa-solid fa-list"></i> Ver Incidencias
         </a>
 
-        <a href="/admin/herramientas/reportes" class="btn text-start py-2.5 px-3 rounded-3 w-100 d-flex align-items-center gap-2"
-           th:classappend="${activeTab == 'reportes' ? 'btn-dark active' : 'btn-light border'}">
+        <a href="/admin/panel-admin?seccion=reportes" id="btnCentroReportes" class="btn text-start py-2.5 px-3 rounded-3 w-100 d-flex align-items-center gap-2"
+           th:classappend="${activeTab == 'reportes' ? 'btn-dark active' : 'btn-light border'}"
+           onclick="if(window.mostrarSeccion) { mostrarSeccion('reportes'); return false; }">
             <i class="fa-solid fa-chart-line"></i> Centro de Reportes
         </a>
 
-        <a href="/admin/herramientas/metricas" class="btn text-start py-2.5 px-3 rounded-3 w-100 d-flex align-items-center gap-2"
-           th:classappend="${activeTab == 'metricas' ? 'btn-dark active' : 'btn-light border'}">
+        <a href="/admin/panel-admin?seccion=metricas" id="btnVerMetricas" class="btn text-start py-2.5 px-3 rounded-3 w-100 d-flex align-items-center gap-2"
+           th:classappend="${activeTab == 'metricas' ? 'btn-dark active' : 'btn-light border'}"
+           onclick="if(window.mostrarSeccion) { mostrarSeccion('metricas'); return false; }">
             <i class="fa-solid fa-chart-pie"></i> Ver Métricas
         </a>
 
+<<<<<<< HEAD
         <a href="/admin/herramientas/catalogo" class="btn text-start py-2.5 px-3 rounded-3 w-100 d-flex align-items-center gap-2"
            th:classappend="${activeTab == 'catalogo' ? 'btn-dark active' : 'btn-light border'}">
            <i class="fa-solid fa-layer-group"></i> CRUD Catálogo
         </a>
         <a href="/admin/auditoria" class="btn text-start py-2.5 px-3 rounded-3 w-100 d-flex align-items-center gap-2"
            th:classappend="${activeTab == 'auditoria' ? 'btn-dark active' : 'btn-light border'}">
+=======
+        <a href="/admin/panel-admin?seccion=catalogo" id="btnCrudCatalogo" class="btn text-start py-2.5 px-3 rounded-3 w-100 d-flex align-items-center gap-2"
+           th:classappend="${activeTab == 'catalogo' ? 'btn-dark active' : 'btn-light border'}"
+           onclick="if(window.mostrarSeccion) { mostrarSeccion('catalogo'); return false; }">
+            <i class="fa-solid fa-layer-group"></i> CRUD Catálogo
+        </a>
+
+        <a href="/admin/panel-admin?seccion=auditoria" id="btnAuditoria" class="btn text-start py-2.5 px-3 rounded-3 w-100 d-flex align-items-center gap-2"
+           th:classappend="${activeTab == 'auditoria' ? 'btn-dark active' : 'btn-light border'}"
+           onclick="if(window.mostrarSeccion) { mostrarSeccion('auditoria'); return false; }">
+>>>>>>> 65860da7e45c0e5d36fdee2b4f8ae61766c96d3c
             <i class="fa-solid fa-shield-halved"></i> Auditoría
         </a>
     </div>

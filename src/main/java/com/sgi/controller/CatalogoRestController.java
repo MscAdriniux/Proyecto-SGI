@@ -25,33 +25,36 @@ public class CatalogoRestController {
         return ResponseEntity.ok(catalogo);
     }
 
-    /**
-     * Crea un nuevo ítem en el catálogo de incidencias.
-     * Usado por el modal "Agregar Incidencia al Catálogo" del panel de administrador.
-     */
     @PostMapping
     public ResponseEntity<CatalogoIncidencia> crear(@RequestBody CatalogoIncidencia item) {
-        item.setId(null); // Nos aseguramos de que sea un registro nuevo, ignorando cualquier id enviado
-        CatalogoIncidencia creado = catalogoService.guardar(item);
-        return ResponseEntity.ok(creado);
+        CatalogoIncidencia nuevo = catalogoService.guardar(item);
+        return ResponseEntity.ok(nuevo);
     }
 
-    /**
-     * Actualiza un ítem existente del catálogo de incidencias.
-     * Usado por el modal "Editar Incidencia en el Catálogo" del panel de administrador.
-     */
     @PutMapping("/{id}")
     public ResponseEntity<CatalogoIncidencia> actualizar(@PathVariable Long id, @RequestBody CatalogoIncidencia item) {
-        item.setId(id); // El id viene de la URL, no del cuerpo, para evitar inconsistencias
-        CatalogoIncidencia actualizado = catalogoService.guardar(item);
+        // Usamos la lógica de verificación de 'main' que es más segura
+        CatalogoIncidencia existente = catalogoService.obtenerPorId(id);
+        if (existente == null) {
+            return ResponseEntity.notFound().build();
+        }
+        
+        // Actualizamos los campos
+        existente.setNombre(item.getNombre());
+        existente.setCategoria(item.getCategoria());
+        existente.setPrioridad(item.getPrioridad());
+        
+        CatalogoIncidencia actualizado = catalogoService.guardar(existente);
         return ResponseEntity.ok(actualizado);
     }
 
-    /**
-     * Elimina un ítem del catálogo de incidencias.
-     */
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> eliminar(@PathVariable Long id) {
+        // Verificamos antes de borrar
+        CatalogoIncidencia existente = catalogoService.obtenerPorId(id);
+        if (existente == null) {
+            return ResponseEntity.notFound().build();
+        }
         catalogoService.eliminar(id);
         return ResponseEntity.noContent().build();
     }

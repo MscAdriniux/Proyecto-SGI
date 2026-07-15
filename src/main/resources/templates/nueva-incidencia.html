@@ -19,6 +19,14 @@
         /* Estilo añadido para asegurar que el select mantenga el diseño personalizado */
         select.form-control-custom { appearance: form-select; background-image: var(--bs-form-select-bg-img, none); }
     </style>
+    
+    <script>
+    const tema = localStorage.getItem("tema_preferido");
+
+    if (tema === "dark") {
+        document.documentElement.setAttribute("data-theme","dark");
+    }
+    </script>
 </head>
 <body class="dashboard-body">
 

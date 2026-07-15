@@ -356,6 +356,38 @@ h1, h2, h3, h4, h5, h6, p, span {
     color: var(--text-main) !important;
 }
 
+.table-custom{
+
+    --bs-table-bg: transparent !important;
+
+    --bs-table-color: var(--text-main);
+
+    --bs-table-border-color: var(--border-card);
+
+}
+
+.table-custom thead th{
+
+    background: var(--bg-nav) !important;
+
+    color: var(--text-main) !important;
+
+}
+
+.table-custom tbody td{
+
+    background: transparent !important;
+
+    color: var(--text-main) !important;
+
+}
+
+.table-custom tbody tr:hover td{
+
+    background: var(--bg-input) !important;
+
+}
+
 /* ========================================== 
    8. DISEÑO RESPONSIVO (AJUSTES PARA MÓVILES) 
    ========================================== */

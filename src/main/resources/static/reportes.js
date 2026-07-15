@@ -72,8 +72,10 @@ document.addEventListener("DOMContentLoaded", function() {
         aplicarFiltros();
     };
 
-    // Exporta TODAS las filas que coinciden con el filtro, sin importar en qué página estén
+// Exporta TODAS las filas que coinciden con el filtro, sin importar en qué página estén
     window.descargarReporteFiltrado = function() {
+        // Usamos dataset.coincide porque es nuestra "fuente de verdad" (State)
+        // No usamos style.display porque el paginador lo altera constantemente.
         const idsCoincidentes = filas
             .filter(f => f.dataset.coincide === "1")
             .map(f => f.getAttribute("data-id"));

@@ -10,16 +10,17 @@ import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 @Service
 public class AuditServiceImpl implements AuditService {
 
-    private static final String LOG_FILE = "logs/sgi.log";
+      private static final String LOG_FILE = "logs/sgi.log";
 
     private static final DateTimeFormatter FORMATTER =
             DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-
+    
     @Override
     public List<AuditLog> obtenerLogs() {
 
@@ -93,11 +94,30 @@ public class AuditServiceImpl implements AuditService {
             e.printStackTrace();
 
         }
-
-        java.util.Collections.reverse(lista);
+        // ordenar mas reciente, mas antiguo
+        lista.sort(Comparator.comparing(AuditLog::getFecha).reversed());
 
         return lista;
 
     }
+    @Override
+    public long contarInfo() {
+        return obtenerLogs().stream()
+                .filter(log -> "INFO".equals(log.getNivel()))
+                .count();
+    }
+    @Override
+    public long contarWarn() {
+        return obtenerLogs().stream()
+                .filter(log -> "WARN".equals(log.getNivel()))
+                .count();
+    }
+    @Override
+    public long contarError() {
+        return obtenerLogs().stream()
+                .filter(log -> "ERROR".equals(log.getNivel()))
+                .count();
+    }
+    
 
 }
