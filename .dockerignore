@@ -1,0 +1,7 @@
+.git
+target/
+uploads/
+logs/
+*.log
+.vscode
+docs/
