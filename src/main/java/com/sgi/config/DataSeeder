@@ -1,0 +1,28 @@
+package com.sgi.config;
+
+import com.sgi.model.Pabellon;
+import com.sgi.repository.PabellonRepository;
+import org.springframework.boot.CommandLineRunner;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+
+import java.util.Arrays;
+
+@Configuration
+public class DataSeeder {
+
+    @Bean
+    CommandLineRunner initDatabase(PabellonRepository repository) {
+        return args -> {
+            // Solo insertamos si la tabla está vacía
+            if (repository.count() == 0) {
+                Pabellon p1 = new Pabellon(); p1.setNombre("A"); p1.setSede("Tacna y Arica");
+                Pabellon p2 = new Pabellon(); p2.setNombre("B"); p2.setSede("Tacna y Arica");
+                // ... agrega los que necesites ...
+                
+                repository.saveAll(Arrays.asList(p1, p2));
+                System.out.println(">>> Datos de pabellones insertados con éxito por Spring Boot.");
+            }
+        };
+    }
+}
